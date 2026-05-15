@@ -106,7 +106,6 @@ export default function DashboardPage() {
                         {issue.id}
                       </span>
                       <StatusBadge status={issue.status} />
-                      <StatusBadge status={issue.status} />
                     </div>
                     <h3 className="text-sm font-medium text-white truncate">
                       {issue.title}
