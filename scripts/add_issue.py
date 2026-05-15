@@ -76,7 +76,7 @@ def main():
     status = prompt("Status", "CONFIRMED_REAL", STATUSES).upper()
     issue_url = prompt("Upstream issue URL (leave empty if none)", "")
     issue_date = prompt("Discovery date (YYYY-MM-DD)", date.today().isoformat())
-    author = prompt("Author (GitHub username)", "fermat-hkrc")
+    author = prompt("Author (GitHub username)", "Zirui")
     finding_count = prompt("Number of findings in this issue", "1")
 
     # Optional

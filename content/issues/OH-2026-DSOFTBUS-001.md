@@ -8,7 +8,7 @@ cwe: CWE-862
 cwe_name: Missing Authorization
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9200
-author: fermat-hkrc
+author: Zirui
 ---
 
 ---

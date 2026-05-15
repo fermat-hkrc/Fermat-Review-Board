@@ -8,7 +8,7 @@ cwe: CWE-416
 cwe_name: Use After Free
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/customization_config_policy/issues/162
-author: fermat-hkrc
+author: Zirui
 ---
 
 ## 漏洞概述

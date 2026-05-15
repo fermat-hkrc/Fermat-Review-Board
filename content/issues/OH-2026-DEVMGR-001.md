@@ -8,7 +8,7 @@ cwe: CWE-862
 cwe_name: Missing Authorization
 status: CONFIRMED_REAL
 issue_url: https://gitcode.com/openharmony/distributedhardware_device_manager/issues/2426
-author: fermat-hkrc
+author: Zirui
 ---
 
 ## 问题描述

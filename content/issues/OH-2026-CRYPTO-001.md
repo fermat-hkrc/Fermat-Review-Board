@@ -15,7 +15,7 @@ file_paths:
   - common/src/blob.c
   - plugin/openssl_plugin/crypto_operation/cipher/src/cipher_aes_common.c
   - frameworks/js/napi/crypto/src/napi_key_agreement.cpp
-author: fermat-hkrc
+author: Zirui
 ---
 
 ## 漏洞概述

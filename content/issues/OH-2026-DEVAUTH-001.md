@@ -8,7 +8,7 @@ cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_device_auth/issues/1037
-author: fermat-hkrc
+author: Zirui
 ---
 
 ---

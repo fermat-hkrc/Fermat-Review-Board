@@ -8,7 +8,7 @@ cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/drivers_interface/issues/1235
-author: fermat-hkrc
+author: Zirui
 ---
 
 ## 漏洞概述

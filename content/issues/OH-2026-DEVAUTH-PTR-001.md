@@ -8,7 +8,7 @@ cwe: CWE-822
 cwe_name: Untrusted Pointer Dereference
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_device_auth/issues/1035
-author: fermat-hkrc
+author: Zirui
 ---
 
 ### 漏洞编号：

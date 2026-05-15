@@ -8,7 +8,7 @@ cwe: CWE-775
 cwe_name: Missing Release of File Descriptor after Effective Lifetime
 status: SUBMITTED
 issue_url: https://gitcode.com/Ascend/pytorch/issues/1731
-author: fermat-hkrc
+author: Zirui
 ---
 
 ## GitCode 安全漏洞报告指引

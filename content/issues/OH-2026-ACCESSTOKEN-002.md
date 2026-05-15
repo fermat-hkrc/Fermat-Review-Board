@@ -8,7 +8,7 @@ cwe: CWE-190
 cwe_name: Integer Overflow or Wraparound
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_access_token/issues/3173
-author: fermat-hkrc
+author: Zirui
 ---
 
 下列还有一个问题，也请您顺便看看：

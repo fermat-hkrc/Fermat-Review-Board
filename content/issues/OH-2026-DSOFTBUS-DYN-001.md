@@ -8,7 +8,7 @@ cwe: CWE-20
 cwe_name: Improper Input Validation
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9228
-author: fermat-hkrc
+author: Zirui
 ---
 
 ### 漏洞编号：

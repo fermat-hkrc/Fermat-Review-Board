@@ -8,7 +8,7 @@ cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/telephony_state_registry/issues/254
-author: fermat-hkrc
+author: Zirui
 ---
 
 ---

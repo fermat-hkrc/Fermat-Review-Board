@@ -8,7 +8,7 @@ cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_security_component_manager/issues/395
-author: fermat-hkrc
+author: Zirui
 ---
 
 ---

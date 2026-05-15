@@ -8,7 +8,7 @@ cwe: CWE-749
 cwe_name: Exposed Dangerous Method or Function
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_appverify/issues/172
-author: fermat-hkrc
+author: Zirui
 ---
 
 ### 漏洞编号：

@@ -8,7 +8,7 @@ cwe: CWE-457
 cwe_name: Use of Uninitialized Variable
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/graphic_graphic_surface/issues/980
-author: fermat-hkrc
+author: Zirui
 ---
 
 ## 漏洞概述
