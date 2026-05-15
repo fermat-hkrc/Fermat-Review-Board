@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getAllIssueIds, getIssue } from "@/lib/content";
 import IssueContent from "@/components/issue-content";
+import PocViewer from "@/components/poc-viewer";
 
 export function generateStaticParams() {
   return getAllIssueIds().map((id) => ({ id }));
@@ -129,40 +130,11 @@ export default async function IssueDetailPage({
 
       {/* PoC Section */}
       {issue.poc && issue.poc.files.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 bg-blue-500 rounded-full" />
-            Proof of Concept
-          </h2>
-          {issue.poc.files.map((file) => (
-            <div
-              key={file.name}
-              className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden mb-4"
-            >
-              <div className="px-4 py-2 border-b border-[#262626] flex items-center justify-between bg-[#1a1a1a]">
-                <span className="text-sm font-mono text-[#a3a3a3]">
-                  {file.name}
-                </span>
-                <span className="text-xs text-[#737373]">{file.language}</span>
-              </div>
-              <pre className="p-4 overflow-x-auto text-sm leading-relaxed">
-                <code className="text-[#d4d4d4] font-mono">{file.content}</code>
-              </pre>
-            </div>
-          ))}
-          {issue.poc.output && (
-            <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden">
-              <div className="px-4 py-2 border-b border-[#262626] bg-[#1a1a1a]">
-                <span className="text-sm font-mono text-[#a3a3a3]">
-                  Output
-                </span>
-              </div>
-              <pre className="p-4 overflow-x-auto text-sm leading-relaxed text-green-400 font-mono">
-                {issue.poc.output}
-              </pre>
-            </div>
-          )}
-        </div>
+        <PocViewer
+          files={issue.poc.files}
+          output={issue.poc.output}
+          issueId={issue.meta.id}
+        />
       )}
 
       {/* Back link */}
