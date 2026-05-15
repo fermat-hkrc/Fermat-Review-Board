@@ -9,6 +9,25 @@
 - `src/` — Next.js 前端
 - `scripts/` — 工具脚本
 
+## 内容规范（必须遵守）
+
+### 写作风格
+
+- **冰冷理性，CVE 风格**。不要出现"你好"、"特此报告"、"我们发现"等措辞。直接陈述问题。
+- **不要包含置信度/confidence**。无论是 frontmatter 还是正文，都不需要 confidence/置信度字段。提单即代表需要处理。
+- **不要包含扫描元数据**。不要写"发现工具"、"扫描时间"、"LLM 调用次数"等。只写和漏洞本身相关的内容。
+- **一个漏洞一个条目**。即使上游 issue 链接里包含多个漏洞（合并提单），在 Review Board 里必须拆分为独立条目。每个条目对应 `~/data/output` 中的一个独立发现。
+
+### Status 规则
+
+- `SUBMITTED` — 已提单，等待上游确认（默认状态）
+- `CONFIRMED_REAL` — 上游开发人员已确认是真实漏洞
+- `CONFIRMED_FIXED` — 已确认并已修复
+- `NEEDS_REVIEW` — 需要内部 review（尚未提单）
+- `FALSE_POSITIVE` — 误报
+
+**重要**：只有上游明确确认后才能标记为 CONFIRMED。提单不等于确认。
+
 ## 添加新 Issue
 
 当用户要求添加新的漏洞 issue 时，按以下流程操作：
@@ -31,32 +50,53 @@ id: OH-2026-XXX-001          # 必填
 date: "2026-05-15"           # 必填，发现日期
 repo: repository_name        # 必填，仓库名
 repo_url: https://gitcode.com/openharmony/xxx  # 必填
-title: 漏洞简述              # 必填
+title: 漏洞简述              # 必填，纯技术描述
 severity: HIGH               # 必填：CRITICAL / HIGH / MEDIUM / LOW
 cwe: CWE-476                 # 必填
-cwe_name: NULL Pointer Dereference  # 必填
-status: CONFIRMED_REAL       # 必填：CONFIRMED_REAL / CONFIRMED_FIXED / NEEDS_REVIEW
+cwe_name: NULL Pointer Dereference  # 必填，CWE 全称
+status: SUBMITTED            # 必填：默认 SUBMITTED
 issue_url: https://gitcode.com/xxx/issues/123  # 上游提单链接（如有）
 affected_version: "版本信息"  # 可选
 component: 组件名            # 可选
 file_paths:                  # 可选，受影响文件列表
   - path/to/file.c
-finding_count: 1             # 可选，包含的漏洞发现数量
 author: github-username      # 必填
 ---
 ```
 
-Markdown body 包含：漏洞概述、问题代码、触发条件、影响分析、修复建议。
+### 3. 正文格式
 
-### 3. 验证
+```markdown
+## 漏洞概述
 
-```bash
-npm run build
+直接描述问题。不要寒暄。
+
+## 问题代码
+
+代码块 + 行号标注。
+
+## 触发条件
+
+1. 条件 A
+2. 条件 B
+
+## 影响
+
+- 影响 1
+- 影响 2
+
+## 修复建议
+
+diff 格式的修复代码。
 ```
 
-必须成功才能提交。
+### 4. 验证
 
-### 4. 提交
+```bash
+npm run build   # 必须成功
+```
+
+### 5. 提交
 
 ```bash
 git add content/issues/{ID}.md

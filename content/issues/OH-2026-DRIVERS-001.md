@@ -7,9 +7,8 @@ title: "Camera HAL ReadMetadata 系列函数空指针解引用"
 severity: MEDIUM
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/drivers_interface/issues/1235
-finding_count: 1
 author: fermat-hkrc
 ---
 
@@ -181,10 +180,3 @@ static void ReadMetadataUInt8(camera_metadata_item_t &entry, MessageParcel &data
 - `camera/metadata/src/metadata_utils.cpp` (lines 591, 601, 611, 621, 631, 641)
 - `camera/metadata/include/metadata_utils.h`
 
-## 扫描元数据
-
-- **发现日期**: 2026-05-08
-- **扫描工具**: Fermat Security Scanner v15
-- **检测规则**: DF-TAINT-A1 (Data Flow Taint Analysis)
-- **检测方式**: Graph Analysis + Spectra LLM 双确认
-- **置信度**: CRITICAL

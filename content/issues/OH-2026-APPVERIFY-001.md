@@ -7,9 +7,8 @@ title: "暴露危险方法或函数"
 severity: MEDIUM
 cwe: CWE-749
 cwe_name: Exposed Dangerous Method or Function
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_appverify/issues/172
-finding_count: 1
 author: fermat-hkrc
 ---
 

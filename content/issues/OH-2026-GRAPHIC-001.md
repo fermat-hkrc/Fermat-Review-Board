@@ -7,9 +7,8 @@ title: "NativeWindow API va_arg 指针未校验"
 severity: LOW
 cwe: CWE-457
 cwe_name: Use of Uninitialized Variable
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/graphic_graphic_surface/issues/980
-finding_count: 1
 author: fermat-hkrc
 ---
 
@@ -83,15 +82,6 @@ static void HandleNativeWindowSetSurfaceAppFrameworkType(OHNativeWindow *window,
 
 - `surface/src/native_window.cpp` (lines 395-402)
 - `surface/include/native_window.h` (API 声明)
-
-## 扫描元数据
-
-- **发现日期**: 2026-05-11
-- **扫描工具**: Facebook Infer v1.2.0 (Pulse checker)
-- **检测规则**: PULSE_UNINITIALIZED_VALUE
-- **检测方式**: Infer 静态分析 + 人工源码验证
-- **置信度**: LOW（边界条件，需恶意调用者配合）
-- **FP 率说明**: 同次扫描另发现 2 个 FP（`std::stringstream` 默认构造、`buf{0}` 零初始化被误判）
 
 ## 参考
 

@@ -7,9 +7,8 @@ title: "CJ_GetCfgDirList / CJ_GetCfgFiles Use-After-Free"
 severity: HIGH
 cwe: CWE-416
 cwe_name: Use After Free
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/customization_config_policy/issues/162
-finding_count: 1
 author: fermat-hkrc
 ---
 
@@ -122,14 +121,6 @@ RetDataCStringArr CJ_GetCfgDirList()
 
 - `interfaces/kits/cj/src/config_policy_ffi.cpp` (lines 57-78, 80-103)
 - `interfaces/kits/cj/src/config_policy_ffi.h`
-
-## 扫描元数据
-
-- **发现日期**: 2026-05-08
-- **扫描工具**: Fermat Security Scanner v15
-- **检测规则**: EH-ERROR_PATH-A1, RL-TYPESTATE-A1
-- **检测方式**: Graph Analysis + Spectra LLM + 人工源码验证
-- **置信度**: CRITICAL
 
 ## 参考
 

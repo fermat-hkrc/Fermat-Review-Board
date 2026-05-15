@@ -7,15 +7,10 @@ title: "BusCenterExObjStub 和 TransSpecObjectStub OnRemoteRequest 缺少调用�
 severity: HIGH
 cwe: CWE-862
 cwe_name: Missing Authorization
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9200
-finding_count: 2
 author: fermat-hkrc
 ---
-
-您好，
-
-在对 communication_dsoftbus 进行安全审计时，我们发现两个 IPC Stub 的 `OnRemoteRequest` 实现中缺少调用者身份验证，均使用了相同的 dlsym 委托模式且无任何鉴权，特此报告。
 
 ## 问题描述
 

@@ -7,9 +7,8 @@ title: "整数溢出与授权缺失"
 severity: HIGH
 cwe: CWE-190
 cwe_name: Integer Overflow or Wraparound
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_access_token/issues/3173
-finding_count: 2
 author: fermat-hkrc
 ---
 

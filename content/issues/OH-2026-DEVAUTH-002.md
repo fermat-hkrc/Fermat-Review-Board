@@ -7,9 +7,8 @@ title: "IPC 回调 Stub 参数提取失败时 NULL 传入回调函数"
 severity: MEDIUM
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_device_auth/issues/1037
-finding_count: 6
 author: fermat-hkrc
 ---
 
@@ -324,10 +323,3 @@ static void OnDevUnboundStub(CallbackParams params)
 - `frameworks/src/lite/ipc_callback_stub.c` (IPC 入口)
 - `frameworks/src/standard/ipc_callback_stub.cpp` (IPC 入口)
 
-## 扫描元数据
-
-- **发现日期**: 2026-05-08
-- **扫描工具**: Fermat Security Scanner v15
-- **检测规则**: MS-06-A2 (Null Pointer Dereference)
-- **检测方式**: Graph Analysis + Spectra LLM 双确认
-- **置信度**: CRITICAL

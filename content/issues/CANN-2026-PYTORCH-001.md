@@ -7,9 +7,8 @@ title: "文件描述符泄漏"
 severity: MEDIUM
 cwe: CWE-775
 cwe_name: Missing Release of File Descriptor after Effective Lifetime
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/Ascend/pytorch/issues/1731
-finding_count: 1
 author: fermat-hkrc
 ---
 

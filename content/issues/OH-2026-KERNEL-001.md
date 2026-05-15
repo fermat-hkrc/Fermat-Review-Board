@@ -7,15 +7,10 @@ title: "LiteIPC LiteIpcTaskInit 返回值未检查导致 NULL 指针解引用"
 severity: HIGH
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/kernel_liteos_a/issues/1067
-finding_count: 1
 author: fermat-hkrc
 ---
-
-您好，
-
-在对 kernel_liteos_a 进行安全审计时，我们发现 LiteIPC 模块中多处调用 `LiteIpcTaskInit()` 后未检查返回值，当内存分配失败时将导致 NULL 指针解引用，特此报告。
 
 ## 问题描述
 

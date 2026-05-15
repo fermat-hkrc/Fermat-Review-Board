@@ -105,7 +105,10 @@ export function getStats() {
   const byRepo: Record<string, number> = {};
 
   for (const issue of issues) {
-    byCwe[issue.cwe] = (byCwe[issue.cwe] || 0) + 1;
+    const cweLabel = issue.cwe_name
+      ? `${issue.cwe} ${issue.cwe_name}`
+      : issue.cwe;
+    byCwe[cweLabel] = (byCwe[cweLabel] || 0) + 1;
     bySeverity[issue.severity] = (bySeverity[issue.severity] || 0) + 1;
     byStatus[issue.status] = (byStatus[issue.status] || 0) + 1;
     byRepo[issue.repo] = (byRepo[issue.repo] || 0) + 1;

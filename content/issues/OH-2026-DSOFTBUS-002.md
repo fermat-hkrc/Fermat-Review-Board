@@ -7,9 +7,8 @@ title: "输入校验不当导致潜在缓冲区溢出"
 severity: HIGH
 cwe: CWE-20
 cwe_name: Improper Input Validation
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9228
-finding_count: 3
 author: fermat-hkrc
 ---
 

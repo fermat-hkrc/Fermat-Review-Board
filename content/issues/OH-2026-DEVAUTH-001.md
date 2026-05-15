@@ -7,9 +7,8 @@ title: "不受信任的指针解引用"
 severity: HIGH
 cwe: CWE-822
 cwe_name: Untrusted Pointer Dereference
-status: CONFIRMED_REAL
+status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_device_auth/issues/1035
-finding_count: 1
 author: fermat-hkrc
 ---
 

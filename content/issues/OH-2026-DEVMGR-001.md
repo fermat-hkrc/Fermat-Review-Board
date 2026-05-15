@@ -9,13 +9,8 @@ cwe: CWE-862
 cwe_name: Missing Authorization
 status: CONFIRMED_REAL
 issue_url: https://gitcode.com/openharmony/distributedhardware_device_manager/issues/2426
-finding_count: 1
 author: fermat-hkrc
 ---
-
-您好，
-
-在对 distributedhardware_device_manager 进行安全审计时，我们发现 IPC 服务端 Stub 的 `OnRemoteRequest` 实现中缺少调用者身份验证，特此报告。
 
 ## 问题描述
 
