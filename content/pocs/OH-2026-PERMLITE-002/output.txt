@@ -1,0 +1,20 @@
+ERROR: AddressSanitizer: global-buffer-overflow on address 0x5dbb479c2338 at pc 0x5dbb479bf4b5 bp 0x7fffdecfef10 sp 0x7fffdecfef00
+READ of size 8 at 0x5dbb479c2338 thread T0
+    #0 0x5dbb479bf4b4 in QueryPermissionString (/tmp/fermat_l4_run_finqh58r/poc_bin+0x24b4) (BuildId: bed291d50b3f25be3921ed227a52ab3ae354d63f)
+    #1 0x5dbb479bf7b1 in ReplyQueryPermission (/tmp/fermat_l4_run_finqh58r/poc_bin+0x27b1) (BuildId: bed291d50b3f25be3921ed227a52ab3ae354d63f)
+    #2 0x5dbb479bfc5a in main (/tmp/fermat_l4_run_finqh58r/poc_bin+0x2c5a) (BuildId: bed291d50b3f25be3921ed227a52ab3ae354d63f)
+    #3 0x7791edc2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x7791edc2a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #5 0x5dbb479bf284 in _start (/tmp/fermat_l4_run_finqh58r/poc_bin+0x2284) (BuildId: bed291d50b3f25be3921ed227a52ab3ae354d63f)
+
+Address 0x5dbb479c2338 is a wild pointer inside of access range of size 0x000000000008.
+SUMMARY: AddressSanitizer: global-buffer-overflow (/tmp/fermat_l4_run_finqh58r/poc_bin+0x24b4) (BuildId: bed291d50b3f25be3921ed227a52ab3ae354d63f) in QueryPermissionString
+Shadow bytes around the buggy address:
+  0x5dbb479c2080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x5dbb479c2100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x5dbb479c2180: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x5dbb479c2200: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x5dbb479c2280: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+=>0x5dbb479c2300: f9 f9 f9 f9 f9 f9 f9[f9]f9 f9 f9 f9 f9 f9 f9 f9
+  0x5dbb479c2380: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x5dbb479c2400: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9

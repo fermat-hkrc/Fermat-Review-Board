@@ -1,0 +1,20 @@
+ERROR: AddressSanitizer: global-buffer-overflow on address 0x5a23b7994338 at pc 0x5a23b79917e1 bp 0x7ffc950e6630 sp 0x7ffc950e6620
+READ of size 8 at 0x5a23b7994338 thread T0
+    #0 0x5a23b79917e0 in StubGrantPermission (/tmp/fermat_l4_run_zy2xt1yc/poc_bin+0x27e0) (BuildId: 9f052169f02a9f428fc5b65548ba3678e4d16ca8)
+    #1 0x5a23b79919d1 in ReplyGrantPermission (/tmp/fermat_l4_run_zy2xt1yc/poc_bin+0x29d1) (BuildId: 9f052169f02a9f428fc5b65548ba3678e4d16ca8)
+    #2 0x5a23b7991ee7 in main (/tmp/fermat_l4_run_zy2xt1yc/poc_bin+0x2ee7) (BuildId: 9f052169f02a9f428fc5b65548ba3678e4d16ca8)
+    #3 0x73eefdc2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x73eefdc2a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #5 0x5a23b79912c4 in _start (/tmp/fermat_l4_run_zy2xt1yc/poc_bin+0x22c4) (BuildId: 9f052169f02a9f428fc5b65548ba3678e4d16ca8)
+
+Address 0x5a23b7994338 is a wild pointer inside of access range of size 0x000000000008.
+SUMMARY: AddressSanitizer: global-buffer-overflow (/tmp/fermat_l4_run_zy2xt1yc/poc_bin+0x27e0) (BuildId: 9f052169f02a9f428fc5b65548ba3678e4d16ca8) in StubGrantPermission
+Shadow bytes around the buggy address:
+  0x5a23b7994080: 00 00 00 00 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x5a23b7994100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x5a23b7994180: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x5a23b7994200: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x5a23b7994280: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+=>0x5a23b7994300: f9 f9 f9 f9 f9 f9 f9[f9]f9 f9 f9 f9 f9 f9 f9 f9
+  0x5a23b7994380: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x5a23b7994400: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
