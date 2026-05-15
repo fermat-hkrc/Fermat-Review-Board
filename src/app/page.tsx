@@ -57,28 +57,10 @@ export default function DashboardPage() {
         />
       </div>
 
-      {Object.keys(stats.byCwe).length > 0 && (
-        <div className="bg-[#141414] border border-[#262626] rounded-lg p-6 mb-8">
-          <h2 className="text-lg font-semibold text-white mb-4">
-            By CWE Category
-          </h2>
-          <div className="flex flex-wrap gap-3">
-            {Object.entries(stats.byCwe).map(([cwe, count]) => (
-              <div
-                key={cwe}
-                className="flex items-center gap-2 bg-[#1a1a1a] border border-[#262626] rounded-md px-3 py-2"
-              >
-                <span className="text-sm font-mono text-blue-400">{cwe}</span>
-                <span className="text-sm text-[#a3a3a3]">{count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
+      {/* Issues List */}
       <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden">
         <div className="px-6 py-4 border-b border-[#262626] flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Recent Issues</h2>
+          <h2 className="text-lg font-semibold text-white">Issues</h2>
           <Link
             href="/issues"
             className="text-sm text-blue-400 hover:text-blue-300"
@@ -86,43 +68,65 @@ export default function DashboardPage() {
             View all &rarr;
           </Link>
         </div>
-        <div className="divide-y divide-[#262626]">
+        <div className="divide-y divide-[#1e1e1e]">
           {issues.length === 0 ? (
             <div className="px-6 py-12 text-center text-[#737373]">
-              No issues found. Add issue markdown files to{" "}
-              <code className="text-[#a3a3a3]">content/issues/</code>.
+              No issues found.
             </div>
           ) : (
-            issues.slice(0, 10).map((issue) => (
-              <Link
+            issues.map((issue) => (
+              <div
                 key={issue.id}
-                href={`/issues/${issue.id}`}
-                className="block px-6 py-4 hover:bg-[#1a1a1a] transition-colors"
+                className="px-6 py-5 hover:bg-[#1a1a1a] transition-colors"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-mono text-[#737373]">
-                        {issue.id}
-                      </span>
+                    {/* Title row */}
+                    <div className="flex items-center gap-2 mb-2">
                       <StatusBadge status={issue.status} />
+                      <Link
+                        href={`/issues/${issue.id}`}
+                        className="text-[15px] font-medium text-white hover:text-blue-300 transition-colors"
+                      >
+                        {issue.title}
+                      </Link>
                     </div>
-                    <h3 className="text-sm font-medium text-white truncate">
-                      {issue.title}
-                    </h3>
-                    <div className="flex items-center gap-3 mt-1 text-xs text-[#737373]">
+                    {/* CWE + Repo info */}
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[#1a1a2e] text-blue-400 border border-blue-500/20">
+                        {issue.cwe}
+                      </span>
+                      {issue.cwe_name && (
+                        <span className="text-xs text-[#a3a3a3]">
+                          {issue.cwe_name}
+                        </span>
+                      )}
+                    </div>
+                    {/* Meta row */}
+                    <div className="flex items-center gap-4 text-xs text-[#737373]">
+                      <span className="font-mono">{issue.id}</span>
                       <span>{issue.repo}</span>
-                      <span>{issue.cwe}</span>
                       <span>{issue.date}</span>
                     </div>
                   </div>
-                  {issue.has_poc && (
-                    <span className="shrink-0 text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded">
-                      PoC
-                    </span>
-                  )}
+                  {/* Right side: upstream link */}
+                  <div className="shrink-0 flex items-center gap-2">
+                    {issue.issue_url && (
+                      <a
+                        href={issue.issue_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs text-[#737373] hover:text-blue-400 transition-colors px-2 py-1 rounded border border-[#262626] hover:border-blue-500/30"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        Issue
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </Link>
+              </div>
             ))
           )}
         </div>
