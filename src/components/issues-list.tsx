@@ -129,72 +129,39 @@ export default function IssuesListClient({
         )}
       </div>
 
-      {/* Issues Table */}
-      <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-[#262626] text-left text-xs text-[#737373] uppercase tracking-wider">
-              <th className="px-4 py-3">ID</th>
-              <th className="px-4 py-3">Title</th>
-              <th className="px-4 py-3 hidden md:table-cell">Repository</th>
-              <th className="px-4 py-3">Severity</th>
-              <th className="px-4 py-3 hidden sm:table-cell">CWE</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3 hidden lg:table-cell">Date</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#262626]">
-            {filtered.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={7}
-                  className="px-4 py-12 text-center text-[#737373]"
-                >
-                  No issues match your filters.
-                </td>
-              </tr>
-            ) : (
-              filtered.map((issue) => (
-                <tr
-                  key={issue.id}
-                  className="hover:bg-[#1a1a1a] transition-colors"
-                >
-                  <td className="px-4 py-3">
-                    <Link
-                      href={`/issues/${issue.id}`}
-                      className="text-sm font-mono text-blue-400 hover:text-blue-300"
-                    >
-                      {issue.id}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Link
-                      href={`/issues/${issue.id}`}
-                      className="text-sm text-white hover:text-blue-300"
-                    >
-                      {issue.title}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3 hidden md:table-cell text-sm text-[#a3a3a3]">
-                    {issue.repo}
-                  </td>
-                  <td className="px-4 py-3">
-                    <SeverityBadge severity={issue.severity} />
-                  </td>
-                  <td className="px-4 py-3 hidden sm:table-cell text-sm font-mono text-[#a3a3a3]">
-                    {issue.cwe}
-                  </td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={issue.status} />
-                  </td>
-                  <td className="px-4 py-3 hidden lg:table-cell text-sm text-[#737373]">
-                    {issue.date}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      {/* Issues List */}
+      <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden divide-y divide-[#262626]">
+        {filtered.length === 0 ? (
+          <div className="px-6 py-12 text-center text-[#737373]">
+            No issues match your filters.
+          </div>
+        ) : (
+          filtered.map((issue) => (
+            <Link
+              key={issue.id}
+              href={`/issues/${issue.id}`}
+              className="block px-5 py-4 hover:bg-[#1a1a1a] transition-colors"
+            >
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-xs font-mono text-[#737373]">
+                  {issue.id}
+                </span>
+                <SeverityBadge severity={issue.severity} />
+                <StatusBadge status={issue.status} />
+                <span className="text-xs font-mono text-[#525252]">
+                  {issue.cwe}
+                </span>
+              </div>
+              <h3 className="text-sm font-medium text-white mb-1">
+                {issue.title}
+              </h3>
+              <div className="flex items-center gap-4 text-xs text-[#737373]">
+                <span>{issue.repo}</span>
+                <span>{issue.date}</span>
+              </div>
+            </Link>
+          ))
+        )}
       </div>
     </div>
   );

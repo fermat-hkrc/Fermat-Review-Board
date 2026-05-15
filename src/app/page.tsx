@@ -59,17 +59,12 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-3 gap-4 mb-8">
         <StatCard label="Total Issues" value={stats.total} />
         <StatCard
           label="Confirmed"
           value={stats.confirmed}
           accent="text-green-400"
-        />
-        <StatCard
-          label="With PoC"
-          value={stats.withPoc}
-          accent="text-blue-400"
         />
         <StatCard
           label="Repos"
