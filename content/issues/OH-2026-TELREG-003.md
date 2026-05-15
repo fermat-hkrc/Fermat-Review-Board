@@ -105,12 +105,3 @@ Line 391 已经证明 `networkState` 可以为 nullptr（否则不需要检查�
 ## 涉及文件
 
 - `services/src/telephony_state_registry_service.cpp` (line 410) — 缺失 null check
-
-## 扫描元数据
-
-- **发现日期**: 2026-05-12
-- **扫描工具**: Fermat Security Scanner L3 (Spectra + Graph)
-- **检测规则**: MS-06-A1 (Null Pointer Dereference)
-- **Spectra 判定**: violation (confidence=high)
-- **检测方式**: 静态分析 + 人工源码验证
-- **置信度**: HIGH — 同函数 line 391 有 null check 证明参数可为 nullptr

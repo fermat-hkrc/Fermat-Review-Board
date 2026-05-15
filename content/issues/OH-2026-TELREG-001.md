@@ -105,15 +105,6 @@ void TelephonyObserver::OnNetworkStateUpdatedInner(
 - `frameworks/js/napi/src/event_listener_handler.cpp` (line 842) — 直接解引用
 - `frameworks/cj/src/observer_event_handler.cpp` (line 481) — 直接解引用
 
-## 扫描元数据
-
-- **发现日期**: 2026-05-12
-- **扫描工具**: Fermat Security Scanner L3 (Spectra + Graph)
-- **检测规则**: MS-06-A1 (Null Pointer Dereference)
-- **Spectra 判定**: violation (confidence=high)
-- **检测方式**: 静态分析 + 人工源码验证
-- **置信度**: HIGH — 同仓库 Stub 层有正确的 null check 实现作为对比
-
 ## 参考
 
 - CWE-476: NULL Pointer Dereference

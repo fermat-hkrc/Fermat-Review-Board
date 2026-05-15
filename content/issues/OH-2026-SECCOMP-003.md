@@ -79,11 +79,3 @@ bool WindowInfoHelper::TryGetWindowInfo(int32_t windowId, sptr<Rosen::Accessibil
 ## 涉及文件
 
 - `services/security_component_service/sa/sa_main/window_info_helper.cpp` (line 40-41) — lambda 中缺失 null check
-
-## 扫描元数据
-
-- **发现日期**: 2026-05-12
-- **扫描工具**: Fermat Security Scanner L3 (Spectra + Graph)
-- **检测规则**: MS-06-A1 (Null Pointer Dereference)
-- **检测方式**: 静态分析 + 人工源码验证
-- **置信度**: MEDIUM — line 43 的 null check 证明开发者预期向量中可能有 null 元素

@@ -84,11 +84,3 @@ void FirstUseDialog::SendSaveEventHandler(void)
 ## 涉及文件
 
 - `services/security_component_service/sa/sa_main/first_use_dialog.cpp` (line 476) — 缺失 null check
-
-## 扫描元数据
-
-- **发现日期**: 2026-05-12
-- **扫描工具**: Fermat Security Scanner L3 (Spectra + Graph)
-- **检测规则**: MS-06-A1 (Null Pointer Dereference)
-- **检测方式**: 静态分析 + 人工源码验证
-- **置信度**: MEDIUM — 同类其他函数有 null check 证明成员可为空

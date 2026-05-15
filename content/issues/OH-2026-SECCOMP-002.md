@@ -101,11 +101,3 @@ SecCompClient& SecCompClient::GetInstance()
 ## 涉及文件
 
 - `frameworks/inner_api/security_component/src/sec_comp_client.cpp` (line 49-53) — OOM 未处理
-
-## 扫描元数据
-
-- **发现日期**: 2026-05-12
-- **扫描工具**: Fermat Security Scanner L3 (Spectra + Graph)
-- **检测规则**: MS-06-A1 (Null Pointer Dereference)
-- **检测方式**: 静态分析 + 人工源码验证
-- **置信度**: MEDIUM — OOM 是低概率事件，但 std::nothrow 的使用证明开发者预期了该场景

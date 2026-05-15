@@ -104,11 +104,3 @@ napi_status NapiReturnToJS(napi_env env, napi_ref callbackRef, napi_value callba
 ## 涉及文件
 
 - `frameworks/js/napi/src/event_listener_handler.cpp` (13 处，lines 775-1046)
-
-## 扫描元数据
-
-- **发现日期**: 2026-05-12
-- **扫描工具**: Fermat Security Scanner L3 + 人工源码验证
-- **检测规则**: MS-06-A1 (Null Pointer Dereference)
-- **检测方式**: 静态分析发现模式 + 人工确认同文件有正确实现作为对比
-- **置信度**: MEDIUM — 取决于 NAPI 引擎对 null scope 的容忍度，但属于明确的代码缺陷
