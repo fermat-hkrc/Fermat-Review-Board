@@ -1,21 +1,16 @@
 ---
 id: OH-2026-DSOFTBUS-002
-date: "2026-05-03"
+date: "2026-04-29"
 repo: communication_dsoftbus
 repo_url: https://gitcode.com/openharmony/communication_dsoftbus
-title: "输入校验不当导致潜在缓冲区溢出"
-severity: HIGH
-cwe: CWE-20
-cwe_name: Improper Input Validation
+title: "TransSpecObjectStub::OnRemoteRequest 鉴权缺失"
+cwe: CWE-862
+cwe_name: Missing Authorization
 status: SUBMITTED
-issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9228
+issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9200
 author: fermat-hkrc
 ---
 
-## 输入校验不当导致潜在缓冲区溢出
+## TransSpecObjectStub::OnRemoteRequest 鉴权缺失
 
-**CWE-20**: Improper Input Validation
-
-本 issue 包含 3 个相关漏洞发现。
-
-详细分析请查看上游 issue。
+**CWE-862**: Missing Authorization

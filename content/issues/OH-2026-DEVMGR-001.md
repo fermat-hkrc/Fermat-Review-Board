@@ -4,7 +4,6 @@ date: "2026-05-03"
 repo: distributedhardware_device_manager
 repo_url: https://gitcode.com/openharmony/distributedhardware_device_manager
 title: "IpcServerStub::OnRemoteRequest 缺少调用者身份验证"
-severity: HIGH
 cwe: CWE-862
 cwe_name: Missing Authorization
 status: CONFIRMED_REAL

@@ -11,7 +11,6 @@ export interface IssueMeta {
   repo: string;
   repo_url: string;
   title: string;
-  severity: string;
   cwe: string;
   cwe_name?: string;
   status: string;
@@ -100,7 +99,6 @@ function getPocData(issueId: string): PocData | null {
 export function getStats() {
   const issues = getAllIssues();
   const byCwe: Record<string, number> = {};
-  const bySeverity: Record<string, number> = {};
   const byStatus: Record<string, number> = {};
   const byRepo: Record<string, number> = {};
 
@@ -109,7 +107,6 @@ export function getStats() {
       ? `${issue.cwe} ${issue.cwe_name}`
       : issue.cwe;
     byCwe[cweLabel] = (byCwe[cweLabel] || 0) + 1;
-    bySeverity[issue.severity] = (bySeverity[issue.severity] || 0) + 1;
     byStatus[issue.status] = (byStatus[issue.status] || 0) + 1;
     byRepo[issue.repo] = (byRepo[issue.repo] || 0) + 1;
   }
@@ -119,10 +116,8 @@ export function getStats() {
     confirmed: issues.filter(
       (i) => i.status === "CONFIRMED_REAL" || i.status === "CONFIRMED_FIXED"
     ).length,
-    withPoc: issues.filter((i) => i.has_poc).length,
     repos: Object.keys(byRepo).length,
     byCwe,
-    bySeverity,
     byStatus,
     byRepo,
   };

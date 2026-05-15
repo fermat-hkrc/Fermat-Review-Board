@@ -1,16 +1,16 @@
 ---
-id: OH-2026-ACCESSTOKEN-001
+id: OH-2026-ACCESSTOKEN-002
 date: "2026-05-03"
 repo: security_access_token
 repo_url: https://gitcode.com/openharmony/security_access_token
-title: "整数溢出"
-cwe: CWE-190
-cwe_name: Integer Overflow or Wraparound
+title: "授权缺失"
+cwe: CWE-862
+cwe_name: Missing Authorization
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_access_token/issues/3173
 author: fermat-hkrc
 ---
 
-## 整数溢出
+## 授权缺失
 
-**CWE-190**: Integer Overflow or Wraparound
+**CWE-862**: Missing Authorization

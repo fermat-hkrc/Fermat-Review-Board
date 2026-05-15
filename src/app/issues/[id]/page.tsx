@@ -36,7 +36,6 @@ export default async function IssueDetailPage({
       {/* Header */}
       <div className="mb-8">
         <div className="flex flex-wrap items-center gap-2 mb-3">
-          <SeverityBadge severity={issue.meta.severity} />
           <StatusBadge status={issue.meta.status} />
           <span className="text-xs font-mono text-[#737373] bg-[#1a1a1a] px-2 py-0.5 rounded border border-[#262626]">
             {issue.meta.cwe}
@@ -176,22 +175,6 @@ export default async function IssueDetailPage({
         </Link>
       </div>
     </div>
-  );
-}
-
-function SeverityBadge({ severity }: { severity: string }) {
-  const colors: Record<string, string> = {
-    CRITICAL: "bg-red-500/20 text-red-400 border-red-500/30",
-    HIGH: "bg-orange-500/20 text-orange-400 border-orange-500/30",
-    MEDIUM: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-    LOW: "bg-green-500/20 text-green-400 border-green-500/30",
-  };
-  return (
-    <span
-      className={`inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold border ${colors[severity] || "bg-gray-500/20 text-gray-400 border-gray-500/30"}`}
-    >
-      {severity}
-    </span>
   );
 }
 

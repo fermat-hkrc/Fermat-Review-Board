@@ -4,7 +4,6 @@ date: "2026-04-29"
 repo: security_device_auth
 repo_url: https://gitcode.com/openharmony/security_device_auth
 title: "不受信任的指针解引用"
-severity: HIGH
 cwe: CWE-822
 cwe_name: Untrusted Pointer Dereference
 status: SUBMITTED

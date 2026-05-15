@@ -4,7 +4,6 @@ date: "2026-05-11"
 repo: graphic_graphic_surface
 repo_url: https://gitcode.com/openharmony/graphic_graphic_surface
 title: "NativeWindow API va_arg 指针未校验"
-severity: LOW
 cwe: CWE-457
 cwe_name: Use of Uninitialized Variable
 status: SUBMITTED

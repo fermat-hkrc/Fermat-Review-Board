@@ -4,7 +4,6 @@ date: "2026-05-08"
 repo: customization_config_policy
 repo_url: https://gitcode.com/openharmony/customization_config_policy
 title: "CJ_GetCfgDirList / CJ_GetCfgFiles Use-After-Free"
-severity: HIGH
 cwe: CWE-416
 cwe_name: Use After Free
 status: SUBMITTED

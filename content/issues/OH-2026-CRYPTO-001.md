@@ -4,7 +4,6 @@ date: "2026-04-23"
 repo: security_crypto_framework
 repo_url: https://gitcode.com/openharmony/security_crypto_framework
 title: 密钥协商共享密钥（异步路径）未清零
-severity: HIGH
 cwe: CWE-244
 cwe_name: Improper Clearing of Heap Memory Before Release
 status: CONFIRMED_FIXED

@@ -4,7 +4,6 @@ date: "2026-05-07"
 repo: drivers_interface
 repo_url: https://gitcode.com/openharmony/drivers_interface
 title: "Camera HAL ReadMetadata 系列函数空指针解引用"
-severity: MEDIUM
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 status: SUBMITTED

@@ -4,22 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { IssueMeta } from "@/lib/content";
 
-function SeverityBadge({ severity }: { severity: string }) {
-  const colors: Record<string, string> = {
-    CRITICAL: "bg-red-500/20 text-red-400 border-red-500/30",
-    HIGH: "bg-orange-500/20 text-orange-400 border-orange-500/30",
-    MEDIUM: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-    LOW: "bg-green-500/20 text-green-400 border-green-500/30",
-  };
-  return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${colors[severity] || "bg-gray-500/20 text-gray-400 border-gray-500/30"}`}
-    >
-      {severity}
-    </span>
-  );
-}
-
 function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
     CONFIRMED_REAL: "bg-green-500/20 text-green-400 border-green-500/30",
@@ -52,10 +36,8 @@ export default function IssuesListClient({
   issues: IssueMeta[];
 }) {
   const [search, setSearch] = useState("");
-  const [severityFilter, setSeverityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
-  const severities = [...new Set(issues.map((i) => i.severity))];
   const statuses = [...new Set(issues.map((i) => i.status))];
 
   const filtered = issues.filter((issue) => {
@@ -68,7 +50,6 @@ export default function IssuesListClient({
         issue.cwe.toLowerCase().includes(q);
       if (!match) return false;
     }
-    if (severityFilter && issue.severity !== severityFilter) return false;
     if (statusFilter && issue.status !== statusFilter) return false;
     return true;
   });
@@ -92,18 +73,6 @@ export default function IssuesListClient({
           className="bg-[#141414] border border-[#262626] rounded-md px-3 py-1.5 text-sm text-white placeholder-[#737373] focus:outline-none focus:border-blue-500 w-64"
         />
         <select
-          value={severityFilter}
-          onChange={(e) => setSeverityFilter(e.target.value)}
-          className="bg-[#141414] border border-[#262626] rounded-md px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
-        >
-          <option value="">All Severities</option>
-          {severities.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-        <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           className="bg-[#141414] border border-[#262626] rounded-md px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
@@ -115,11 +84,10 @@ export default function IssuesListClient({
             </option>
           ))}
         </select>
-        {(search || severityFilter || statusFilter) && (
+        {(search || statusFilter) && (
           <button
             onClick={() => {
               setSearch("");
-              setSeverityFilter("");
               setStatusFilter("");
             }}
             className="text-sm text-[#a3a3a3] hover:text-white px-2"
@@ -146,7 +114,6 @@ export default function IssuesListClient({
                 <span className="text-xs font-mono text-[#737373]">
                   {issue.id}
                 </span>
-                <SeverityBadge severity={issue.severity} />
                 <StatusBadge status={issue.status} />
                 <span className="text-xs font-mono text-[#525252]">
                   {issue.cwe}

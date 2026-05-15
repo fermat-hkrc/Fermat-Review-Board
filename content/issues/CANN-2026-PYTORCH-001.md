@@ -4,7 +4,6 @@ date: "2026-04-29"
 repo: pytorch
 repo_url: https://gitcode.com/Ascend/pytorch
 title: "文件描述符泄漏"
-severity: MEDIUM
 cwe: CWE-775
 cwe_name: Missing Release of File Descriptor after Effective Lifetime
 status: SUBMITTED
