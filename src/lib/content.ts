@@ -17,6 +17,7 @@ export interface IssueMeta {
   status: string;
   affected_version?: string;
   component?: string;
+  issue_url?: string;
   file_paths?: string[];
   author?: string;
   has_poc?: boolean;

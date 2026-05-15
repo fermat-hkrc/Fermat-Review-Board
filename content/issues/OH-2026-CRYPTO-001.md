@@ -10,6 +10,7 @@ cwe_name: Improper Clearing of Heap Memory Before Release
 status: CONFIRMED_FIXED
 affected_version: "2026.04.23 最新版本"
 component: security_crypto_framework
+issue_url: https://gitcode.com/openharmony/security_crypto_framework/issues/575
 file_paths:
   - common/src/memory.c
   - common/src/blob.c
