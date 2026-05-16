@@ -6,7 +6,8 @@ repo_url: https://gitcode.com/openharmony/security_permission_lite
 title: "ReplyRevokeRuntimePermission 全局缓冲区越界写入"
 cwe: CWE-129
 cwe_name: Improper Validation of Array Index
-status: PENDING
+status: SUBMITTED
+issue_url: https://gitcode.com/openharmony/security_permission_lite/issues/96
 has_poc: true
 file_paths:
   - pms_server_internal.c:181

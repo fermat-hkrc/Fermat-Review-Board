@@ -1,0 +1,11 @@
+=================================================================
+==1876473==ERROR: AddressSanitizer: requested allocation size 0xffffffff80000098 (0xffffffff80001098 after adjustments for alignment, red zones etc.) exceeds maximum supported size of 0x10000000000 (thread T0)
+    #0 0x7866200fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x64bcd25bab25 in main (/tmp/ohos_build_prod/out/default/obj/test/server_poc+0x1b25) (BuildId: 1ea99ad5b55b3798d494f3a304e76b9ffabc1c9d)
+    #2 0x78661f42a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #3 0x78661f42a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #4 0x64bcd25ba504 in _start (/tmp/ohos_build_prod/out/default/obj/test/server_poc+0x1504) (BuildId: 1ea99ad5b55b3798d494f3a304e76b9ffabc1c9d)
+
+==1876473==HINT: if you don't care about these errors you may set allocator_may_return_null=1
+SUMMARY: AddressSanitizer: allocation-size-too-big ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69 in malloc
+==1876473==ABORTING
