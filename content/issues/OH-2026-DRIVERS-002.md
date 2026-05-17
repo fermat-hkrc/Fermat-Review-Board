@@ -7,7 +7,7 @@ title: "HieventBufferCopy 内核地址分支使用原始 srcLen 导致堆溢出"
 severity: HIGH
 cwe: CWE-120
 cwe_name: Buffer Copy without Checking Size of Input
-status: NEEDS_REVIEW
+status: PENDING
 file_paths:
   - hievent/src/hievent_driver.c
 author: Zirui
