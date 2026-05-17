@@ -113,6 +113,18 @@ git push
 | MEDIUM | 空指针崩溃（DoS）、特定条件下的资源泄漏 |
 | LOW | 代码质量问题、需要特殊条件才能触发 |
 
+## PoC 页面
+
+`/poc` 路由向用户解释 PoC 验证方法论（Target-Compile、ASan 检测、OHOS 编译基础设施、已验证案例等）。
+内容直接在 `src/app/poc/page.tsx` 中维护（不使用外部 markdown 文件）。
+
+在以下情况更新此页面：
+- 新的 PoC 类型支持（如 NAPI 模块、IPC harness）
+- 新的技术挑战被发现（添加到第 8 节的技术挑战列表）
+- 构建工具链发生重大变化（桩代码新增、工具链更新）
+- ASan/UBSan 检测能力扩展
+- 新的已验证 PoC 案例提交（Section 7 自动从 content/issues 读取 has_poc: true 的 issue）
+
 ## 开发
 
 ```bash

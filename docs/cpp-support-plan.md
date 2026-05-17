@@ -10,19 +10,35 @@
 | 能力 | 支持 |
 |------|------|
 | C 模块编译为 .a | 已支持 |
-| gcc + ASan + UBSan | 已支持 |
+| gcc/g++ + ASan + UBSan | 已支持 |
 | 客户端桩（IpcIo/SAMGR/HiLog） | 已支持（ohos_stubs.c） |
 | 服务端桩（HalMalloc/HalFree） | 已支持（hal_stubs.c） |
-| C++ 模块编译 | **未支持** |
-| NAPI/JS 绑定桩 | **未支持** |
-| OHOS C++ 基础类桩（RefBase/sptr/IRemoteBroker） | **未支持** |
-| OHOS IPC 框架桩（MessageParcel/Parcel） | **未支持** |
+| C++ 模块编译 | **已支持** ✓ |
+| OHOS C++ 基础类桩（RefBase/sptr/IRemoteBroker） | **已支持** ✓ |
+| OHOS IPC 框架桩（MessageParcel/Parcel） | **已支持** ✓ |
+| NAPI/JS 绑定桩 | 未支持 |
+| setup_build.py C++ 自动检测 | 未支持 |
 
 ## 实施步骤
 
-### Phase 1: C++ 编译器支持
+### Phase 1: C++ 编译器支持 — COMPLETE ✓
 
-**改动**：`custom_build/toolchain/BUILD.gn` 添加 C++ 工具
+**验证日期**：2026-05-17
+
+`custom_build/toolchain/BUILD.gn` 已有 `cxx` 工具定义。`cflags_cc` 配置为 `-std=c++17 -fno-rtti`。
+
+已验证 castengine_wifi_display 的 C++ 源码编译通过（rtp_packet.cpp, data_buffer.cpp, rtp_poc.cpp）。
+
+**关键技术发现**：GN 的 `set_defaults()` 不会将 cflags 传播到各个 target。ASan 标志（`-fsanitize=address,undefined`）必须在每个 target 的 `configs` 列表中显式声明。这是导致 RtpPacket PoC 无法触发 ASan 的根本原因——代码在未启用 ASan 插桩的情况下编译，但链接了 ASan 运行时，导致越界读取静默通过。
+
+修复方法：在每个 `static_library` 和 `executable` target 的 BUILD.gn 中添加：
+```gn
+config("asan_config") {
+  cflags = ["-Wall", "-O0", "-g", "-fPIC", "-fsanitize=address,undefined", "-fno-sanitize-recover=undefined"]
+  cflags_cc = ["-std=c++17", "-fno-rtti", "-Wno-non-virtual-dtor"]
+  ldflags = ["-fsanitize=address,undefined", "-lstdc++", "-lm", "-lpthread"]
+}
+```
 
 当前工具链只定义了 `cc`（C 编译器）。需要添加 `cxx`（C++ 编译器）。
 
@@ -51,7 +67,24 @@ config("gcc_defaults") {
 **注意**：OHOS 使用 `-fno-exceptions` 和 `-fno-rtti` 以减小二进制体积。
 如果目标模块依赖异常或 RTTI，需要移除这些标志。
 
-### Phase 2: OHOS C++ 基础类桩
+### Phase 2: OHOS C++ 基础类桩 — COMPLETE ✓
+
+**验证日期**：2026-05-17
+
+已实现并验证的桩代码在 `~/data/ohos-build-toolkit/stubs/ohos_cpp_stubs.h`：
+- RefBase（侵入式引用计数基类）
+- sptr\<T\>（智能指针模板）
+- Parcel / MessageParcel（IPC 数据序列化）
+- IRemoteObject（IPC 远程对象基类）
+- IRemoteBroker（IPC 代理接口）
+- IPCSkeleton（GetCallingPid/Uid/TokenID 静态方法）
+- HiLog C++ 版本
+
+已通过以下模块的编译 + ASan 触发验证：
+- DataBuffer（CWE-170）：拷贝构造函数 heap-buffer-overflow
+- RtpPacket（CWE-125）：GetCsrcData 越界读取 heap-buffer-overflow
+
+**注意**：当前 DataBuffer 和 RtpPacket 模块不需要 OHOS 框架桩（仅依赖标准库 + securec），因此 Phase 2 桩代码虽然已编写，尚未在需要 IPC 框架的模块中实际测试。
 
 这是最大的工作量。OHOS C++ 模块普遍依赖以下基础类：
 

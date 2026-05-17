@@ -96,6 +96,11 @@ function getPocData(issueId: string): PocData | null {
   };
 }
 
+export function getVerifiedPocIssues(): IssueMeta[] {
+  const issues = getAllIssues();
+  return issues.filter((i) => i.has_poc === true);
+}
+
 export function getStats() {
   const issues = getAllIssues();
   const byCwe: Record<string, number> = {};

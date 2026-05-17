@@ -44,6 +44,7 @@ export default function RootLayout({
                 <div className="hidden sm:flex items-center gap-1">
                   <NavLink href="/">Dashboard</NavLink>
                   <NavLink href="/issues">Issues</NavLink>
+                  <NavLink href="/poc">PoC</NavLink>
                 </div>
               </div>
               <a
