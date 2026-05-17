@@ -49,7 +49,8 @@ export default function IssuesListClient({
         issue.title.toLowerCase().includes(q) ||
         issue.id.toLowerCase().includes(q) ||
         issue.repo.toLowerCase().includes(q) ||
-        issue.cwe.toLowerCase().includes(q);
+        issue.cwe.toLowerCase().includes(q) ||
+        (issue.cwe_name || "").toLowerCase().includes(q);
       if (!match) return false;
     }
     if (statusFilter && issue.status !== statusFilter) return false;
@@ -117,8 +118,8 @@ export default function IssuesListClient({
                   {issue.id}
                 </span>
                 <StatusBadge status={issue.status} />
-                <span className="text-xs font-mono text-[#525252]">
-                  {issue.cwe}
+                <span className="text-xs font-mono text-blue-400">
+                  {issue.cwe}{issue.cwe_name && ` — ${issue.cwe_name}`}
                 </span>
               </div>
               <h3 className="text-sm font-medium text-white mb-1">

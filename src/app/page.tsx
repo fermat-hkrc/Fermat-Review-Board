@@ -97,12 +97,8 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[#1a1a2e] text-blue-400 border border-blue-500/20">
                         {issue.cwe}
+                        {issue.cwe_name && ` — ${issue.cwe_name}`}
                       </span>
-                      {issue.cwe_name && (
-                        <span className="text-xs text-[#a3a3a3]">
-                          {issue.cwe_name}
-                        </span>
-                      )}
                     </div>
                     {/* Meta row */}
                     <div className="flex items-center gap-4 text-xs text-[#737373]">
