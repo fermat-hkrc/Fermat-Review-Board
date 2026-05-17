@@ -1,0 +1,13 @@
+==3509948==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50200000001b
+READ of size 12 at 0x50200000001b thread T0
+    #0 in printf_common
+    #1 in printf
+    #2 in main
+    #3 in OHOS::Sharing::DataBuffer::DataBuffer(DataBuffer const&)
+
+0x50200000001b is located 0 bytes after 11-byte region [0x502000000010,0x50200000001b)
+allocated by thread T0 here:
+    #0 in operator new[](unsigned long)
+    #1 in OHOS::Sharing::DataBuffer::DataBuffer(DataBuffer const&)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow in printf_common
