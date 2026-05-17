@@ -7,7 +7,7 @@ title: "ParsePermissions 服务端整数溢出导致堆破坏"
 severity: HIGH
 cwe: CWE-190
 cwe_name: Integer Overflow or Wraparound
-status: NEEDS_REVIEW
+status: PENDING
 component: pms_impl
 file_paths:
   - services/pms/src/pms_impl.c:183
