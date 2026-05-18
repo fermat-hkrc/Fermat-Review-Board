@@ -93,36 +93,12 @@ export default function DashboardPage() {
                         {issue.title}
                       </Link>
                     </div>
-                    {/* CWE + PoC + Issue links */}
-                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    {/* CWE */}
+                    <div className="flex items-center gap-2 mb-2">
                       <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[#1a1a2e] text-blue-400 border border-blue-500/20">
                         {issue.cwe}
                         {issue.cwe_name && ` — ${issue.cwe_name}`}
                       </span>
-                      {issue.has_poc && (
-                        <Link
-                          href={`/issues/${issue.id}#poc`}
-                          className="inline-flex items-center gap-1 text-xs font-medium px-1.5 py-0.5 rounded bg-green-500/15 text-green-400 border border-green-500/30 hover:bg-green-500/25 transition-colors"
-                        >
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                          </svg>
-                          PoC
-                        </Link>
-                      )}
-                      {issue.issue_url && (
-                        <a
-                          href={issue.issue_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs font-medium px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors"
-                        >
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                          Issue
-                        </a>
-                      )}
                     </div>
                     {/* Meta row */}
                     <div className="flex items-center gap-4 text-xs text-[#737373]">
@@ -130,6 +106,33 @@ export default function DashboardPage() {
                       <span>{issue.repo}</span>
                       <span>{issue.date}</span>
                     </div>
+                  </div>
+                  {/* Right side: PoC + Issue links */}
+                  <div className="shrink-0 flex items-center gap-2">
+                    {issue.has_poc && (
+                      <Link
+                        href={`/issues/${issue.id}#poc-验证`}
+                        className="inline-flex items-center gap-1 text-xs font-medium px-1.5 py-0.5 rounded bg-green-500/15 text-green-400 border border-green-500/30 hover:bg-green-500/25 transition-colors"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                        PoC
+                      </Link>
+                    )}
+                    {issue.issue_url && (
+                      <a
+                        href={issue.issue_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-medium px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        Issue
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
