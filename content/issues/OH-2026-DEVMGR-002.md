@@ -14,7 +14,7 @@ component: relationshipsyncmgr
 file_paths:
   - services/service/src/relationshipsyncmgr/dm_transport_msg.cpp
   - interfaces/inner_kits/native_cpp/include/dm_device_info.h
-author: Zirui
+author: Toan
 ---
 
 ## 漏洞概述
