@@ -74,23 +74,23 @@ export default function PocPage() {
                 <th className="text-left text-[#737373] px-5 py-3 font-medium">漏洞类型</th>
                 <th className="text-left text-[#737373] px-5 py-3 font-medium">CWE</th>
                 <th className="text-left text-[#737373] px-5 py-3 font-medium">技术描述</th>
-                <th className="text-left text-[#737373] px-5 py-3 font-medium hidden md:table-cell">类比</th>
+                <th className="text-left text-[#737373] px-5 py-3 font-medium hidden md:table-cell">典型后果</th>
               </tr>
             </thead>
             <tbody className="text-[#d4d4d4]">
               {[
-                ["堆越界读取", "CWE-125", "程序读取超出堆缓冲区分配范围的内存", "一张 10 人名单，却去读第 15 个人"],
-                ["堆越界写入", "CWE-787", "程序写入超出堆缓冲区分配范围的内存", "在白板上写答案，笔迹延伸到了别人的白板上"],
-                ["整数溢出", "CWE-190", "算术运算结果超出数据类型能表示的范围", "汽车里程表从 999999 跳到 000000"],
-                ["Null 终止符缺失", "CWE-170", "字符串缺少末尾的 \\0 结束标记", "一篇文章没有句号，读者不知道在哪停"],
-                ["空指针解引用", "CWE-476", "通过空指针访问内存导致程序崩溃", "打开一个空盒子找东西"],
-                ["释放后使用", "CWE-416", "访问已经释放（归还给系统）的内存", "退房后又回去找东西——房间可能已经被别人使用了"],
-              ].map(([type, cwe, desc, analogy], i) => (
+                ["堆越界读取", "CWE-125", "Out-of-bounds Read", "程序读取超出堆缓冲区分配范围的内存，可泄露相邻堆块中的敏感数据", "信息泄露、ASLR 绕过"],
+                ["堆越界写入", "CWE-787", "Out-of-bounds Write", "程序写入超出堆缓冲区分配范围的内存，可覆盖堆元数据或相邻对象", "任意代码执行、堆布局劫持"],
+                ["整数溢出", "CWE-190", "Integer Overflow or Wraparound", "算术运算结果超出数据类型表示范围，导致分配大小计算错误", "后续缓冲区溢出、逻辑绕过"],
+                ["Null 终止符缺失", "CWE-170", "Improper Null Termination", "字符串缺少 \\0 结束标记，后续字符串操作越界读取直到遇到随机 \\0", "信息泄露、越界读取"],
+                ["空指针解引用", "CWE-476", "NULL Pointer Dereference", "通过空指针访问内存，内核映射 NULL 页时可能被利用", "拒绝服务、特定内核配置下代码执行"],
+                ["释放后使用", "CWE-416", "Use After Free", "访问已释放的堆内存，若该区域被重新分配给其他对象则可控制其内容", "任意代码执行、类型混淆"],
+              ].map(([type, cwe, cweName, desc, impact], i) => (
                 <tr key={i} className="border-b border-[#262626] last:border-0">
                   <td className="px-5 py-3 font-medium">{type}</td>
-                  <td className="px-5 py-3"><code className="text-blue-400 text-xs">{cwe}</code></td>
+                  <td className="px-5 py-3"><code className="text-blue-400 text-xs">{cwe}</code><br/><span className="text-[#737373] text-xs">{cweName}</span></td>
                   <td className="px-5 py-3 text-[#a3a3a3]">{desc}</td>
-                  <td className="px-5 py-3 text-[#737373] hidden md:table-cell">{analogy}</td>
+                  <td className="px-5 py-3 text-[#737373] hidden md:table-cell">{impact}</td>
                 </tr>
               ))}
             </tbody>
