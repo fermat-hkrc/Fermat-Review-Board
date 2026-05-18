@@ -1,0 +1,17 @@
+[DEBUG] RegisterSensorChannel begin
+[DEBUG] IsRegisterCallback begin
+[POC] RegisterSensorChannel returned: 0
+[POC] g_sensorEvent allocated at 0x504000000010
+[POC] sensorTypeId=0, dataLen=0, version=0
+[POC] PASS: calloc zeroed all memory (patch effective)
+
+=== Patch Verification (before/after) ===
+
+BEFORE (malloc, unpatched):
+  g_sensorEvent = malloc(sizeof(SensorEvent))
+  Memory contains heap residual data — uninitialized bytes present
+
+AFTER (calloc, patched):
+  g_sensorEvent = calloc(1, sizeof(SensorEvent))
+  All bytes zeroed — no ASan trigger
+  exit=0
