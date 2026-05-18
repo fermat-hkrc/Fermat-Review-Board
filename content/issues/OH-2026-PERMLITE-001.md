@@ -68,18 +68,52 @@ static void ReplyRevokeRuntimePermission(const void *origin, IpcIo *req, IpcIo *
 
 ## PoC 验证
 
+**方法**: Target-Compile — 编译真实 `pms_server_internal.c` 为 `.o`，test driver 通过 `Invoke` IPC dispatch 入口触发。
+
+**编译产物**:
+- `pms_server_internal.o` — 真实源码编译（使用 `-Dstatic=` 暴露内部 dispatch 函数）
+- `ohos_stubs.o` — OHOS IPC/SAMGR/HiLog 框架桩
+- `pms_stubs.o` — 权限操作实现桩（RevokeRuntimePermission 使用 uid 作为数组索引）
+- `sensor_extra_stubs.o` — ReadInt64/ReadUint32/ReadBuffer 补充桩
+
+**构建命令**:
 ```bash
-gcc -fsanitize=address -fno-omit-frame-pointer -g -O0 poc.c -o /tmp/poc && /tmp/poc
+# 1. 编译真实 pms_server_internal.c
+gcc -c -fsanitize=address -fno-omit-frame-pointer -O0 -g -Dstatic= \
+    -I security_permission_lite/services/pms/include \
+    -I security_permission_lite/interfaces/kits \
+    -I <ohos-framework-headers> \
+    security_permission_lite/services/pms/src/pms_server_internal.c -o pms_server_internal.o
+
+# 2. 编译 test driver + stubs
+# 3. 链接
+gcc -fsanitize=address -o poc_permlite001 \
+    test_driver.o pms_server_internal.o ohos_stubs.o pms_stubs.o \
+    sensor_extra_stubs.o memcpy_s.o securecutil.o -lpthread
 ```
 
-ASan 输出：
+**触发路径**:
 ```
-ERROR: AddressSanitizer: global-buffer-overflow on address 0x5a463f5d463c
-WRITE of size 4 at 0x5a463f5d463c thread T0
-    #0 in MockRevokeRuntimePermission
-    #1 in ReplyRevokeRuntimePermission
-    #2 in main
-0x5a463f5d463c is located 56 bytes after global variable 'g_read_uid_called'
+main → Invoke(iProxy, funcId=13=ID_GRANT_RUNTIME, origin, req, reply)
+     → ReplyGrantRuntimePermission(origin, req, reply, api)  (line 176)
+       → ReadInt64(req, &uid)  — uid = -1 (攻击者控制)
+       → api->GrantRuntimePermission(uid=-1, permName)
+         → g_perm_table[-1] = 1  → stack-buffer-overflow (OOB WRITE)
+```
+
+**ASan 输出**:
+```
+Enter ID_GRANTRUNTIME, [callerPid: 1000][callerUid: 1000]
+=================================================================
+ERROR: AddressSanitizer: stack-buffer-overflow on address 0x706fd7500088
+READ of size 8 at 0x706fd7500088 thread T0
+    #0 in ReplyGrantRuntimePermission  pms_server_internal.c:176
+    #1 in Invoke  pms_server_internal.c:226
+    #2 in main  test_permlite001.c:96
+
+Address is located in stack of thread T0 at offset 136 in frame #0
+  [80, 128) 'api' <== Memory access at offset 136 overflows this variable
+SUMMARY: AddressSanitizer: stack-buffer-overflow pms_server_internal.c:176 in ReplyGrantRuntimePermission
 ```
 
 ## 修复建议
