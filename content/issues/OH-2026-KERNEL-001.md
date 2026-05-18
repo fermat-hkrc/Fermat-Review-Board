@@ -82,4 +82,3 @@ LITE_OS_SEC_TEXT STATIC UINT32 LiteIpcRead(IpcContent *content)
 
 - `kernel/extended/liteipc/hm_liteipc.c` (line 780-782, 1075-1086, 1153-1168)
 
-感谢您的关注！

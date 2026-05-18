@@ -11,7 +11,6 @@ issue_url: https://gitcode.com/openharmony/security_device_auth/issues/1037
 author: Zirui
 ---
 
----
 
 ## 漏洞概述
 

@@ -11,7 +11,6 @@ issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9200
 author: Zirui
 ---
 
----
 
 
 
@@ -140,4 +139,3 @@ int32_t BusCenterExObjStub::OnRemoteRequest(uint32_t code, MessageParcel &data, 
 - `core/bus_center/extend/src/bus_center_ex_obj_stub.cpp` (line 49)
 - `core/transmission/broadcast/src/trans_spec_object_stub.cpp` (line 55)
 
-感谢您的关注！

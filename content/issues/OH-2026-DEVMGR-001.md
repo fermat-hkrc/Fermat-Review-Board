@@ -123,4 +123,3 @@ int32_t IpcServerStub::OnRemoteRequest(uint32_t code, MessageParcel &data, Messa
 
 - `services/service/src/ipc/standard/ipc_server_stub.cpp` (line 306)
 
-感谢您的关注！

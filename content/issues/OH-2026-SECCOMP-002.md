@@ -11,7 +11,6 @@ issue_url: https://gitcode.com/openharmony/security_security_component_manager/i
 author: Zirui
 ---
 
----
 
 ## 漏洞概述
 
