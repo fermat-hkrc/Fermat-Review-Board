@@ -105,6 +105,9 @@ export default function DashboardPage() {
                       <span className="font-mono">{issue.id}</span>
                       <span>{issue.repo}</span>
                       <span>{issue.date}</span>
+                      {issue.author && (
+                        <span>by {issue.author}</span>
+                      )}
                     </div>
                   </div>
                   {/* Right side: PoC + Issue links */}
