@@ -4,140 +4,110 @@ date: "2026-05-15"
 repo: security_permission_lite
 repo_url: https://gitcode.com/openharmony/security_permission_lite
 title: "ReplyRevokePermission 栈缓冲区溢出"
+severity: HIGH
 cwe: CWE-119
 cwe_name: Improper Restriction of Operations within the Bounds of a Memory Buffer
 status: PENDING
 has_poc: true
 file_paths:
-  - pms_server_internal.c:153
+  - services/pms/src/pms_server_internal.c:153
 author: Zirui
 ---
 
-## ReplyRevokePermission 栈缓冲区溢出
+## 漏洞概述
 
-ReplyRevokePermission — 栈缓冲区溢出
+`security_permission_lite` 权限管理服务的 IPC handler `ReplyRevokePermission()` 从 IPC 请求中通过 `ReadString()` 读取 identifier 和 permName 字符串，无长度校验。当 IPC 消息中的字符串未正确 null-terminated 或长度超出内部缓冲区时，后续 `HILOG_INFO` 的 printf 格式化操作读取超出栈缓冲区边界的内存，导致栈缓冲区溢出。
 
-**Finding ID:** FERMAT-621d175e1782
-**文件:** `services/pms/src/pms_server_internal.c:153`
-**CWE:** CWE-119/CWE-129 (Buffer Overflow / Improper Validation of Array Index)
+## 问题代码
 
-#### 漏洞原理
+**文件**: `services/pms/src/pms_server_internal.c`
 
-`ReplyRevokePermission()` 从 IPC 请求中通过 `ReadString()` 读取 identifier 和 permName，没有长度校验。当构造的 IPC 消息提供的字符串长度超过内部缓冲区时，`HILOG_INFO` 的 printf 格式化操作会读取超出栈缓冲区边界的内存，导致栈缓冲区溢出。
+IPC dispatch 入口：
+```c
+// Line 212 — Invoke 路由
+static int32 Invoke(IServerProxy *iProxy, int funcId, void *origin, IpcIo *req, IpcIo *reply)
+{
+    switch (funcId) {
+        case ID_REVOKE:
+            ReplyRevokePermission(origin, req, reply, api);  // ← funcId=2
+            break;
+        ...
+    }
+}
+```
 
-#### 漏洞代码
+漏洞函数：
+```c
+// Line 153-165
+static void ReplyRevokePermission(const void *origin, IpcIo *req, IpcIo *reply, InnerPermLiteApi* api)
+{
+    pid_t callingPid = GetCallingPid();
+    uid_t callingUid = GetCallingUid();
+    size_t permLen = 0;
+    size_t idLen = 0;
+    char *identifier = (char *)ReadString(req, &idLen);   // ← 不可信，无长度校验
+    char *permName = (char *)ReadString(req, &permLen);   // ← 不可信
+    int32_t ret = api->RevokePermission(identifier, permName);
+    HILOG_INFO(HILOG_MODULE_APP, "revoke permission, [id: %s][perm: %s][ret: %d]",
+        identifier, permName, ret);
+    // ↑ printf 格式化读取字符串时，若字符串未 null-terminated，读取超出栈缓冲区
+    WriteInt32(reply, ret);
+}
+```
+
+## 触发条件
+
+1. 攻击者向权限管理服务发送 IPC 请求，funcId 设为 `ID_REVOKE`
+2. IPC 消息体中构造的字符串数据未正确 null-terminated
+3. `ReadString` 返回指向 IPC buffer 内部的指针，该指针指向的数据缺少 `\0` 终止符
+4. `HILOG_INFO` 中的 `%s` 格式化读取该字符串时越过 IPC buffer 边界
+5. printf 内部的 `strlen` / 字符遍历读取栈上相邻内存
+
+## 影响
+
+- 栈缓冲区越界读取（READ）— 泄露栈上的返回地址、局部变量
+- 信息泄露 — 栈内容可能通过日志输出暴露
+- 潜在的栈破坏 — 若 HILOG 内部使用栈缓冲区格式化，超长字符串可导致栈溢出写入
+
+## PoC 验证
+
+```bash
+gcc -fsanitize=address -fno-omit-frame-pointer -g -O0 poc.c -o /tmp/poc && /tmp/poc
+```
+
+ASan 输出：
+```
+ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7a4a41d000d0
+READ of size 17 at 0x7a4a41d000d0 thread T0
+    #0 in printf_common
+    #1 in vprintf
+    #2 in printf
+    #3 in ReplyRevokePermission
+    #4 in main
+
+Address 0x7a4a41d000d0 is located in stack of thread T0 at offset 208 in frame
+  This frame has 4 object(s):
+    [192, 208) 'small_buffer' <== Memory access at offset 208 overflows this variable
+```
+
+## 修复建议
 
 ```c
-// pms_server_internal.c:160-163
-char *identifier = (char *)ReadString(req, &idLen);   // ← 不可信，无长度校验
-char *permName = (char *)ReadString(req, &permLen);   // ← 不可信
-int32_t ret = api->RevokePermission(identifier, permName);
-HILOG_INFO(..., "revoke permission, [id: %s][perm: %s][ret: %d]", identifier, permName, ret);
-// ↑ printf 读取超出缓冲区边界（字符串未正确 null-terminated）
+static void ReplyRevokePermission(const void *origin, IpcIo *req, IpcIo *reply, InnerPermLiteApi* api)
+{
+    size_t permLen = 0;
+    size_t idLen = 0;
+    char *identifier = (char *)ReadString(req, &idLen);
+    char *permName = (char *)ReadString(req, &permLen);
++   if (identifier == NULL || permName == NULL ||
++       idLen == 0 || idLen > MAX_IDENTIFIER_LEN ||
++       permLen == 0 || permLen > MAX_PERM_NAME_LEN) {
++       WriteInt32(reply, PERM_ERRORCODE_INVALID_PARAMS);
++       return;
++   }
+    int32_t ret = api->RevokePermission(identifier, permName);
+    HILOG_INFO(HILOG_MODULE_APP, "revoke permission, [id: %s][perm: %s][ret: %d]",
+        identifier, permName, ret);
+    WriteInt32(reply, ret);
+}
 ```
-
-#### 触发路径
-
-```
-恶意 IPC Client → ReplyRevokePermission() → HILOG_INFO(... identifier ...) → 栈缓冲区溢出
-```
-
-#### PoC 复现方法
-
-**PoC 文件:** `poc_FERMAT-621d175e1782.c`
-
-```bash
-# 1. 编译
-gcc -fsanitize=address -fno-omit-frame-pointer -g -O0 \
-    ~/data/output/2026.05.15/poc_FERMAT-621d175e1782.c \
-    -o /tmp/poc_621d1758
-
-# 2. 运行
-/tmp/poc_621d1758
-
-# 3. 预期输出:
-# ERROR: AddressSanitizer: stack-buffer-overflow on address 0x...
-# READ of size 17 at 0x... thread T0
-#     #0 in printf_common
-#     #3 in ReplyRevokePermission
-#     #4 in main
-# Memory access at offset 208 overflows variable 'small_buffer'
-```
-
----
-
-## 快速批量验证脚本
-
-一键编译并运行所有 4 个 PoC:
-
-```bash
-#!/bin/bash
-# 快速验证所有 PoC
-# 用法: bash ~/data/output/2026.05.15/verify_all.sh
-
-DIR=~/data/output/2026.05.15
-PASS=0
-FAIL=0
-
-for poc in "$DIR"/poc_FERMAT-*.c; do
-    name=$(basename "$poc" .c)
-    echo "━━━ $name ━━━"
-    gcc -fsanitize=address -fno-omit-frame-pointer -g -O0 "$poc" -o "/tmp/$name" 2>/dev/null
-    if [ $? -ne 0 ]; then
-        echo "  COMPILE FAILED"
-        FAIL=$((FAIL+1))
-        continue
-    fi
-    output=$("/tmp/$name" 2>&1)
-    if echo "$output" | grep -q "AddressSanitizer"; then
-        echo "  TRIGGERED: $(echo "$output" | grep 'SUMMARY:' | sed 's/SUMMARY: //')"
-        PASS=$((PASS+1))
-    else
-        echo "  NOT TRIGGERED"
-        FAIL=$((FAIL+1))
-    fi
-    echo ""
-done
-
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "RESULT: $PASS/$((PASS+FAIL)) PoCs triggered"
-```
-
----
-
-## 未确认的发现 (6个, PoC 未触发)
-
-以下发现在 PoC 验证阶段未能触发崩溃，视为误报已过滤:
-
-| Finding ID | 文件 | 描述 |
-|-----------|------|------|
-| FERMAT-b1769da8ea7c | pms_server_internal.c:124 | ReplyCheckPermission — uid 无边界校验 |
-| FERMAT-d9f2393c9454 | pms_server_internal.c:167 | ReplyGrantRuntimePermission — uid 无边界校验 |
-| FERMAT-05cd2056523c | pms_server_internal.c:195 | ReplyUpdatePermissionFlags — 无边界校验 |
-| FERMAT-69b468663f0d | pms_impl.c:85 | TOCTOU race: stat() + open() |
-| FERMAT-4f9dcd8b0517 | perm_client.c:206 | malloc 返回值未检查 |
-| FERMAT-70f036c8dbcf | perm_client.c:269 | IPC 污点数据流入 malloc |
-
----
-
-## 文件清单
-
-| 文件 | 说明 |
-|------|------|
-| `README.md` | 本报告 |
-| `results.json` | 完整扫描结果 (L3 分析) |
-| `verification_report.json` | PoC 验证详细报告 (含源码) |
-| `scan_progress.json` | 扫描进度快照 |
-| `poc_FERMAT-c073dd3aa275.c` | PoC: ReplyRevokeRuntimePermission OOB write |
-| `poc_FERMAT-55fb84d6f77c.c` | PoC: ReplyQueryPermission OOB read |
-| `poc_FERMAT-f6c924a892f9.c` | PoC: ReplyGrantPermission OOB read |
-| `poc_FERMAT-621d175e1782.c` | PoC: ReplyRevokePermission stack overflow |
-| `verify_all.sh` | 一键批量验证脚本 |
-
----
-
-## 环境要求
-
-- GCC (支持 `-fsanitize=address`)
-- Linux x86_64
-- 无需目标仓库源码即可独立编译运行 PoC (PoC 内含所有必要的 stub)

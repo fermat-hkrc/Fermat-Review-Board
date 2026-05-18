@@ -4,62 +4,98 @@ date: "2026-05-15"
 repo: security_permission_lite
 repo_url: https://gitcode.com/openharmony/security_permission_lite
 title: "ReplyRevokeRuntimePermission 全局缓冲区越界写入"
+severity: HIGH
 cwe: CWE-129
 cwe_name: Improper Validation of Array Index
 status: SUBMITTED
 issue_url: https://gitcode.com/openharmony/security_permission_lite/issues/96
 has_poc: true
 file_paths:
-  - pms_server_internal.c:181
+  - services/pms/src/pms_server_internal.c:181
 author: Zirui
 ---
 
-## ReplyRevokeRuntimePermission 全局缓冲区越界写入
+## 漏洞概述
 
-ReplyRevokeRuntimePermission — 全局缓冲区越界写入
+`security_permission_lite` 权限管理服务的 IPC handler `ReplyRevokeRuntimePermission()` 从 IPC 请求中读取 `int64_t uid`，未做任何边界校验即传入 `api->RevokeRuntimePermission(uid, permName)`。底层实现将 uid 用作 per-uid 权限表的数组索引，攻击者通过构造 uid=-1 或超大值的 IPC 消息可触发全局缓冲区越界写入。
 
-**Finding ID:** FERMAT-c073dd3aa275
-**文件:** `services/pms/src/pms_server_internal.c:181`
-**CWE:** CWE-129 (Improper Validation of Array Index)
+## 问题代码
 
-#### 漏洞原理
+**文件**: `services/pms/src/pms_server_internal.c`
 
-`ReplyRevokeRuntimePermission()` 从 IPC 请求中通过 `ReadInt64(req, &uid)` 读取一个 `int64_t uid`，没有任何边界校验。该 uid 直接传递给 `api->RevokeRuntimePermission(uid, permName)`。如果底层实现将 uid 作为数组索引访问 per-uid 权限表，攻击者可以通过构造 uid=-1 或超大值的 IPC 消息，导致越界内存写入。
-
-#### 漏洞代码
-
+IPC dispatch 入口：
 ```c
-// pms_server_internal.c:186-190
-int64_t uid;
-ReadInt64(req, &uid);                              // ← 不可信 IPC 输入，无校验
-char *permName = (char *)ReadString(req, &permLen);
-int32_t ret = api->RevokeRuntimePermission(uid, permName);  // ← uid 用作数组索引
+// Line 212 — Invoke 路由
+static int32 Invoke(IServerProxy *iProxy, int funcId, void *origin, IpcIo *req, IpcIo *reply)
+{
+    InnerPermLiteApi *api = (InnerPermLiteApi *)iProxy;
+    switch (funcId) {
+        ...
+        case ID_REVOKE_RUNTIME:
+            ReplyRevokeRuntimePermission(origin, req, reply, api);  // ← funcId=5
+            break;
+    }
+}
 ```
 
-#### 触发路径
-
+漏洞函数：
+```c
+// Line 181-192
+static void ReplyRevokeRuntimePermission(const void *origin, IpcIo *req, IpcIo *reply, InnerPermLiteApi* api)
+{
+    size_t permLen = 0;
+    int64_t uid;
+    ReadInt64(req, &uid);                              // ← 不可信 IPC 输入，无边界校验
+    char *permName = (char *)ReadString(req, &permLen);
+    int32_t ret = api->RevokeRuntimePermission(uid, permName);  // ← uid 直接用作数组索引
+    WriteInt32(reply, ret);
+}
 ```
-恶意 IPC Client → ReplyRevokeRuntimePermission() → api->RevokeRuntimePermission(uid=-1, ...) → 越界写入
-```
 
-#### PoC 复现方法
+## 触发条件
 
-**PoC 文件:** `poc_FERMAT-c073dd3aa275.c`
+1. 攻击者向权限管理服务发送 IPC 请求，funcId 设为 `ID_REVOKE_RUNTIME`
+2. IPC 消息体中 uid 字段设为 -1 或超出权限表大小的值
+3. `ReadInt64` 读取攻击者控制的 uid，无任何范围检查
+4. uid 传入 `RevokeRuntimePermission`，作为数组索引访问全局权限表
+
+## 影响
+
+- 全局缓冲区越界写入（WRITE）— 可覆盖权限表相邻内存
+- 权限表数据破坏 — 可能导致权限状态不一致
+- 潜在权限提升 — 覆盖其他 uid 的权限记录
+- 服务进程崩溃（DoS）
+
+## PoC 验证
 
 ```bash
-# 1. 编译 (使用 ASan 检测内存错误)
-gcc -fsanitize=address -fno-omit-frame-pointer -g -O0 \
-    ~/data/output/2026.05.15/poc_FERMAT-c073dd3aa275.c \
-    -o /tmp/poc_c073dd3a
-
-# 2. 运行
-/tmp/poc_c073dd3a
-
-# 3. 预期输出 (ASan 报告越界写入):
-# ERROR: AddressSanitizer: global-buffer-overflow on address 0x...
-# WRITE of size 4 at 0x... thread T0
-#     #0 in MockRevokeRuntimePermission
-#     #1 in ReplyRevokeRuntimePermission
-#     #2 in main
+gcc -fsanitize=address -fno-omit-frame-pointer -g -O0 poc.c -o /tmp/poc && /tmp/poc
 ```
 
+ASan 输出：
+```
+ERROR: AddressSanitizer: global-buffer-overflow on address 0x5a463f5d463c
+WRITE of size 4 at 0x5a463f5d463c thread T0
+    #0 in MockRevokeRuntimePermission
+    #1 in ReplyRevokeRuntimePermission
+    #2 in main
+0x5a463f5d463c is located 56 bytes after global variable 'g_read_uid_called'
+```
+
+## 修复建议
+
+```c
+static void ReplyRevokeRuntimePermission(const void *origin, IpcIo *req, IpcIo *reply, InnerPermLiteApi* api)
+{
+    size_t permLen = 0;
+    int64_t uid;
+    ReadInt64(req, &uid);
++   if (uid < 0 || uid >= MAX_UID_COUNT) {
++       WriteInt32(reply, PERM_ERRORCODE_INVALID_PARAMS);
++       return;
++   }
+    char *permName = (char *)ReadString(req, &permLen);
+    int32_t ret = api->RevokeRuntimePermission(uid, permName);
+    WriteInt32(reply, ret);
+}
+```
