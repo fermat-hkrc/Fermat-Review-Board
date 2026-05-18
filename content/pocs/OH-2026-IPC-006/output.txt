@@ -1,0 +1,16 @@
+SensorChannelCallback begin
+DispatchData begin
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==1981810==ERROR: AddressSanitizer: SEGV on unknown address 0x5de9b9403698 (pc 0x5de1b93f61a1 bp 0x7fff8a334250 sp 0x7fff8a334230 T0)
+==1981810==The signal is caused by a READ memory access.
+    #0 0x5de1b93f61a1 in DispatchData /home/cupcup/data/test-repos/sensors_sensor_lite/frameworks/src/sensor_agent_proxy.c:207
+    #1 0x5de1b93f6926 in SensorChannelCallback /home/cupcup/data/test-repos/sensors_sensor_lite/frameworks/src/sensor_agent_proxy.c:249
+    #2 0x5de1b93f4b96 in main /tmp/test_ipc006.c:96
+    #3 0x7048baa2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x7048baa2a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #5 0x5de1b93f4384 in _start (/tmp/poc_ipc006+0x3384) (BuildId: c32e86448cac0d1b83047edbcf6fdbde92299984)
+
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /home/cupcup/data/test-repos/sensors_sensor_lite/frameworks/src/sensor_agent_proxy.c:207 in DispatchData
+==1981810==ABORTING
