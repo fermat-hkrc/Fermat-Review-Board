@@ -257,7 +257,7 @@ SUMMARY: AddressSanitizer: allocation-size-too-big
 ==1876473==ABORTING
 ```
 
-### 6. 局限性
+### 6. 攻击条件分析
 
 **6.1 端到端触发条件**
 
