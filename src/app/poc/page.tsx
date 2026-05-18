@@ -24,24 +24,60 @@ export default function PocPage() {
         </p>
       </div>
 
-      {/* Section 1: What is PoC */}
+      {/* Section 1: Verification Framework */}
       <section className="mb-10">
         <h2 className="text-xl font-semibold text-white border-b border-[#262626] pb-3 mb-6">
-          1. 什么是 PoC（概念验证）？
+          1. PoC 验证框架
         </h2>
         <div className="bg-[#141414] border border-[#262626] rounded-lg p-6 mb-4">
           <div className="space-y-4 text-[#d4d4d4]">
             <p>
-              <strong className="text-white">安全漏洞</strong>是程序中的缺陷，攻击者可以利用它执行不该执行的操作——读取不该读的数据、写入不该写的内存、绕过权限检查等。
+              <strong className="text-white">PoC（Proof of Concept）</strong>的本质不是"让程序崩溃"，而是<strong className="text-white">证明安全属性被违反</strong>。不同漏洞类型需要不同的验证 Oracle（判定准则）。
             </p>
             <p>
-              <strong className="text-white">PoC（Proof of Concept，概念验证）</strong>是一段代码，用来证明漏洞在真实环境中确实可以被触发。静态分析工具可以报告"这里可能有问题"，但可能是误报。PoC 用实际运行结果证明漏洞存在。
-            </p>
-            <p>
-              在 Fermat 中，静态分析引擎（Joern、Infer、IKOS）发现疑似漏洞后，我们为每个发现构建 PoC，编译目标项目的真实源码，构造恶意输入，用 AddressSanitizer（ASan）捕获越界访问，从而确认漏洞的真实性。
+              Fermat 针对每种漏洞类型设计了对应的验证策略。静态分析引擎（Joern、Infer、IKOS）发现疑似漏洞后，根据漏洞类型选择对应的 Oracle 生成 PoC，通过运行时信号确认漏洞真实性。
             </p>
           </div>
         </div>
+
+        {/* Verification Oracle Table */}
+        <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden mb-4">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[#262626]">
+                <th className="text-left text-[#737373] px-5 py-3 font-medium">漏洞类型</th>
+                <th className="text-left text-[#737373] px-5 py-3 font-medium">验证 Oracle</th>
+                <th className="text-left text-[#737373] px-5 py-3 font-medium">判定信号</th>
+                <th className="text-left text-[#737373] px-5 py-3 font-medium">状态</th>
+              </tr>
+            </thead>
+            <tbody className="text-[#d4d4d4]">
+              {[
+                ["内存空间安全\nCWE-125/787/120/416", "ASan (AddressSanitizer)", "SIGABRT + ASan report\n含完整调用栈和分配追踪", "done"],
+                ["未初始化内存读取\nCWE-457", "MSan (MemorySanitizer)", "use-of-uninitialized-value\n精确到首次读取位置", "done"],
+                ["未定义行为 / 整数溢出\nCWE-190/191", "UBSan (UndefinedBehaviorSanitizer)", "runtime error: signed integer overflow\n或 shift exponent too large", "done"],
+                ["竞态条件 / TOCTOU\nCWE-362/367", "TSan + 并发竞争 Harness", "TSan: data race detected\n或竞争窗口内 symlink 替换成功", "planned"],
+                ["权限 / 认证缺失\nCWE-862/306", "断言式 PoC (Assertion Oracle)", "受保护操作在无权限上下文中\n成功执行 → [VULN] marker", "planned"],
+                ["路径遍历\nCWE-22", "文件系统沙箱 Oracle", "沙箱外文件被成功读写\n(../../ 逃逸检测)", "planned"],
+              ].map(([type, oracle, signal, status], i) => (
+                <tr key={i} className="border-b border-[#262626] last:border-0">
+                  <td className="px-5 py-3 font-medium whitespace-pre-line">{type}</td>
+                  <td className="px-5 py-3 text-blue-400 whitespace-pre-line">{oracle}</td>
+                  <td className="px-5 py-3 text-[#a3a3a3] font-mono text-xs whitespace-pre-line">{signal}</td>
+                  <td className="px-5 py-3">
+                    {status === "done" ? (
+                      <span className="text-green-400 text-xs font-medium">✓ 已实现</span>
+                    ) : (
+                      <span className="text-amber-400 text-xs font-medium">◐ 规划中</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Comparison cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-[#141414] border border-red-500/30 rounded-lg p-5">
             <h3 className="text-red-400 font-semibold mb-3">仅静态分析</h3>
@@ -52,11 +88,81 @@ export default function PocPage() {
             </div>
           </div>
           <div className="bg-[#141414] border border-green-500/30 rounded-lg p-5">
-            <h3 className="text-green-400 font-semibold mb-3">PoC 验证（我们的方法）</h3>
+            <h3 className="text-green-400 font-semibold mb-3">Oracle 驱动的 PoC 验证</h3>
             <div className="text-[#a3a3a3] text-sm space-y-1">
-              <div>编译真实代码 → 构造恶意输入 → ASan 捕获错误</div>
-              <div className="text-green-400/80">确认漏洞在真实代码路径上可触发</div>
-              <div className="text-green-400/80">提供完整的崩溃调用栈和内存分配追踪</div>
+              <div>编译真实代码 → 构造触发输入 → Oracle 捕获违规</div>
+              <div className="text-green-400/80">每种漏洞类型有对应的判定准则</div>
+              <div className="text-green-400/80">运行时信号证明安全属性被违反</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 1.5: Verification Strategies Detail */}
+      <section className="mb-10">
+        <h2 className="text-xl font-semibold text-white border-b border-[#262626] pb-3 mb-6">
+          1.5 验证策略详解
+        </h2>
+
+        {/* A: Sanitizer Family */}
+        <div className="bg-[#141414] border border-green-500/30 rounded-lg p-6 mb-4">
+          <h3 className="text-green-400 font-semibold mb-3">A. Sanitizer 家族 — 内存与未定义行为（已实现）</h3>
+          <div className="text-[#a3a3a3] text-sm space-y-3">
+            <p>编译时插桩，运行时检测。Sanitizer 在内存分配周围插入 red zone，在释放后标记为 poisoned，在未初始化区域标记为 uninitialized。任何违规访问立即触发报告并终止。</p>
+            <div className="bg-[#0a0a0a] border border-[#262626] rounded p-3 font-mono text-xs">
+              <div className="text-[#737373]">{"# 编译命令"}</div>
+              <div>{"gcc -fsanitize=address,undefined -fno-omit-frame-pointer -g -O0 target.c poc.c -o poc"}</div>
+              <div className="mt-2 text-[#737373]">{"# 判定: 程序以非零退出码终止 + stderr 包含 Sanitizer 报告"}</div>
+              <div className="text-green-400">{"grep 'ERROR: AddressSanitizer\\|runtime error:' stderr → 漏洞确认"}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* B: Race Condition */}
+        <div className="bg-[#141414] border border-amber-500/30 rounded-lg p-6 mb-4">
+          <h3 className="text-amber-400 font-semibold mb-3">B. 竞态条件 / TOCTOU 验证（规划中）</h3>
+          <div className="text-[#a3a3a3] text-sm space-y-3">
+            <p>TOCTOU 漏洞的 check 和 use 之间存在时间窗口。验证策略是在该窗口内并发修改目标资源，证明竞争可被利用。</p>
+            <div className="bg-[#0a0a0a] border border-[#262626] rounded p-3 font-mono text-xs">
+              <div className="text-[#737373]">{"// TOCTOU PoC 结构 (CWE-367)"}</div>
+              <div>{"Thread A: while(1) { symlink(\"/tmp/target\", \"/etc/shadow\"); unlink(\"/tmp/target\"); }"}</div>
+              <div>{"Thread B: target_function(\"/tmp/target\");  // access() + open()"}</div>
+              <div className="mt-2 text-[#737373]">{"// Oracle: 检测 open() 实际打开的文件是否为 symlink 目标"}</div>
+              <div className="text-amber-400">{"readlink(/proc/self/fd/N) != \"/tmp/target\" → 竞争成功 → 漏洞确认"}</div>
+            </div>
+            <p className="text-[#737373]">备选方案: TSan 编译 + 多线程 harness，检测 data race 报告。</p>
+          </div>
+        </div>
+
+        {/* C: Logic/Auth */}
+        <div className="bg-[#141414] border border-amber-500/30 rounded-lg p-6 mb-4">
+          <h3 className="text-amber-400 font-semibold mb-3">C. 权限 / 认证缺失验证（规划中）</h3>
+          <div className="text-[#a3a3a3] text-sm space-y-3">
+            <p>逻辑漏洞不会触发 crash。验证策略是构造<strong className="text-white">不满足前置条件</strong>的调用上下文，证明受保护操作仍然成功执行。参考 POC-GYM (arXiv:2602.04165) 的 assertion-based oracle 方法。</p>
+            <div className="bg-[#0a0a0a] border border-[#262626] rounded p-3 font-mono text-xs">
+              <div className="text-[#737373]">{"// Assertion Oracle (CWE-862 权限缺失)"}</div>
+              <div>{"setup_context(uid=UNPRIVILEGED_USER, no_capability=true);"}</div>
+              <div>{"int ret = ProtectedOperation(params);  // 本应返回 PERMISSION_DENIED"}</div>
+              <div className="mt-2 text-[#737373]">{"// Oracle: 操作成功 = 安全属性违反"}</div>
+              <div className="text-amber-400">{"if (ret == SUCCESS) printf(\"[VULN] operation succeeded without authorization\");"}</div>
+              <div className="mt-2 text-[#737373]">{"// 对照验证: 修复版本上同样调用应返回错误"}</div>
+              <div>{"// patched: ret == PERMISSION_DENIED → 修复有效"}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* D: Path Traversal */}
+        <div className="bg-[#141414] border border-amber-500/30 rounded-lg p-6">
+          <h3 className="text-amber-400 font-semibold mb-3">D. 路径遍历验证（规划中）</h3>
+          <div className="text-[#a3a3a3] text-sm space-y-3">
+            <p>构造包含 <code className="text-blue-400">../</code> 序列的路径输入，在受限沙箱环境中调用目标函数，检测是否成功逃逸到沙箱外。</p>
+            <div className="bg-[#0a0a0a] border border-[#262626] rounded p-3 font-mono text-xs">
+              <div className="text-[#737373]">{"// 文件系统沙箱 Oracle (CWE-22)"}</div>
+              <div>{"mkdir(\"/tmp/sandbox/allowed/\");"}</div>
+              <div>{"write_file(\"/tmp/sandbox/canary.txt\", \"SHOULD_NOT_READ\");"}</div>
+              <div>{"char *result = target_read_file(\"../../canary.txt\");  // 相对于 allowed/"}</div>
+              <div className="mt-2 text-[#737373]">{"// Oracle: 成功读取沙箱外文件 = 路径遍历确认"}</div>
+              <div className="text-amber-400">{"if (strcmp(result, \"SHOULD_NOT_READ\") == 0) printf(\"[VULN] path traversal\");"}</div>
             </div>
           </div>
         </div>

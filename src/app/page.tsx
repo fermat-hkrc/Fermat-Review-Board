@@ -107,8 +107,19 @@ export default function DashboardPage() {
                       <span>{issue.date}</span>
                     </div>
                   </div>
-                  {/* Right side: upstream link */}
+                  {/* Right side: upstream link + PoC link */}
                   <div className="shrink-0 flex items-center gap-2">
+                    {issue.has_poc && (
+                      <Link
+                        href={`/issues/${issue.id}#poc`}
+                        className="inline-flex items-center gap-1 text-xs text-[#737373] hover:text-green-400 transition-colors px-2 py-1 rounded border border-green-500/20 hover:border-green-500/40"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                        PoC
+                      </Link>
+                    )}
                     {issue.issue_url && (
                       <a
                         href={issue.issue_url}

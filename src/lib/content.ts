@@ -54,7 +54,15 @@ export function getIssueMeta(id: string): IssueMeta | null {
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data } = matter(raw);
-  return data as IssueMeta;
+  const meta = data as IssueMeta;
+  if (!meta.has_poc) {
+    const pocDir = path.join(pocsDirectory, id);
+    if (fs.existsSync(pocDir)) {
+      const entries = fs.readdirSync(pocDir).filter((f) => !f.startsWith("."));
+      if (entries.length > 0) meta.has_poc = true;
+    }
+  }
+  return meta;
 }
 
 export function getIssue(id: string): Issue | null {

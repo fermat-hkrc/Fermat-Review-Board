@@ -132,11 +132,13 @@ export default async function IssueDetailPage({
 
       {/* PoC Section */}
       {issue.poc && issue.poc.files.length > 0 && (
-        <PocViewer
-          files={issue.poc.files}
-          output={issue.poc.output}
-          issueId={issue.meta.id}
-        />
+        <div id="poc">
+          <PocViewer
+            files={issue.poc.files}
+            output={issue.poc.output}
+            issueId={issue.meta.id}
+          />
+        </div>
       )}
 
       {/* Back link */}

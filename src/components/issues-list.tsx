@@ -118,6 +118,11 @@ export default function IssuesListClient({
                   {issue.id}
                 </span>
                 <StatusBadge status={issue.status} />
+                {issue.has_poc && (
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
+                    PoC
+                  </span>
+                )}
                 <span className="text-xs font-mono text-blue-400">
                   {issue.cwe}{issue.cwe_name && ` — ${issue.cwe_name}`}
                 </span>
