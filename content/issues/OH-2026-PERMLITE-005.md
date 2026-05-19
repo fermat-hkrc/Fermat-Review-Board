@@ -7,7 +7,8 @@ title: "ParsePermissions 服务端整数溢出导致堆破坏"
 severity: HIGH
 cwe: CWE-190
 cwe_name: Integer Overflow or Wraparound
-status: PENDING
+status: SUBMITTED
+issue_url: https://gitcode.com/openharmony/security_permission_lite/issues/97
 component: pms_impl
 file_paths:
   - services/pms/src/pms_impl.c:183
