@@ -1,0 +1,18 @@
+[POC] Calling GetAllSensorsByProxy with malicious IPC reply (count=0x7FFFFFFF)
+[DEBUG] GetAllSensorsByProxy begin
+[DEBUG] InitSensorList begin
+[DEBUG] Notify begin
+[DEBUG] GetSensorInfos begin
+=================================================================
+==99330==ERROR: AddressSanitizer: out of memory: allocator is trying to allocate 0x29ffffffac bytes
+    #0 in malloc
+    #1 in GetSensorInfos sensor_agent_proxy.c:149
+    #2 in Notify sensor_agent_proxy.c:175
+    #3 in MockInvoke poc.c:70
+    #4 in InitSensorList sensor_agent_proxy.c:326
+    #5 in GetAllSensorsByProxy sensor_agent_proxy.c:343
+    #6 in main poc.c:100
+    #7 in __libc_start_call_main
+    #8 in __libc_start_main_impl
+SUMMARY: AddressSanitizer: out-of-memory in malloc
+==99330==ABORTING

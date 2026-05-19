@@ -1,16 +1,19 @@
-SensorChannelCallback begin
-DispatchData begin
+[DEBUG] RegisterSensorChannel begin
+[DEBUG] IsRegisterCallback begin
+[POC] RegisterSensorChannel returned: 0
+[POC] g_sensorEvent at 0x504000000010, push callback registered=1
+[POC] Triggering SAMGR_SimulatePush with sensorTypeId=0x7FFFFFFF
+[DEBUG] SensorChannelCallback begin
+[DEBUG] DispatchData begin
 AddressSanitizer:DEADLYSIGNAL
 =================================================================
-==1981810==ERROR: AddressSanitizer: SEGV on unknown address 0x5de9b9403698 (pc 0x5de1b93f61a1 bp 0x7fff8a334250 sp 0x7fff8a334230 T0)
-==1981810==The signal is caused by a READ memory access.
-    #0 0x5de1b93f61a1 in DispatchData /home/cupcup/data/test-repos/sensors_sensor_lite/frameworks/src/sensor_agent_proxy.c:207
-    #1 0x5de1b93f6926 in SensorChannelCallback /home/cupcup/data/test-repos/sensors_sensor_lite/frameworks/src/sensor_agent_proxy.c:249
-    #2 0x5de1b93f4b96 in main /tmp/test_ipc006.c:96
-    #3 0x7048baa2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #4 0x7048baa2a28a in __libc_start_main_impl ../csu/libc-start.c:360
-    #5 0x5de1b93f4384 in _start (/tmp/poc_ipc006+0x3384) (BuildId: c32e86448cac0d1b83047edbcf6fdbde92299984)
-
-AddressSanitizer can not provide additional info.
-SUMMARY: AddressSanitizer: SEGV /home/cupcup/data/test-repos/sensors_sensor_lite/frameworks/src/sensor_agent_proxy.c:207 in DispatchData
-==1981810==ABORTING
+==74132==ERROR: AddressSanitizer: SEGV on unknown address 0x6066e8c38a18 (pc 0x605ee8c1cbc4 bp 0x7ffff0d37cc0 sp 0x7ffff0d37ca0 T0)
+==74132==The signal is caused by a READ memory access.
+    #0 0x605ee8c1cbc4 in DispatchData sensor_agent_proxy.c:201
+    #1 0x605ee8c1d283 in SensorChannelCallback sensor_agent_proxy.c:233
+    #2 0x605ee8c2c4c8 in SAMGR_SimulatePush (IPC push callback dispatch)
+    #3 0x605ee8c304b3 in main poc.c:109
+    #4 0x749009a2a1c9 in __libc_start_call_main
+    #5 0x749009a2a28a in __libc_start_main_impl
+SUMMARY: AddressSanitizer: SEGV sensor_agent_proxy.c:201 in DispatchData
+==74132==ABORTING

@@ -54,11 +54,11 @@ export default function PocPage() {
             <tbody className="text-[#d4d4d4]">
               {[
                 ["内存空间安全\nCWE-125/787/120/416", "ASan (AddressSanitizer)", "SIGABRT + ASan report\n含完整调用栈和分配追踪", "done"],
-                ["未初始化内存读取\nCWE-457", "MSan (MemorySanitizer)", "use-of-uninitialized-value\n精确到首次读取位置", "done"],
+                ["未初始化内存读取\nCWE-457/908", "MSan (MemorySanitizer)", "use-of-uninitialized-value\n精确到首次读取位置", "done"],
                 ["未定义行为 / 整数溢出\nCWE-190/191", "UBSan (UndefinedBehaviorSanitizer)", "runtime error: signed integer overflow\n或 shift exponent too large", "done"],
                 ["竞态条件 / TOCTOU\nCWE-362/367", "TSan + 并发竞争 Harness", "TSan: data race detected\n或竞争窗口内 symlink 替换成功", "planned"],
                 ["权限 / 认证缺失\nCWE-862/306", "断言式 PoC (Assertion Oracle)", "受保护操作在无权限上下文中\n成功执行 → [VULN] marker", "planned"],
-                ["路径遍历\nCWE-22", "文件系统沙箱 Oracle", "沙箱外文件被成功读写\n(../../ 逃逸检测)", "planned"],
+                ["路径遍历\nCWE-22", "文件系统沙箱 Oracle", "沙箱外文件被成功读写\n(../../ 逃逸检测)", "done"],
               ].map(([type, oracle, signal, status], i) => (
                 <tr key={i} className="border-b border-[#262626] last:border-0">
                   <td className="px-5 py-3 font-medium whitespace-pre-line">{type}</td>
@@ -152,8 +152,8 @@ export default function PocPage() {
         </div>
 
         {/* D: Path Traversal */}
-        <div className="bg-[#141414] border border-amber-500/30 rounded-lg p-6">
-          <h3 className="text-amber-400 font-semibold mb-3">D. 路径遍历验证（规划中）</h3>
+        <div className="bg-[#141414] border border-green-500/30 rounded-lg p-6">
+          <h3 className="text-green-400 font-semibold mb-3">D. 路径遍历验证（已验证）</h3>
           <div className="text-[#a3a3a3] text-sm space-y-3">
             <p>构造包含 <code className="text-blue-400">../</code> 序列的路径输入，在受限沙箱环境中调用目标函数，检测是否成功逃逸到沙箱外。</p>
             <div className="bg-[#0a0a0a] border border-[#262626] rounded p-3 font-mono text-xs">
@@ -162,8 +162,9 @@ export default function PocPage() {
               <div>{"write_file(\"/tmp/sandbox/canary.txt\", \"SHOULD_NOT_READ\");"}</div>
               <div>{"char *result = target_read_file(\"../../canary.txt\");  // 相对于 allowed/"}</div>
               <div className="mt-2 text-[#737373]">{"// Oracle: 成功读取沙箱外文件 = 路径遍历确认"}</div>
-              <div className="text-amber-400">{"if (strcmp(result, \"SHOULD_NOT_READ\") == 0) printf(\"[VULN] path traversal\");"}</div>
+              <div className="text-green-400">{"if (strcmp(result, \"SHOULD_NOT_READ\") == 0) printf(\"[VULN] path traversal\");"}</div>
             </div>
+            <p className="text-green-400/80">已通过 OH-2026-FS-001（customization_config_policy <code className="text-blue-400">GetOneCfgFile</code>）验证。PoC 使用 <code className="text-blue-400">../../etc/passwd</code> 序列成功探测沙箱外文件存在性。</p>
           </div>
         </div>
       </section>
@@ -191,6 +192,9 @@ export default function PocPage() {
                 ["Null 终止符缺失", "CWE-170", "Improper Null Termination", "字符串缺少 \\0 结束标记，后续字符串操作越界读取直到遇到随机 \\0", "信息泄露、越界读取"],
                 ["空指针解引用", "CWE-476", "NULL Pointer Dereference", "通过空指针访问内存，内核映射 NULL 页时可能被利用", "拒绝服务、特定内核配置下代码执行"],
                 ["释放后使用", "CWE-416", "Use After Free", "访问已释放的堆内存，若该区域被重新分配给其他对象则可控制其内容", "任意代码执行、类型混淆"],
+                ["未初始化内存使用", "CWE-908", "Use of Uninitialized Resource", "通过 malloc 分配但未初始化的内存被后续代码读取，堆上残留数据被泄露给调用方", "信息泄露、不可预测行为"],
+                ["路径遍历", "CWE-22", "Path Traversal", "路径参数未过滤 ../ 序列，攻击者可拼接路径访问受限目录外的文件", "任意文件读取、信息泄露"],
+                ["数组索引越界", "CWE-129", "Improper Validation of Array Index", "数组索引未校验范围，外部输入可控的索引值导致越界数组访问", "越界读写、代码执行"],
               ].map(([type, cwe, cweName, desc, impact], i) => (
                 <tr key={i} className="border-b border-[#262626] last:border-0">
                   <td className="px-5 py-3 font-medium">{type}</td>
@@ -246,9 +250,75 @@ export default function PocPage() {
             </ul>
           </div>
         </div>
-      </section>
 
-      {/* Section 4: OpenHarmony Build Infrastructure */}
+        {/* PoC Automation: Path Resolver + Scenario + Modes */}
+        <div className="bg-[#141414] border border-[#262626] rounded-lg p-6 mb-4">
+          <h3 className="text-white font-semibold mb-3">自动化 PoC 生成管线</h3>
+          <p className="text-[#d4d4d4] mb-4">
+            Fermat 的 L4 验证层将 PoC 生成从手动编写升级为<strong className="text-white">全自动管线</strong>：从漏洞函数自动追溯入口点、生成攻击场景计划、编写 PoC 代码、编译验证、生成补丁并验证补丁有效性。
+          </p>
+          <div className="bg-[#0a0a0a] border border-[#262626] rounded p-4 font-mono text-sm text-[#a3a3a3]">
+            <div className="text-blue-400 mb-1">{"# L4 PoC 生成管线"}</div>
+            <div className="space-y-1">
+              <div>{"漏洞函数"}</div>
+              <div className="text-[#737373]">{"    ↓ PoC Path Resolver — 自动入口追溯"}</div>
+              <div>{"Public API 入口 + IPC 序列化格式 + CWE 触发值"}</div>
+              <div className="text-[#737373]">{"    ↓ Scenario Planner — 攻击场景规划"}</div>
+              <div>{"结构化攻击计划（SCENARIO / SETUP / TRIGGER / EXPECTED_SIGNAL）"}</div>
+              <div className="text-[#737373]">{"    ↓ Code Generator — 按场景写代码"}</div>
+              <div>{"PoC 测试驱动 + Build Agent 自动编译"}</div>
+              <div className="text-[#737373]">{"    ↓ Oracle 验证 — ASan/MSan/Assertion"}</div>
+              <div className="text-green-400">{"漏洞确认 → 补丁生成 → 补丁有效性验证"}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Two-level Entry Resolution */}
+        <div className="bg-[#141414] border border-[#262626] rounded-lg p-6 mb-4">
+          <h3 className="text-white font-semibold mb-3">PoC Path Resolver：两级入口追溯</h3>
+          <p className="text-[#a3a3a3] text-sm mb-4">
+            PoC Path Resolver 从漏洞函数向上 BFS 追溯调用链，自动确定测试驱动应调用的入口函数、IPC 序列化格式（Read* 调用序列 + size-prefix 关系）、以及 CWE 特定的触发值。
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-[#0a0a0a] border border-green-500/30 rounded-lg p-4">
+              <h4 className="text-green-400 text-sm font-semibold mb-2">Public API Entry（首选）</h4>
+              <p className="text-[#a3a3a3] text-xs">模块公开头文件中声明的函数（如 <code className="text-blue-400">interfaces/kits/native/include/*.h</code>）。测试驱动直接调用此函数，真实编译代码处理完整的内部调用链。</p>
+            </div>
+            <div className="bg-[#0a0a0a] border border-[#262626] rounded-lg p-4">
+              <h4 className="text-[#d4d4d4] text-sm font-semibold mb-2">Transport Entry（Fallback）</h4>
+              <p className="text-[#a3a3a3] text-xs">IPC 回调或 handler（如 <code className="text-blue-400">.func =</code> 注册的函数、<code className="text-blue-400">OnRemoteRequest</code>）。当无法追溯到 Public API 时，使用 transport entry 配合 IPC 序列化格式构造输入。</p>
+            </div>
+          </div>
+        </div>
+
+        {/* PoC Generation Modes */}
+        <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[#262626]">
+                <th className="text-left text-[#737373] px-5 py-3 font-medium">优先级</th>
+                <th className="text-left text-[#737373] px-5 py-3 font-medium">模式</th>
+                <th className="text-left text-[#737373] px-5 py-3 font-medium">说明</th>
+                <th className="text-left text-[#737373] px-5 py-3 font-medium hidden sm:table-cell">可信度</th>
+              </tr>
+            </thead>
+            <tbody className="text-[#d4d4d4]">
+              {[
+                ["1（最高）", "target_compile", "编译真实源码为 .a 静态库，链接测试驱动。OHOS 模块强制使用", "最高"],
+                ["2", "chain_aware", "包含完整调用链源码的 PoC，通过入口点触发（非 OHOS）", "高"],
+                ["3（最低）", "standalone", "自包含 PoC，仅用于非 OHOS 项目的 fallback", "中"],
+              ].map(([priority, mode, desc, confidence], i) => (
+                <tr key={i} className="border-b border-[#262626] last:border-0">
+                  <td className="px-5 py-3 text-[#737373]">{priority}</td>
+                  <td className="px-5 py-3"><code className="text-blue-400">{mode}</code></td>
+                  <td className="px-5 py-3 text-[#a3a3a3]">{desc}</td>
+                  <td className="px-5 py-3 hidden sm:table-cell">{confidence}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
       <section className="mb-10">
         <h2 className="text-xl font-semibold text-white border-b border-[#262626] pb-3 mb-6">
           4. OpenHarmony 编译基础设施
@@ -297,6 +367,8 @@ export default function PocPage() {
             <div>{"ReadInt32 / ReadString"}</div>
             <div className="mt-1 text-[#737373]">{"// IPC 客户端代理 — 测试驱动可配置返回值"}</div>
             <div>{"IClientProxy.Invoke → 写入 g_mock_result_code + g_mock_response_json"}</div>
+            <div className="mt-1 text-[#737373]">{"// IPC 异步推送模拟 — 模拟服务端向客户端推送数据"}</div>
+            <div>{"SAMGR_SimulatePush(IpcIo *data) → 调用 WriteRemoteObject 注册的回调"}</div>
           </div>
 
           <h4 className="text-[#d4d4d4] text-sm font-medium mb-2">系统服务管理（SamgrLite）</h4>
@@ -394,7 +466,7 @@ export default function PocPage() {
       {/* Section 5: ASan/UBSan */}
       <section className="mb-10">
         <h2 className="text-xl font-semibold text-white border-b border-[#262626] pb-3 mb-6">
-          5. ASan/UBSan 检测能力
+          5. ASan/UBSan/MSan 检测能力
         </h2>
 
         <div className="bg-[#141414] border border-[#262626] rounded-lg p-6 mb-4">
@@ -424,10 +496,13 @@ export default function PocPage() {
             <tbody className="text-[#d4d4d4]">
               {[
                 ["heap-buffer-overflow", "堆缓冲区越界读写", "CWE-125, CWE-787"],
+                ["SEGV (out-of-bounds)", "越界访问到未映射内存页", "CWE-129"],
                 ["allocation-size-too-big", "整数溢出导致异常大分配", "CWE-190"],
+                ["out-of-memory", "未校验的外部输入控制分配大小", "CWE-190"],
                 ["heap-use-after-free", "释放后使用", "CWE-416"],
                 ["stack-buffer-overflow", "栈缓冲区溢出", "CWE-121"],
                 ["UBSan: signed-integer-overflow", "有符号整数溢出", "CWE-190"],
+                ["MSan: use-of-uninitialized-value", "未初始化内存读取", "CWE-908"],
               ].map(([type, desc, cwe], i) => (
                 <tr key={i} className="border-b border-[#262626] last:border-0">
                   <td className="px-5 py-3"><code className="text-amber-400">{type}</code></td>
@@ -469,22 +544,24 @@ export default function PocPage() {
       {/* Section 6: Build Pipeline */}
       <section className="mb-10">
         <h2 className="text-xl font-semibold text-white border-b border-[#262626] pb-3 mb-6">
-          6. GN+Ninja 构建管线
+          6. PoC 构建与验证管线
         </h2>
         <div className="bg-[#141414] border border-[#262626] rounded-lg p-6 mb-4">
           <div className="bg-[#0a0a0a] border border-[#262626] rounded p-4 font-mono text-sm text-[#a3a3a3]">
             <div className="space-y-1">
-              <div className="text-white">{"OHOS 模块源码 (.c/.cpp)"}</div>
+              <div className="text-white">{"漏洞报告（L3 输出）"}</div>
+              <div className="text-[#737373]">{"    ↓ PoC Path Resolver — 入口追溯 + IPC 格式提取 + 触发值选择"}</div>
+              <div>{"入口函数 + 序列化格式 + CWE 触发值"}</div>
+              <div className="text-[#737373]">{"    ↓ Scenario Planner — 结构化攻击场景"}</div>
+              <div>{"SCENARIO / SETUP / TRIGGER / EXPECTED_SIGNAL"}</div>
               <div className="text-[#737373]">{"    ↓ setup_build.py — 一键生成构建根目录"}</div>
-              <div>{"GN 构建描述 (BUILD.gn)"}</div>
-              <div className="text-[#737373]">{"    ↓ gn gen — 生成 ninja 构建规则"}</div>
-              <div>{"Ninja 构建规则 (build.ninja)"}</div>
-              <div className="text-[#737373]">{"    ↓ ninja — gcc/g++ 编译 + ASan 插桩"}</div>
+              <div>{"GN 构建描述 (BUILD.gn) + 桩代码"}</div>
+              <div className="text-[#737373]">{"    ↓ gn gen + ninja — gcc/g++ 编译 + ASan/MSan 插桩"}</div>
               <div className="text-white">{"静态库 (.a) — 真实编译产物"}</div>
-              <div className="text-[#737373]">{"    ↓ gcc/g++ 链接 PoC 测试驱动"}</div>
-              <div>{"可执行文件（含 ASan runtime）"}</div>
-              <div className="text-[#737373]">{"    ↓ 运行 — 构造恶意输入"}</div>
-              <div className="text-green-400">{"ASan 报告 → 漏洞确认"}</div>
+              <div className="text-[#737373]">{"    ↓ Build Agent — 链接 PoC 测试驱动（自动修复编译错误）"}</div>
+              <div>{"可执行文件（含 Sanitizer runtime）"}</div>
+              <div className="text-[#737373]">{"    ↓ Oracle 验证 — 运行 + 捕获信号"}</div>
+              <div className="text-green-400">{"漏洞确认 → 补丁生成 → 补丁有效性验证 → 反馈知识库"}</div>
             </div>
           </div>
         </div>
@@ -500,12 +577,15 @@ export default function PocPage() {
             </thead>
             <tbody className="text-[#d4d4d4]">
               {[
-                ["源码准备", "setup_build.py", "OHOS 模块源码", "GN 构建根目录"],
+                ["入口解析", "PoC Path Resolver", "漏洞函数 + 源码", "Public API 入口 + IPC 格式"],
+                ["场景规划", "Scenario Planner", "入口 + CWE + 触发条件", "结构化攻击计划"],
+                ["源码准备", "setup_build.py", "OHOS 模块源码", "GN 构建根目录 + 桩代码"],
                 ["构建生成", "gn gen", "BUILD.gn 文件", "ninja 构建文件"],
                 ["编译", "ninja (gcc/g++)", ".c/.cpp 源文件", ".o 目标文件"],
                 ["打包", "ar rcs", ".o 目标文件", ".a 静态库"],
-                ["链接", "gcc", "PoC.o + .a + ASan runtime", "可执行文件"],
-                ["验证", "ASan + UBSan", "构造的恶意输入", "漏洞报告"],
+                ["链接", "Build Agent", "PoC.o + .a + Sanitizer", "可执行文件"],
+                ["验证", "Oracle (ASan/MSan/Assertion)", "构造的恶意输入", "漏洞确认报告"],
+                ["补丁", "Patch Generator + Validator", "漏洞点 + PoC", "修复补丁 + 有效性验证"],
               ].map(([stage, tool, input, output], i) => (
                 <tr key={i} className="border-b border-[#262626] last:border-0">
                   <td className="px-5 py-3">{stage}</td>
@@ -534,22 +614,18 @@ export default function PocPage() {
               color: "text-white",
             },
             {
-              label: "C Target-Compile",
-              value: verifiedIssues.filter((i) =>
-                i.repo.includes("permission_lite") || i.repo.includes("config_policy")
-              ).length.toString(),
+              label: "覆盖仓库",
+              value: new Set(verifiedIssues.map((i) => i.repo)).size.toString(),
               color: "text-blue-400",
             },
             {
-              label: "C++ Target-Compile",
-              value: verifiedIssues.filter((i) =>
-                i.repo.includes("castengine")
-              ).length.toString(),
+              label: "CWE 类型",
+              value: new Set(verifiedIssues.map((i) => i.cwe)).size.toString(),
               color: "text-green-400",
             },
             {
-              label: "覆盖仓库",
-              value: new Set(verifiedIssues.map((i) => i.repo)).size.toString(),
+              label: "验证方法",
+              value: "Target-Compile",
               color: "text-amber-400",
             },
           ].map((stat) => (
@@ -649,6 +725,26 @@ export default function PocPage() {
               desc: "GN 的 set_defaults() 不会将 cflags（包括 -fsanitize=address）传播到编译目标。必须在每个 target 的 configs 中显式声明。这是 RtpPacket PoC 最初无法触发 ASan 的根本原因——代码编译时没有 ASan 插桩，但链接了 ASan 运行时，造成越界访问静默通过。",
               highlight: true,
             },
+            {
+              num: 8,
+              title: "模块特定编译依赖解析",
+              desc: "不同 OHOS 模块使用不同的构建配置和第三方依赖。某些模块的 BUILD.gn 有 3-4 层嵌套引用，Build Agent 需要自动解析依赖树、查找缺失头文件并生成对应桩代码。setup_build.py 自动化了大部分流程，但极端情况仍需手动调整。",
+            },
+            {
+              num: 9,
+              title: "C++ NAPI 桩代码边界",
+              desc: "涉及 NAPI（JS/Native 桥接层）的模块需要 napi.h 和 node_api.h 的桩实现，包括 napi_value、napi_env 等不透明类型。当前 Target-Compile 仅覆盖纯 C/C++ 模块，NAPI 类型需要独立的桩系统才能支持 JS 桥接模块的编译。",
+            },
+            {
+              num: 10,
+              title: "-Dstatic= 多重定义冲突",
+              desc: "-Dstatic= 将 static 函数暴露为全局符号，当多个 .o 文件定义了同名 static 函数时会导致链接器报 multiple definition 错误。解决方案是对 OHOS target-compile 自动传递 -Wl,--allow-multiple-definition 链接器标志。",
+            },
+            {
+              num: 11,
+              title: "securec static inline 失效",
+              desc: "-Dstatic= 同时影响 securec.h 中的 static inline 函数（memset_s、strcpy_s 等），使其变为 inline 但丢失外部定义（C99 语义）。需要独立的 securec_stubs.c 在不使用 -Dstatic= 的情况下编译，提供外部链接定义。",
+            },
           ].map((item) => (
             <div
               key={item.num}
@@ -704,7 +800,7 @@ export default function PocPage() {
                 ["PoC 验证", "验证方法、编译环境、编译产物列表"],
                 ["ASan 输出", "ASan/UBSan 的完整报告，包含调用栈和分配追踪"],
                 ["修复建议", "漏洞的修复代码（unified diff 格式）"],
-                ["PoC 类型声明", "PoC 是否可在真实设备触发、攻击前提等"],
+                ["PoC 类型声明", "PoC 生成模式（target_compile / chain_aware / standalone）、验证 Oracle 类型、是否可在真实设备触发、攻击前提"],
               ].map(([title, desc], i) => (
                 <tr key={i} className="border-b border-[#262626] last:border-0">
                   <td className="px-5 py-3 text-[#737373]">{i + 1}</td>
@@ -749,31 +845,39 @@ export default function PocPage() {
             <ul className="text-[#d4d4d4] text-sm space-y-2">
               <li className="flex items-start gap-2">
                 <span className="text-green-400 mt-0.5">&#10003;</span>
-                <span>纯 C 模块编译（permission_lite, config_policy）</span>
+                <span>纯 C 模块（permission_lite, config_policy, sensors_sensor_lite）</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400 mt-0.5">&#10003;</span>
-                <span>C++ 模块编译（castengine_wifi_display: DataBuffer, RtpPacket, RTCP）</span>
+                <span>C++ 模块（castengine_wifi_display: DataBuffer, RtpPacket）</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400 mt-0.5">&#10003;</span>
-                <span>ASan heap-buffer-overflow 检测（READ + WRITE）</span>
+                <span>路径遍历验证（CWE-22，文件系统沙箱 Oracle）</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400 mt-0.5">&#10003;</span>
-                <span>ASan allocation-size-too-big 检测（整数溢出）</span>
+                <span>未初始化内存检测（CWE-908，MSan Oracle）</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400 mt-0.5">&#10003;</span>
-                <span>UBSan 未定义行为检测</span>
+                <span>整数溢出→堆破坏链（CWE-190 → allocation-size-too-big）</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400 mt-0.5">&#10003;</span>
-                <span>C++ 基础框架桩（RefBase, sptr, Parcel, IPC）</span>
+                <span>ASan/UBSan/MSan 多 Sanitizer 检测</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400 mt-0.5">&#10003;</span>
-                <span>客户端 + 服务端模块双向支持</span>
+                <span>自动入口追溯（PoC Path Resolver）+ 场景级 PoC 生成</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-400 mt-0.5">&#10003;</span>
+                <span>补丁生成与有效性验证反馈闭环</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-400 mt-0.5">&#10003;</span>
+                <span>客户端 + 服务端 + IPC 模块三向支持</span>
               </li>
             </ul>
           </div>
@@ -790,15 +894,15 @@ export default function PocPage() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[#737373] mt-0.5">&#8722;</span>
-                <span>需要 OHOS 图形/音频框架的模块暂不支持</span>
+                <span>需要 OHOS 图形/音频/Ability 框架的模块暂不支持</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[#737373] mt-0.5">&#8722;</span>
-                <span>C++ 框架桩尚未在 IPC 模块中实际验证</span>
+                <span>TSan 竞态条件验证（CWE-362/367）仍为规划中</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[#737373] mt-0.5">&#8722;</span>
-                <span>setup_build.py 尚未自动检测 C++ 模块配置</span>
+                <span>权限/认证 Assertion Oracle（CWE-862/306）仍为规划中</span>
               </li>
             </ul>
           </div>
