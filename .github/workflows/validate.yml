@@ -1,0 +1,42 @@
+name: Validate Issues
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "content/issues/**"
+  push:
+    branches: [main]
+    paths:
+      - "content/issues/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Get changed issue files
+        id: changed
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE="${{ github.event.before }}"
+          fi
+          FILES=$(git diff --name-only "$BASE" HEAD -- content/issues/ | grep '\.md$' || true)
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          echo "Changed issues: $FILES"
+
+      - name: Validate changed issues
+        if: steps.changed.outputs.files != ''
+        run: npx tsx scripts/validate-issues.ts ${{ steps.changed.outputs.files }}

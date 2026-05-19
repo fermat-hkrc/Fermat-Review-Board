@@ -1,10 +1,5 @@
 #!/bin/bash
-# Build script for OH-2026-IPC-006 PoC (target-compile)
-#
-# Prerequisites:
-#   - OHOS toolkit stubs at <toolkit-path>/stubs/
-#   - Real sensor_agent_proxy.c source
-#   - gcc with ASan support
+# Build script for OH-2026-IPC-005 PoC (target-compile)
 #
 # Usage: ./build.sh <sensors_sensor_lite_path> <toolkit-stubs-path>
 
@@ -12,7 +7,7 @@ set -e
 TARGET="${1:?Usage: $0 <sensors_sensor_lite_path> <toolkit-stubs-path>}"
 STUBS="${2:?Missing toolkit-stubs-path}"
 
-TMPDIR=$(mktemp -d /tmp/fermat_ipc006_XXXXXX)
+TMPDIR=$(mktemp -d /tmp/fermat_ipc005_XXXXXX)
 trap "rm -rf $TMPDIR" EXIT
 
 echo "[*] Compiling real sensor_agent_proxy.c ..."
