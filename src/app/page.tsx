@@ -51,6 +51,7 @@ export default function DashboardPage() {
           label="Confirmed"
           value={stats.confirmed}
           accent="text-green-400"
+          href="/confirmed"
         />
         <StatCard
           label="Repos"
@@ -151,17 +152,23 @@ function StatCard({
   label,
   value,
   accent,
+  href,
 }: {
   label: string;
   value: number;
   accent?: string;
+  href?: string;
 }) {
-  return (
-    <div className="bg-[#141414] border border-[#262626] rounded-lg p-5">
+  const content = (
+    <div className={`bg-[#141414] border border-[#262626] rounded-lg p-5 ${href ? "hover:border-[#404040] transition-colors cursor-pointer" : ""}`}>
       <span className="text-sm text-[#a3a3a3]">{label}</span>
       <div className={`text-3xl font-bold mt-1 ${accent || "text-white"}`}>
         {value}
       </div>
     </div>
   );
+  if (href) {
+    return <Link href={href}>{content}</Link>;
+  }
+  return content;
 }
