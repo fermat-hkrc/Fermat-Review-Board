@@ -7,7 +7,7 @@ title: "[Bug]: Reinit succeeds from INIT state (before any Update)"
 cwe: CWE-385
 cwe_name: Missing State Tracking
 severity: MEDIUM
-status: SUBMITTED
+status: CONFIRMED_REAL
 issue_url: https://gitcode.com/openHiTLS/openhitls/issues/157
 affected_version: "*"
 component: hmac
