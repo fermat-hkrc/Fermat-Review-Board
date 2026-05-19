@@ -4,7 +4,9 @@ date: "2026-05-19"
 repo: openHiTLS
 repo_url: https://gitcode.com/openHiTLS/openhitls
 title: "XTS mode outLen formula in documentation always yields multiple of 16, but implementation does not"
-
+severity: MEDIUM
+cwe: CWE-131
+cwe_name: Incorrect Calculation of Buffer Size
 status: CONFIRMED_FIXED
 issue_url: https://gitcode.com/openHiTLS/openhitls/issues/149
 affected_version: "*"

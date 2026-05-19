@@ -4,6 +4,9 @@ date: "2026-05-19"
 repo: openHiTLS
 repo_url: https://gitcode.com/openHiTLS/openhitls
 title: "[Bug]: Incorrect Comments about the reserve blocks property/invariant in XTS mode documentation"
+severity: MEDIUM
+cwe: CWE-131
+cwe_name: Incorrect Calculation of Buffer Size
 status: CONFIRMED_FIXED
 issue_url: https://gitcode.com/openHiTLS/openhitls/issues/148
 affected_version: "*"
