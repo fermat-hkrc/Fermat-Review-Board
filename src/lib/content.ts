@@ -109,6 +109,13 @@ export function getVerifiedPocIssues(): IssueMeta[] {
   return issues.filter((i) => i.has_poc === true);
 }
 
+export function getConfirmedIssues(): IssueMeta[] {
+  const issues = getAllIssues();
+  return issues.filter(
+    (i) => i.status === "CONFIRMED_REAL" || i.status === "CONFIRMED_FIXED"
+  );
+}
+
 export function getStats() {
   const issues = getAllIssues();
   const byCwe: Record<string, number> = {};
