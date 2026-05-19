@@ -7,7 +7,7 @@ title: "merge_cpusets returns Err when one operand is empty — empty string spl
 cwe: CWE-20
 cwe_name: Improper Input Validation
 severity: MEDIUM
-status: SUBMITTED
+status: CONFIRMED_REAL
 issue_url: https://github.com/kuasar-io/kuasar/issues/245
 affected_version: "*"
 component: vmm/sandbox
