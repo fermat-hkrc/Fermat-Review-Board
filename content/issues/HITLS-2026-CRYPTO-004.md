@@ -1,5 +1,5 @@
 ---
-id: OH-2026-CRYPTO-005
+id: HITLS-2026-CRYPTO-004
 date: "2026-05-19"
 repo: openHiTLS
 repo_url: https://gitcode.com/openHiTLS/openhitls
