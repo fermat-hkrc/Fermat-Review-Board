@@ -7,7 +7,7 @@ title: "[Bug]: _sanitize_identifier — Multiple Identifier Validity Failures"
 cwe: CWE-20
 cwe_name: Improper Input Validation
 severity: MEDIUM
-status: CONFIRMED_REAL
+status: CONFIRMED_FIXED
 issue_url: https://gitcode.com/openJiuwen/agent-studio/issues/821
 affected_version: "*"
 component: workflow_code_generator
