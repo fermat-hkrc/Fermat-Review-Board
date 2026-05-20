@@ -1,5 +1,5 @@
 ---
-id: AI-2026-CONV-001
+id: PBT-AI-2026-CONV-001
 date: "2026-05-19"
 repo: agent-studio
 repo_url: https://gitcode.com/openJiuwen/agent-studio

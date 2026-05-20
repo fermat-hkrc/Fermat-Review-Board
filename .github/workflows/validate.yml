@@ -33,7 +33,7 @@ jobs:
           else
             BASE="${{ github.event.before }}"
           fi
-          FILES=$(git diff --name-only "$BASE" HEAD -- content/issues/ | grep '\.md$' || true)
+          FILES=$(git diff --name-only "$BASE" HEAD -- content/issues/ | grep '\.md$' | tr '\n' ' ' | sed 's/ $//' || true)
           echo "files=$FILES" >> "$GITHUB_OUTPUT"
           echo "Changed issues: $FILES"
 

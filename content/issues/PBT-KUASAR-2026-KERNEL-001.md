@@ -1,5 +1,5 @@
 ---
-id: KUASAR-2026-KERNEL-001
+id: PBT-KUASAR-2026-KERNEL-001
 date: "2026-05-19"
 repo: kuasar
 repo_url: https://github.com/kuasar-io/kuasar

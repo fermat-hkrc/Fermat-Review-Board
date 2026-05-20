@@ -1,5 +1,5 @@
 ---
-id: OH-2026-DRIVERS-002
+id: PBT-OH-2026-DRIVERS-002
 date: "2026-05-19"
 repo: sensors_sensor_lite
 repo_url: https://gitcode.com/openharmony/sensors_sensor_lite
