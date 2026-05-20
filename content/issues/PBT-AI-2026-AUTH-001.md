@@ -1,5 +1,5 @@
 ---
-id: AI-2026-AUTH-001
+id: PBT-AI-2026-AUTH-001
 date: "2026-04-24"
 repo: agent-studio
 repo_url: https://gitcode.com/openJiuwen/agent-studio

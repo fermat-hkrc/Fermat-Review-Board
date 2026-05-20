@@ -1,5 +1,5 @@
 ---
-id: OH-2026-DEVMGR-003
+id: PBT-OH-2026-DEVMGR-003
 date: "2026-05-19"
 repo: distributedhardware_device_manager
 repo_url: https://gitcode.com/openharmony/distributedhardware_device_manager
