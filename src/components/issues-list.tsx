@@ -49,7 +49,7 @@ export default function IssuesListClient({
         issue.title.toLowerCase().includes(q) ||
         issue.id.toLowerCase().includes(q) ||
         issue.repo.toLowerCase().includes(q) ||
-        issue.cwe.toLowerCase().includes(q) ||
+        (issue.cwe || "").toLowerCase().includes(q) ||
         (issue.cwe_name || "").toLowerCase().includes(q);
       if (!match) return false;
     }
@@ -123,12 +123,14 @@ export default function IssuesListClient({
                       {issue.title}
                     </Link>
                   </div>
+                  {issue.cwe && (
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[#1a1a2e] text-blue-400 border border-blue-500/20">
                       {issue.cwe}
                       {issue.cwe_name && ` — ${issue.cwe_name}`}
                     </span>
                   </div>
+                  )}
                   <div className="flex items-center gap-4 text-xs text-[#737373]">
                     <span className="font-mono">{issue.id}</span>
                     <span>{issue.repo}</span>

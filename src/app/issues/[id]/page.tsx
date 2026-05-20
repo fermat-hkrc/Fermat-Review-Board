@@ -38,10 +38,12 @@ export default async function IssueDetailPage({
       <div className="mb-8">
         <div className="flex flex-wrap items-center gap-2 mb-3">
           <StatusBadge status={issue.meta.status} />
+          {issue.meta.cwe && (
           <span className="text-xs font-mono text-blue-400 bg-[#1a1a2e] px-2 py-0.5 rounded border border-blue-500/20">
             {issue.meta.cwe}
             {issue.meta.cwe_name && ` — ${issue.meta.cwe_name}`}
           </span>
+          )}
         </div>
         <h1 className="text-xl font-bold text-white mb-4">
           {issue.meta.title}
@@ -66,12 +68,14 @@ export default async function IssueDetailPage({
         {/* Meta info */}
         <div className="bg-[#141414] border border-[#262626] rounded-lg p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            {issue.meta.cwe && (
             <MetaRow label="CWE">
               <span className="text-[#d4d4d4] font-mono">
                 {issue.meta.cwe}
                 {issue.meta.cwe_name && ` — ${issue.meta.cwe_name}`}
               </span>
             </MetaRow>
+            )}
             <MetaRow label="Repository">
               {issue.meta.repo_url ? (
                 <a

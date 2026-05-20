@@ -95,12 +95,14 @@ export default function DashboardPage() {
                       </Link>
                     </div>
                     {/* CWE */}
+                    {issue.cwe && (
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[#1a1a2e] text-blue-400 border border-blue-500/20">
                         {issue.cwe}
                         {issue.cwe_name && ` — ${issue.cwe_name}`}
                       </span>
                     </div>
+                    )}
                     {/* Meta row */}
                     <div className="flex items-center gap-4 text-xs text-[#737373]">
                       <span className="font-mono">{issue.id}</span>
