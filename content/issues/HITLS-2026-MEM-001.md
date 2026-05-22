@@ -7,7 +7,7 @@ title: "[Bug]: Memory leak in ConstructUserPsk — pskSession not freed on ident
 cwe: CWE-401
 cwe_name: Missing Release of Memory after Effective Lifetime
 severity: MEDIUM
-status: SUBMITTED
+status: CONFIRMED_FIXED
 issue_url: https://gitcode.com/openHiTLS/openhitls/issues/145
 affected_version: "*"
 component: tls/handshake
