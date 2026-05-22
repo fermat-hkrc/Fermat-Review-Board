@@ -1,0 +1,16 @@
+[*] PoC: PngNinePatchRes::DeviceToFile OOB (CWE-787)
+[*] Allocating 48 bytes (struct + 4 dividers)
+[*] Setting numXDivs=64, will access 64*4=256 bytes past struct
+=================================================================
+==2785488==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x504000000040 at pc 0x55e60a3b5873 bp 0x7fff5b8402e0 sp 0x7fff5b8402d0
+READ of size 4 at 0x504000000040 thread T0
+    #0 in OHOS::ImagePlugin::PngNinePatchRes::DeviceToFile() png_ninepatch_res.cpp:48
+    #1 in main poc.cpp:45
+    #2 in __libc_start_call_main
+    #3 in __libc_start_main_impl
+0x504000000040 is located 0 bytes after 48-byte region [0x504000000010,0x504000000040)
+allocated by thread T0 here:
+    #0 in malloc
+    #1 in main poc.cpp:24
+SUMMARY: AddressSanitizer: heap-buffer-overflow png_ninepatch_res.cpp:48 in OHOS::ImagePlugin::PngNinePatchRes::DeviceToFile()
+==2785488==ABORTING

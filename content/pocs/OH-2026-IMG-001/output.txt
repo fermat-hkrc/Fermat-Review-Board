@@ -1,0 +1,20 @@
+[*] PoC: I400ToI420 UV plane overflow (CWE-787)
+[*] Image: 64x64 grayscale -> I420
+[*] U plane allocation: 1024 bytes
+[*] UVCOMSize computed: 2048 bytes (U+V combined)
+[*] memset_s will write 2048 bytes to 1024-byte U buffer
+=================================================================
+==2785689==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x519000000480 at pc 0x740d748fa97d bp 0x7ffe91da5c60 sp 0x7ffe91da5408
+WRITE of size 2048 at 0x519000000480 thread T0
+    #0 in memset
+    #1 in memset_s(void*, unsigned long, int, unsigned long) stubs/securec.h:14
+    #2 in OHOS::ImagePlugin::I400ToI420_wrapper(OHOS::ImagePlugin::YuvPlaneInfo const&, OHOS::ImagePlugin::YuvPlaneInfo const&) jpeg_yuvdata_converter.cpp:346
+    #3 in main poc.cpp:76
+    #4 in __libc_start_call_main
+    #5 in __libc_start_main_impl
+0x519000000480 is located 0 bytes after 1024-byte region [0x519000000080,0x519000000480)
+allocated by thread T0 here:
+    #0 in malloc
+    #1 in main poc.cpp:39
+SUMMARY: AddressSanitizer: heap-buffer-overflow in memset
+==2785689==ABORTING
