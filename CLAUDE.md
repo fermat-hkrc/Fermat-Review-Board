@@ -23,7 +23,7 @@
 - `SUBMITTED` — 已提单，等待上游确认（默认状态）
 - `CONFIRMED_REAL` — 上游开发人员已确认是真实漏洞
 - `CONFIRMED_FIXED` — 已确认并已修复
-- `NEEDS_REVIEW` — 需要内部 review（尚未提单）
+- `PENDING` — 尚未提单
 - `FALSE_POSITIVE` — 误报
 
 **重要**：只有上游明确确认后才能标记为 CONFIRMED。提单不等于确认。

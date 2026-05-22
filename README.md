@@ -32,7 +32,7 @@ title: Brief vulnerability description
 severity: HIGH              # CRITICAL / HIGH / MEDIUM / LOW
 cwe: CWE-XXX
 cwe_name: CWE Full Name
-status: NEEDS_REVIEW        # NEEDS_REVIEW / CONFIRMED_REAL / CONFIRMED_FIXED
+status: PENDING             # PENDING / SUBMITTED / CONFIRMED_REAL / CONFIRMED_FIXED
 affected_version: "version"
 component: component_name
 file_paths:

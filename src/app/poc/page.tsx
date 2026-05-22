@@ -946,7 +946,6 @@ function StatusBadge({ status }: { status: string }) {
     CONFIRMED_FIXED: { label: "Fixed", color: "text-green-400", bg: "bg-green-500/10" },
     SUBMITTED: { label: "Submitted", color: "text-blue-400", bg: "bg-blue-500/10" },
     PENDING: { label: "Pending", color: "text-amber-400", bg: "bg-amber-500/10" },
-    NEEDS_REVIEW: { label: "Review", color: "text-purple-400", bg: "bg-purple-500/10" },
     FALSE_POSITIVE: { label: "FP", color: "text-[#737373]", bg: "bg-[#262626]" },
   };
   const c = config[status] || { label: status, color: "text-[#a3a3a3]", bg: "bg-[#262626]" };

@@ -22,7 +22,7 @@ title: Brief description of the vulnerability
 severity: HIGH          # CRITICAL / HIGH / MEDIUM / LOW
 cwe: CWE-XXX
 cwe_name: CWE Name
-status: NEEDS_REVIEW    # NEEDS_REVIEW / CONFIRMED_REAL / CONFIRMED_FIXED / FALSE_POSITIVE
+status: PENDING         # PENDING / SUBMITTED / CONFIRMED_REAL / CONFIRMED_FIXED / FALSE_POSITIVE
 affected_version: "version info"
 component: component_name
 file_paths:
@@ -76,4 +76,4 @@ npm run build   # Verify static export works
 
 1. Maintainers review the PR for accuracy and completeness
 2. If approved, the PR is merged and the site auto-deploys
-3. Status may be updated later (NEEDS_REVIEW -> CONFIRMED_REAL -> CONFIRMED_FIXED)
+3. Status may be updated later (PENDING -> SUBMITTED -> CONFIRMED_REAL -> CONFIRMED_FIXED)
