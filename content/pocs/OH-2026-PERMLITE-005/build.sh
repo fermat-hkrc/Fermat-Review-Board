@@ -1,6 +1,6 @@
 #!/bin/bash
 # Build script for OH-2026-PERMLITE-005 PoC
-# Requires: gn, ninja, gcc with ASan support, ~/data/ohos-build-toolkit/
+# Requires: gn, ninja, clang with ASan support, ~/data/ohos-build-toolkit/
 #
 # Prerequisites:
 #   1. OHOS repos at ~/data/openharmony-data/repos/

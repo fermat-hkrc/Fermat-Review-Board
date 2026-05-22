@@ -113,7 +113,7 @@ Target-Compile 编译的是**真正的生产代码**，测试驱动调用的是*
 | 项目 | 版本/路径 |
 |------|----------|
 | 操作系统 | Ubuntu 24.04 LTS, Linux 6.17, x86_64 |
-| 编译器 | gcc 13.x（系统自带） |
+| 编译器 | clang (LLVM) |
 | 构建工具 | GN (Generate Ninja) + Ninja |
 | Sanitizer | ASan + UBSan (`-fsanitize=address,undefined`) |
 | OHOS 工具链 | `~/data/ohos-build-toolkit/` |
@@ -124,7 +124,7 @@ Target-Compile 编译的是**真正的生产代码**，测试驱动调用的是*
 ```
 ohos-build-toolkit/
 ├── custom_build/           — GN 工具链定义
-│   ├── BUILDCONFIG.gn      — 全局构建配置，声明 gcc 工具链
+│   ├── BUILDCONFIG.gn      — 全局构建配置，声明 clang 工具链
 │   ├── toolchain/BUILD.gn  — GCC 工具定义（cc/cxx/alink/link）
 │   └── configs/BUILD.gn    — 编译选项：-Wall -O0 -g -fPIC
 │                             -fsanitize=address,undefined
@@ -291,7 +291,7 @@ SUMMARY: AddressSanitizer: allocation-size-too-big
 ### 7. 复现步骤
 
 ```bash
-# 前置条件：gn, ninja, gcc with ASan 在 PATH 中
+# 前置条件：gn, ninja, clang with ASan 在 PATH 中
 
 # 1. 获取工具链
 #    ~/data/ohos-build-toolkit/ (setup_build.py + custom_build/ + stubs/)

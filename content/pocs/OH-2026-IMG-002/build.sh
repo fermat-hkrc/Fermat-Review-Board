@@ -13,21 +13,21 @@ TMPDIR=$(mktemp -d /tmp/fermat_img002_XXXXXX)
 trap "rm -rf $TMPDIR" EXIT
 
 echo "[*] Compiling real png_ninepatch_res.cpp ..."
-g++ -c -fsanitize=address -fno-omit-frame-pointer -O0 -g \
+clang++ -c -fsanitize=address -fno-omit-frame-pointer -O0 -g \
     -I "$INCDIR" \
     -I "$STUBDIR" \
     "$SRCDIR/png_ninepatch_res.cpp" \
     -o "$TMPDIR/png_ninepatch_res.o"
 
 echo "[*] Compiling test driver ..."
-g++ -c -fsanitize=address -fno-omit-frame-pointer -O0 -g \
+clang++ -c -fsanitize=address -fno-omit-frame-pointer -O0 -g \
     -I "$INCDIR" \
     -I "$STUBDIR" \
     "$(dirname "$0")/poc.cpp" \
     -o "$TMPDIR/poc.o"
 
 echo "[*] Linking ..."
-g++ -O0 -fsanitize=address -fno-omit-frame-pointer \
+clang++ -O0 -fsanitize=address -fno-omit-frame-pointer \
     -o "$TMPDIR/poc_bin" \
     "$TMPDIR/png_ninepatch_res.o" \
     "$TMPDIR/poc.o" \

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Build script for OH-2026-FS-001 PoC
-# Requires: gn, ninja, gcc with ASan, ~/data/ohos-build-toolkit/
+# Requires: gn, ninja, clang with ASan, ~/data/ohos-build-toolkit/
 
 set -e
 

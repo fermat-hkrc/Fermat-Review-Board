@@ -7,7 +7,7 @@
  *   ./out/default/obj/test/cfg_policy_poc
  *
  * Or compile directly:
- *   gcc -fsanitize=address,undefined -g -O0 \
+ *   clang -fsanitize=address,undefined -g -O0 \
  *     -I<path-to-headers> poc.c system_param_stubs.c \
  *     configpolicy_util.a libsec_static.a -o poc && ./poc
  */

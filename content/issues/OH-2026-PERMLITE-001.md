@@ -79,7 +79,7 @@ static void ReplyRevokeRuntimePermission(const void *origin, IpcIo *req, IpcIo *
 **构建命令**:
 ```bash
 # 1. 编译真实 pms_server_internal.c
-gcc -c -fsanitize=address -fno-omit-frame-pointer -O0 -g -Dstatic= \
+clang -c -fsanitize=address -fno-omit-frame-pointer -O0 -g -Dstatic= \
     -I security_permission_lite/services/pms/include \
     -I security_permission_lite/interfaces/kits \
     -I <ohos-framework-headers> \
@@ -87,7 +87,7 @@ gcc -c -fsanitize=address -fno-omit-frame-pointer -O0 -g -Dstatic= \
 
 # 2. 编译 test driver + stubs
 # 3. 链接
-gcc -fsanitize=address -o poc_permlite001 \
+clang -fsanitize=address -o poc_permlite001 \
     test_driver.o pms_server_internal.o ohos_stubs.o pms_stubs.o \
     sensor_extra_stubs.o memcpy_s.o securecutil.o -lpthread
 ```

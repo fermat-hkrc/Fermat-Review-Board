@@ -16,14 +16,14 @@
  *   AFTER  patch (calloc): all bytes zeroed, no ASan trigger
  *
  * Build (target-compile):
- *   gcc -c -Dstatic= -O0 -g \
+ *   clang -c -Dstatic= -O0 -g \
  *       -I sensors_sensor_lite/interfaces/kits/native/include \
  *       -I <ohos-toolkit-stubs> \
  *       -I sensors_sensor_lite/frameworks/include \
  *       -I sensors_sensor_lite/services/include \
  *       sensors_sensor_lite/frameworks/src/sensor_agent_proxy.c -o sensor_agent_proxy.o
  *
- *   g++ -O0 -fsanitize=address -fno-omit-frame-pointer \
+ *   clang++ -O0 -fsanitize=address -fno-omit-frame-pointer \
  *       -o poc_bin sensor_agent_proxy.o cJSON.o ohos_stubs.o poc.o memcpy_s.o \
  *       -lpthread -lstdc++
  */

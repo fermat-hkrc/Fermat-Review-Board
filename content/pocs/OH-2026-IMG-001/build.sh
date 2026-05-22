@@ -13,28 +13,28 @@ TMPDIR=$(mktemp -d /tmp/fermat_img001_XXXXXX)
 trap "rm -rf $TMPDIR" EXIT
 
 echo "[*] Compiling real jpeg_yuvdata_converter.cpp ..."
-g++ -c -fsanitize=address -fno-omit-frame-pointer -O0 -g \
+clang++ -c -fsanitize=address -fno-omit-frame-pointer -O0 -g \
     -I "$INCDIR" \
     -I "$STUBDIR" \
     "$SRCDIR/jpeg_yuvdata_converter.cpp" \
     -o "$TMPDIR/jpeg_yuvdata_converter.o"
 
 echo "[*] Compiling real yuv_helper.cpp ..."
-g++ -c -fsanitize=address -fno-omit-frame-pointer -O0 -g \
+clang++ -c -fsanitize=address -fno-omit-frame-pointer -O0 -g \
     -I "$INCDIR" \
     -I "$STUBDIR" \
     "$SRCDIR/yuv_helper.cpp" \
     -o "$TMPDIR/yuv_helper.o"
 
 echo "[*] Compiling test driver ..."
-g++ -c -fsanitize=address -fno-omit-frame-pointer -O0 -g \
+clang++ -c -fsanitize=address -fno-omit-frame-pointer -O0 -g \
     -I "$INCDIR" \
     -I "$STUBDIR" \
     "$(dirname "$0")/poc.cpp" \
     -o "$TMPDIR/poc.o"
 
 echo "[*] Linking ..."
-g++ -O0 -fsanitize=address -fno-omit-frame-pointer \
+clang++ -O0 -fsanitize=address -fno-omit-frame-pointer \
     -o "$TMPDIR/poc_bin" \
     "$TMPDIR/jpeg_yuvdata_converter.o" \
     "$TMPDIR/yuv_helper.o" \

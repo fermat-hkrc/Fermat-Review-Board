@@ -111,7 +111,7 @@ export default function PocPage() {
             <p>编译时插桩，运行时检测。Sanitizer 在内存分配周围插入 red zone，在释放后标记为 poisoned，在未初始化区域标记为 uninitialized。任何违规访问立即触发报告并终止。</p>
             <div className="bg-[#0a0a0a] border border-[#262626] rounded p-3 font-mono text-xs">
               <div className="text-[#737373]">{"# 编译命令"}</div>
-              <div>{"gcc -fsanitize=address,undefined -fno-omit-frame-pointer -g -O0 target.c poc.c -o poc"}</div>
+              <div>{"clang -fsanitize=address,undefined -fno-omit-frame-pointer -g -O0 target.c poc.c -o poc"}</div>
               <div className="mt-2 text-[#737373]">{"# 判定: 程序以非零退出码终止 + stderr 包含 Sanitizer 报告"}</div>
               <div className="text-green-400">{"grep 'ERROR: AddressSanitizer\\|runtime error:' stderr → 漏洞确认"}</div>
             </div>
@@ -334,7 +334,7 @@ export default function PocPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               { name: "GN 构建系统", desc: "模拟 OHOS 构建环境，定义编译目标、依赖关系和编译标志", icon: "gn" },
-              { name: "Ninja 编译器", desc: "执行增量编译，调度 gcc/g++ 编译任务", icon: "ninja" },
+              { name: "Ninja 编译器", desc: "执行增量编译，调度 clang/clang++ 编译任务", icon: "ninja" },
               { name: "ASan + UBSan", desc: "AddressSanitizer 检测内存越界，UndefinedBehaviorSanitizer 检测未定义行为", icon: "san" },
               { name: "setup_build.py", desc: "一键生成完整构建根目录的脚本，自动链接框架头文件和第三方库", icon: "py" },
             ].map((item) => (
@@ -556,7 +556,7 @@ export default function PocPage() {
               <div>{"SCENARIO / SETUP / TRIGGER / EXPECTED_SIGNAL"}</div>
               <div className="text-[#737373]">{"    ↓ setup_build.py — 一键生成构建根目录"}</div>
               <div>{"GN 构建描述 (BUILD.gn) + 桩代码"}</div>
-              <div className="text-[#737373]">{"    ↓ gn gen + ninja — gcc/g++ 编译 + ASan/MSan 插桩"}</div>
+              <div className="text-[#737373]">{"    ↓ gn gen + ninja — clang/clang++ 编译 + ASan/MSan 插桩"}</div>
               <div className="text-white">{"静态库 (.a) — 真实编译产物"}</div>
               <div className="text-[#737373]">{"    ↓ Build Agent — 链接 PoC 测试驱动（自动修复编译错误）"}</div>
               <div>{"可执行文件（含 Sanitizer runtime）"}</div>
@@ -581,7 +581,7 @@ export default function PocPage() {
                 ["场景规划", "Scenario Planner", "入口 + CWE + 触发条件", "结构化攻击计划"],
                 ["源码准备", "setup_build.py", "OHOS 模块源码", "GN 构建根目录 + 桩代码"],
                 ["构建生成", "gn gen", "BUILD.gn 文件", "ninja 构建文件"],
-                ["编译", "ninja (gcc/g++)", ".c/.cpp 源文件", ".o 目标文件"],
+                ["编译", "ninja (clang/clang++)", ".c/.cpp 源文件", ".o 目标文件"],
                 ["打包", "ar rcs", ".o 目标文件", ".a 静态库"],
                 ["链接", "Build Agent", "PoC.o + .a + Sanitizer", "可执行文件"],
                 ["验证", "Oracle (ASan/MSan/Assertion)", "构造的恶意输入", "漏洞确认报告"],
@@ -920,8 +920,8 @@ export default function PocPage() {
               {[
                 ["操作系统", "Ubuntu 24.04 LTS, Linux 6.17, x86_64"],
                 ["构建系统", "GN + Ninja (OHOS 构建工具链)"],
-                ["C 编译器", "gcc 13.x + ASan + UBSan"],
-                ["C++ 编译器", "g++ 13.x + ASan + UBSan"],
+                ["C 编译器", "clang (LLVM) + ASan + UBSan"],
+                ["C++ 编译器", "clang++ (LLVM) + ASan + UBSan"],
                 ["C++ 标准", "C++17 (-std=c++17)"],
                 ["RTTI", "禁用 (-fno-rtti)"],
                 ["优化级别", "-O0 (无优化，确保 ASan 插桩完整)"],
