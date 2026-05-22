@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getAllIssueIds, getIssue } from "@/lib/content";
 import IssueContent from "@/components/issue-content";
 import PocViewer from "@/components/poc-viewer";
+import ExportButton from "@/components/export-button";
 
 export function generateStaticParams() {
   return getAllIssueIds().map((id) => ({ id }));
@@ -50,20 +51,23 @@ export default async function IssueDetailPage({
         </h1>
 
         {/* Upstream Issue Link — prominent */}
-        {issue.meta.issue_url && (
-          <a
-            href={issue.meta.issue_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mb-4 px-4 py-2.5 bg-blue-600/20 border border-blue-500/40 rounded-lg text-blue-300 hover:bg-blue-600/30 hover:text-blue-200 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-            <span className="text-sm font-medium">View Upstream Issue</span>
-            <span className="text-xs text-blue-400/70">{issue.meta.issue_url.replace(/https?:\/\//, '')}</span>
-          </a>
-        )}
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          {issue.meta.issue_url && (
+            <a
+              href={issue.meta.issue_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600/20 border border-blue-500/40 rounded-lg text-blue-300 hover:bg-blue-600/30 hover:text-blue-200 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              <span className="text-sm font-medium">View Upstream Issue</span>
+              <span className="text-xs text-blue-400/70">{issue.meta.issue_url.replace(/https?:\/\//, '')}</span>
+            </a>
+          )}
+          <ExportButton meta={issue.meta} content={issue.content} />
+        </div>
 
         {/* Meta info */}
         <div className="bg-[#141414] border border-[#262626] rounded-lg p-4">

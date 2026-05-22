@@ -11,6 +11,7 @@ export interface IssueMeta {
   repo: string;
   repo_url: string;
   title: string;
+  severity?: string;
   cwe: string;
   cwe_name?: string;
   status: string;
