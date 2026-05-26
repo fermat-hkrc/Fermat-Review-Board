@@ -7,6 +7,7 @@ title: "DSoftBus IPC Inner Handler 从 MessageParcel 读取长度后未做边界
 cwe: CWE-20
 cwe_name: Improper Input Validation
 status: SUBMITTED
+language: C
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9228
 author: Zirui
 ---

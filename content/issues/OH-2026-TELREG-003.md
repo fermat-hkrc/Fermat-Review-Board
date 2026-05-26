@@ -7,6 +7,7 @@ title: "TelephonyStateRegistryService::UpdateNetworkState 在 EXT_WRAPPER 分支
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 status: SUBMITTED
+language: C
 issue_url: https://gitcode.com/openharmony/telephony_state_registry/issues/254
 author: Zirui
 ---

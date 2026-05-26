@@ -7,6 +7,7 @@ title: "TokenSyncManagerStub::OnRemoteRequest 缺少 VerifyAccessToken 授权检
 cwe: CWE-190
 cwe_name: Integer Overflow or Wraparound
 status: SUBMITTED
+language: C
 issue_url: https://gitcode.com/openharmony/security_access_token/issues/3173
 author: Zirui
 ---

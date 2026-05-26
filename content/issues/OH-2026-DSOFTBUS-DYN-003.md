@@ -7,6 +7,7 @@ title: "GetInfoFromSplitKey 中 atol() 返回值未验证直接用于 strcpy_s"
 cwe: CWE-20
 cwe_name: Improper Input Validation
 status: SUBMITTED
+language: C
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9228
 author: Zirui
 ---

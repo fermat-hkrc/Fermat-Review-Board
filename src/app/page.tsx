@@ -73,13 +73,25 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <StatCard label="Total Issues" value={stats.total} />
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+        <StatCard label="Total Issues" value={stats.total} href="/issues" />
         <StatCard
           label="Confirmed"
           value={stats.confirmed}
           accent="text-green-400"
           href="/confirmed"
+        />
+        <StatCard
+          label="Submitted"
+          value={stats.byStatus["SUBMITTED"] || 0}
+          accent="text-amber-400"
+          href="/issues?status=SUBMITTED"
+        />
+        <StatCard
+          label="Pending"
+          value={stats.byStatus["PENDING"] || 0}
+          accent="text-cyan-400"
+          href="/issues?status=PENDING"
         />
         <StatCard
           label="Repos"

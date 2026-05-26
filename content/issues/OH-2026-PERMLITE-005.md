@@ -8,6 +8,7 @@ severity: HIGH
 cwe: CWE-190
 cwe_name: Integer Overflow or Wraparound
 status: SUBMITTED
+language: C
 issue_url: https://gitcode.com/openharmony/security_permission_lite/issues/97
 component: pms_impl
 file_paths:

@@ -7,6 +7,7 @@ title: "BusCenterExObjStub 和 TransSpecObjectStub 的 OnRemoteRequest 缺少调
 cwe: CWE-862
 cwe_name: Missing Authorization
 status: SUBMITTED
+language: C
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9200
 author: Zirui
 ---

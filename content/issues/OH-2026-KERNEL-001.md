@@ -7,6 +7,7 @@ title: "LiteIPC LiteIpcTaskInit 返回值未检查导致 NULL 指针解引用"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 status: CONFIRMED_FIXED
+language: C
 issue_url: https://gitcode.com/openharmony/kernel_liteos_a/issues/1067
 author: Zirui
 ---

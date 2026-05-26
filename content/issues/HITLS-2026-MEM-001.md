@@ -8,6 +8,7 @@ cwe: CWE-401
 cwe_name: Missing Release of Memory after Effective Lifetime
 severity: MEDIUM
 status: CONFIRMED_FIXED
+language: C
 issue_url: https://gitcode.com/openHiTLS/openhitls/issues/145
 affected_version: "*"
 component: tls/handshake

@@ -8,6 +8,7 @@ severity: HIGH
 cwe: CWE-129
 cwe_name: Improper Validation of Array Index
 status: SUBMITTED
+language: C
 issue_url: https://gitcode.com/openharmony/security_permission_lite/issues/96
 has_poc: true
 file_paths:
