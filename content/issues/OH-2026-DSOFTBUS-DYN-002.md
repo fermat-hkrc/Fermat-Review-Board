@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/communication_dsoftbus
 title: "DSoftBus IPC Inner Handler 从 MessageParcel 读取长度后未做边界检查即用于内存操作"
 cwe: CWE-20
 cwe_name: Improper Input Validation
-status: SUBMITTED
+status: CLOSED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9228
 author: Zirui
@@ -151,3 +151,11 @@ auto rawData = data.ReadRawData(len);
 +}
 if (!reply.WriteRawData(nodeInfo, static_cast<int32_t>(infoTypeLen * infoNum))) {
 ```
+
+---
+
+## 开发者回复（已拒绝）
+
+> **xftz** — 2026-05-26
+>
+> SendMessageInner、CloseChannelWithStatisticsInner、OnBrProxyDataRecvInner都已确认传入端正确性。GetAllOnlineNodeInfoInner 在GetAllOnlineNodeInfo函数中已有检测，若长度错误返回异常

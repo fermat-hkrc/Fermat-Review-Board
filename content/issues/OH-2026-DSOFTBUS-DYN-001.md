@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/communication_dsoftbus
 title: "DSoftBus 动态加载 Stub 的 OnRemoteRequest 缺少授权检查"
 cwe: CWE-20
 cwe_name: Improper Input Validation
-status: SUBMITTED
+status: CLOSED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9228
 author: Zirui
@@ -116,3 +116,11 @@ int32_t BusCenterExObjStub::OnRemoteRequest(
     return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
 }
 ```
+
+---
+
+## 开发者回复（已拒绝）
+
+> **xftz** — 2026-05-26
+>
+> BusCenterExObjStub::OnRemoteRequest和TransSpecObjectStub::OnRemoteRequest没有无人调用，不涉及

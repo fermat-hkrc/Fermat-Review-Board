@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/communication_dsoftbus
 title: "GetInfoFromSplitKey 中 atol() 返回值未验证直接用于 strcpy_s"
 cwe: CWE-20
 cwe_name: Improper Input Validation
-status: SUBMITTED
+status: CLOSED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9228
 author: Zirui
@@ -65,3 +65,11 @@ if (strcpy_s(info->accountId, sizeof(info->accountId), splitKey[0]) != EOK) {
     return SOFTBUS_INVALID_PARAM;
 }
 ```
+
+---
+
+## 开发者回复（已拒绝）
+
+> **xftz** — 2026-05-26
+>
+> SendMessageInner、CloseChannelWithStatisticsInner、OnBrProxyDataRecvInner都已确认传入端正确性。GetAllOnlineNodeInfoInner 在GetAllOnlineNodeInfo函数中已有检测，若长度错误返回异常
