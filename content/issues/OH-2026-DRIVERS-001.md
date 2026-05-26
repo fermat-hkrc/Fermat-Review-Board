@@ -7,7 +7,7 @@ title: "Camera HAL ReadMetadata 系列函数空指针解引用"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 status: SUBMITTED
-language: C
+language: "C++"
 issue_url: https://gitcode.com/openharmony/drivers_interface/issues/1235
 author: Zirui
 ---

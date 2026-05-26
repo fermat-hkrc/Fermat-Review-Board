@@ -7,7 +7,7 @@ title: "IpcServerStub::OnRemoteRequest 缺少调用者身份验证"
 cwe: CWE-862
 cwe_name: Missing Authorization
 status: CONFIRMED_REAL
-language: C
+language: "C++"
 issue_url: https://gitcode.com/openharmony/distributedhardware_device_manager/issues/2426
 author: Zirui
 ---

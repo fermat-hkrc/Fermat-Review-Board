@@ -7,7 +7,7 @@ title: 密钥协商共享密钥（异步路径）未清零
 cwe: CWE-244
 cwe_name: Improper Clearing of Heap Memory Before Release
 status: CONFIRMED_FIXED
-language: C
+language: "C++"
 affected_version: "2026.04.23 最新版本"
 component: security_crypto_framework
 issue_url: https://gitcode.com/openharmony/security_crypto_framework/issues/575

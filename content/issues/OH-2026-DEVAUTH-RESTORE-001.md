@@ -7,7 +7,7 @@ title: "RESTORE_CODE 路径跳过 CheckPermission 权限检查"
 cwe: CWE-862
 cwe_name: Missing Authorization
 status: SUBMITTED
-language: C
+language: "C++"
 issue_url: https://gitcode.com/openharmony/security_device_auth/issues/1037
 author: Zirui
 ---

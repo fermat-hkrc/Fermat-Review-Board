@@ -7,7 +7,7 @@ title: "FirstUseDialog::SendSaveEventHandler 未检查 secHandler_ 空指针"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 status: SUBMITTED
-language: C
+language: "C++"
 issue_url: https://gitcode.com/openharmony/security_security_component_manager/issues/395
 author: Zirui
 ---

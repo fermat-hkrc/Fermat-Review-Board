@@ -7,7 +7,7 @@ title: "IPC 回调从 IPC 数据读取函数指针并直接调用"
 cwe: CWE-822
 cwe_name: Untrusted Pointer Dereference
 status: CONFIRMED_FIXED
-language: C
+language: "C++"
 issue_url: https://gitcode.com/openharmony/security_device_auth/issues/1035
 author: Zirui
 ---

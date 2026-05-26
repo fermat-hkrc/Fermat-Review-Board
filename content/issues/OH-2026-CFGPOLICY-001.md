@@ -7,7 +7,7 @@ title: "CJ_GetCfgDirList / CJ_GetCfgFiles Use-After-Free"
 cwe: CWE-416
 cwe_name: Use After Free
 status: SUBMITTED
-language: C
+language: "C++"
 issue_url: https://gitcode.com/openharmony/customization_config_policy/issues/162
 author: Zirui
 ---

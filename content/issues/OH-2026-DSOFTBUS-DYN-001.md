@@ -7,7 +7,7 @@ title: "DSoftBus 动态加载 Stub 的 OnRemoteRequest 缺少授权检查"
 cwe: CWE-20
 cwe_name: Improper Input Validation
 status: SUBMITTED
-language: C
+language: "C++"
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9228
 author: Zirui
 ---
