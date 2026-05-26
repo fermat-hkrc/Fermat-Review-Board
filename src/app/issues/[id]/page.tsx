@@ -149,12 +149,15 @@ export default async function IssueDetailPage({
 
       {/* PoC Section */}
       {issue.poc && issue.poc.files.length > 0 && (
+        <>
+        <hr className="my-10 border-[#333]" />
         <PocViewer
           files={issue.poc.files}
           output={issue.poc.output}
           report={issue.poc.report}
           issueId={issue.meta.id}
         />
+        </>
       )}
 
       {/* Back link */}
