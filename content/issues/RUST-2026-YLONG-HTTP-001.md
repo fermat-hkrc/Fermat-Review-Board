@@ -1,12 +1,12 @@
 ---
 id: RUST-2026-YLONG-HTTP-001
 date: "2026-05-26"
-repo: oh-ylong-http
-repo_url: https://gitee.com/openharmony/commonlibrary_rust_ylong_http
+repo: commonlibrary_rust_ylong_http
+repo_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http
 title: "QUIC Connection 初始化缺少 NULL 指针检查"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: CONFIRMED
+status: PENDING
 language: Rust
 severity: HIGH
 author: Fermat

@@ -1,12 +1,12 @@
 ---
 id: RUST-2026-YLONG-HTTP-002
 date: "2026-05-26"
-repo: oh-ylong-http
-repo_url: https://gitee.com/openharmony/commonlibrary_rust_ylong_http
+repo: commonlibrary_rust_ylong_http
+repo_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http
 title: "SSL_read FFI 调用中的不可变到可变转换导致未定义行为"
 cwe: CWE-787
 cwe_name: Out-of-bounds Write
-status: CONFIRMED
+status: PENDING
 language: Rust
 severity: HIGH
 author: Fermat
