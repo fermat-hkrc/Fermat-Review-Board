@@ -9,13 +9,13 @@ function LanguageIcon({ language }: { language: string }) {
       </svg>
     ),
     C: (
-      <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M16.5 9.4c-.4-.5-1.1-.7-2.1-.7-1.3 0-2.4.7-3.1 2.1-.4.7-.6 1.5-.6 2.5s.2 1.8.6 2.5c.7 1.4 1.8 2.1 3.1 2.1 1 0 1.7-.2 2.1-.7.4-.5.6-1.2.6-2.1h2.1c0 1.4-.4 2.5-1.2 3.3-.8.8-2 1.2-3.6 1.2-1.9 0-3.4-.7-4.4-2-1-1.3-1.5-2.9-1.5-4.8s.5-3.5 1.5-4.8c1-1.3 2.5-2 4.4-2 1.6 0 2.8.4 3.6 1.2.8.8 1.2 1.9 1.2 3.3h-2.1c0-.9-.2-1.6-.6-2.1z"/>
+      <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
       </svg>
     ),
     "C++": (
-      <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M20.66 7a1.51 1.51 0 00-.55-.57l-7.34-4.24a1.67 1.67 0 00-1.54 0L3.89 6.43a1.68 1.68 0 00-.77 1.33v8.48a1.57 1.57 0 00.22.76 1.51 1.51 0 00.55.57l7.34 4.24a1.67 1.67 0 001.54 0l7.34-4.24a1.51 1.51 0 00.55-.57 1.57 1.57 0 00.22-.76V7.76a1.57 1.57 0 00-.22-.76zM12 17.92A5.92 5.92 0 1117.13 9L16 9.71l-.36.2-1.42.82a4 4 0 11-2.48-4.36V6a6.53 6.53 0 010 1.56v.44a4 4 0 012.48 4.36l1.42.82.36.2L17.13 15A5.92 5.92 0 0112 17.92z"/>
+      <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4M16 8v8M8 8v8" />
       </svg>
     ),
     Python: (
