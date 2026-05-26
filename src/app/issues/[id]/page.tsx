@@ -152,6 +152,7 @@ export default async function IssueDetailPage({
         <PocViewer
           files={issue.poc.files}
           output={issue.poc.output}
+          report={issue.poc.report}
           issueId={issue.meta.id}
         />
       )}

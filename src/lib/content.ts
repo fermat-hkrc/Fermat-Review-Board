@@ -34,6 +34,7 @@ export interface Issue {
 export interface PocData {
   files: { name: string; content: string; language: string }[];
   output?: string;
+  report?: string;
 }
 
 export function getAllIssueIds(): string[] {
@@ -101,9 +102,11 @@ function getPocData(issueId: string): PocData | null {
       };
     });
   const outputFile = files.find((f) => f.name === "output.txt");
+  const reportFile = files.find((f) => f.name === "poc-report.md");
   return {
-    files: files.filter((f) => f.name !== "output.txt"),
+    files: files.filter((f) => f.name !== "output.txt" && f.name !== "poc-report.md"),
     output: outputFile?.content,
+    report: reportFile?.content,
   };
 }
 

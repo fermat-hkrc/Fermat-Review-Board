@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import rehypeSlug from "rehype-slug";
 
 interface PocFile {
   name: string;
@@ -11,27 +15,87 @@ interface PocFile {
 export default function PocViewer({
   files,
   output,
+  report,
   issueId,
 }: {
   files: PocFile[];
   output?: string;
+  report?: string;
   issueId: string;
 }) {
+  const [open, setOpen] = useState(false);
+  const totalFiles = files.length + (output ? 1 : 0);
+
   return (
-    <div className="mt-8">
-      <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-        <span className="w-2 h-2 bg-blue-500 rounded-full" />
-        Proof of Concept
-      </h2>
-      {files.map((file) => (
-        <PocFileCard key={file.name} file={file} issueId={issueId} />
-      ))}
-      {output && (
-        <CollapsibleBlock title="ASan Output" defaultOpen={true}>
-          <pre className="p-4 overflow-x-auto text-sm leading-relaxed text-green-400 font-mono whitespace-pre-wrap">
-            {output}
-          </pre>
-        </CollapsibleBlock>
+    <div className="mt-10 border-2 border-emerald-500/30 rounded-xl overflow-hidden bg-[#0d1117]">
+      {/* Collapsible Header */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full px-6 py-4 flex items-center justify-between bg-emerald-500/10 hover:bg-emerald-500/15 transition-colors text-left"
+      >
+        <div className="flex items-center gap-3">
+          <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30">
+            <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </span>
+          <div>
+            <span className="text-base font-semibold text-emerald-300">
+              Proof of Concept
+            </span>
+            <span className="ml-3 text-xs text-emerald-500/70">
+              {totalFiles} file{totalFiles !== 1 ? "s" : ""}
+              {report ? " + report" : ""}
+            </span>
+          </div>
+        </div>
+        <span className="text-emerald-500/60 text-sm">{open ? "▼" : "▶"}</span>
+      </button>
+
+      {/* Collapsed hint */}
+      {!open && (
+        <div className="px-6 py-3 text-xs text-emerald-500/50 border-t border-emerald-500/10">
+          Click to expand PoC verification details
+        </div>
+      )}
+
+      {/* Expanded Content */}
+      {open && (
+        <div className="border-t border-emerald-500/20 p-6 space-y-6">
+          {/* PoC Report (markdown) */}
+          {report && (
+            <div className="prose max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeSlug, rehypeHighlight]}
+              >
+                {report}
+              </ReactMarkdown>
+            </div>
+          )}
+
+          {/* PoC Source Files */}
+          {files.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-emerald-300 mb-3 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                Source Files
+              </h3>
+              {files.map((file) => (
+                <PocFileCard key={file.name} file={file} issueId={issueId} />
+              ))}
+            </div>
+          )}
+
+          {/* ASan / Run Output */}
+          {output && (
+            <CollapsibleBlock title="Run Output" defaultOpen={true}>
+              <pre className="p-4 overflow-x-auto text-sm leading-relaxed text-green-400 font-mono whitespace-pre-wrap">
+                {output}
+              </pre>
+            </CollapsibleBlock>
+          )}
+        </div>
       )}
     </div>
   );
