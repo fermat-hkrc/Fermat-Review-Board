@@ -10,6 +10,7 @@ status: PENDING
 language: Rust
 severity: HIGH
 author: Fermat
+has_poc: true
 ---
 
 ## 漏洞概述

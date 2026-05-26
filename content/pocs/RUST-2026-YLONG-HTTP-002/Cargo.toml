@@ -1,0 +1,9 @@
+[package]
+name = "poc-ylong-ssl-aliasing"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ylong_http_client = { path = "../rust-repos/oh-ylong-http/ylong_http_client", features = ["sync", "http1_1", "c_openssl_3_0", "tokio_base", "async"] }
+openssl = "0.10"
+tokio = { version = "1", features = ["rt", "sync", "time"] }

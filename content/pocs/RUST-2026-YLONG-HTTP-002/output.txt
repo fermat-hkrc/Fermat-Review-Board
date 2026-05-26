@@ -1,0 +1,19 @@
+=== PoC: RUST-2026-YLONG-HTTP-002 ===
+CWE-787: SSL_read writes through immutable reference (&[u8])
+
+[*] Local TLS server on 127.0.0.1:41579
+[*] Sending HTTPS request...
+[+] Status: 200
+[*] Reading response body (triggers vulnerable SslRef::read)...
+[+] Body: Hello, World!
+
+=== Vulnerability Evidence ===
+The response was successfully read, but the read went through:
+  ssl_base.rs:117  fn read(&mut self, buf: &[u8]) -> c_int
+  ssl_base.rs:117    unsafe { SSL_read(..., buf.as_ptr() as *mut c_void, len) }
+
+  &[u8]  = immutable shared reference (Rust promises: no writes)
+  SSL_read = C function that WRITES decrypted data into buffer
+  buf.as_ptr() as *mut c_void = casting const to mutable = UB
+
+  Fix: change `buf: &[u8]` to `buf: &mut [u8]` and use `buf.as_mut_ptr()`
