@@ -150,7 +150,7 @@ export default async function IssueDetailPage({
       {/* PoC Section */}
       {issue.poc && issue.poc.files.length > 0 && (
         <>
-        <hr className="my-10 border-[#333]" />
+        <hr className="my-10 border-0 h-px bg-[#555]" />
         <PocViewer
           files={issue.poc.files}
           output={issue.poc.output}
