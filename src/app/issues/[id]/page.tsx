@@ -177,6 +177,7 @@ function StatusBadge({ status }: { status: string }) {
     PENDING: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
     FALSE_POSITIVE: "bg-gray-500/20 text-gray-400 border-gray-500/30",
     CODE_QUALITY: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+    CLOSED: "bg-red-500/20 text-red-400 border-red-500/30",
   };
   const labels: Record<string, string> = {
     CONFIRMED_REAL: "Confirmed",
@@ -185,6 +186,7 @@ function StatusBadge({ status }: { status: string }) {
     PENDING: "Pending",
     FALSE_POSITIVE: "False Positive",
     CODE_QUALITY: "Code Quality",
+    CLOSED: "Closed",
   };
   return (
     <span
