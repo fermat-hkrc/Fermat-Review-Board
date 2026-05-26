@@ -8,6 +8,7 @@ cwe: CWE-190
 cwe_name: Integer Overflow or Wraparound
 severity: HIGH
 status: CONFIRMED_REAL
+language: Rust
 issue_url: https://github.com/kuasar-io/kuasar/issues/244
 affected_version: "*"
 component: vmm/sandbox

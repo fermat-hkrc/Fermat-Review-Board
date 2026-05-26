@@ -8,6 +8,7 @@ cwe: CWE-1078
 cwe_name: Inappropriate Source Code Style, Formatting, and Commenting
 severity: LOW
 status: CONFIRMED_FIXED
+language: C
 issue_url: https://gitcode.com/openHiTLS/openhitls/issues/149
 affected_version: "*"
 component: crypto

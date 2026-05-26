@@ -8,6 +8,7 @@ cwe: CWE-200
 cwe_name: Exposure of Sensitive Information
 severity: MEDIUM
 status: CONFIRMED_FIXED
+language: Python
 issue_url: https://gitcode.com/openJiuwen/agent-studio/issues/822
 affected_version: "*"
 component: security_utils

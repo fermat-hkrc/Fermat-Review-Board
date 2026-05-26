@@ -8,6 +8,7 @@ cwe: CWE-459
 cwe_name: Incomplete Cleanup
 severity: HIGH
 status: CONFIRMED_REAL
+language: C
 issue_url: https://gitcode.com/openHiTLS/openhitls/issues/156
 affected_version: "*"
 component: hmac

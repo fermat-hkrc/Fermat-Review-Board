@@ -8,6 +8,7 @@ cwe: CWE-20
 cwe_name: Improper Input Validation
 severity: MEDIUM
 status: CONFIRMED_REAL
+language: Rust
 issue_url: https://github.com/kuasar-io/kuasar/issues/245
 affected_version: "*"
 component: vmm/sandbox

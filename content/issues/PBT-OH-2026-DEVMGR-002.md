@@ -8,6 +8,7 @@ cwe: CWE-1066
 cwe_name: Missing Serialization Control Element
 severity: MEDIUM
 status: SUBMITTED
+language: "C++"
 issue_url: https://gitcode.com/openharmony/distributedhardware_device_manager/issues/2438
 affected_version: "5.0+"
 component: relationshipsyncmgr

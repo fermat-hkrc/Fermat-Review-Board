@@ -8,6 +8,7 @@ cwe: CWE-20
 cwe_name: Improper Input Validation
 severity: MEDIUM
 status: CONFIRMED_FIXED
+language: Python
 issue_url: https://gitcode.com/openJiuwen/agent-studio/issues/821
 affected_version: "*"
 component: workflow_code_generator

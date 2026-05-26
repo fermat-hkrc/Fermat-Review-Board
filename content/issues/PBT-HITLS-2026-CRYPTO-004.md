@@ -8,6 +8,7 @@ cwe: CWE-385
 cwe_name: Missing State Tracking
 severity: MEDIUM
 status: CONFIRMED_REAL
+language: C
 issue_url: https://gitcode.com/openHiTLS/openhitls/issues/157
 affected_version: "*"
 component: hmac

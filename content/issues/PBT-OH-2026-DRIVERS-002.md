@@ -8,6 +8,7 @@ cwe: CWE-20
 cwe_name: Improper Input Validation
 severity: MEDIUM
 status: SUBMITTED
+language: C
 issue_url: https://gitcode.com/openharmony/sensors_sensor_lite/issues/32
 affected_version: "*"
 component: sensor_service

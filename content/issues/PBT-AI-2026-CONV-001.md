@@ -8,6 +8,7 @@ cwe: CWE-670
 cwe_name: Always-Incorrect Control Flow Implementation
 severity: MEDIUM
 status: CONFIRMED_FIXED
+language: Python
 issue_url: https://gitcode.com/openJiuwen/agent-studio/issues/815
 affected_version: "*"
 component: converter_n8n
