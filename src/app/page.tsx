@@ -1,6 +1,36 @@
 import Link from "next/link";
 import { getAllIssues, getStats } from "@/lib/content";
 
+function LanguageIcon({ language }: { language: string }) {
+  const icons: Record<string, React.ReactElement> = {
+    Rust: (
+      <svg className="w-4 h-4 text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M23.834 11.441l-1.05-.096a10.74 10.74 0 00-.41-1.44l.87-.546a.344.344 0 00.12-.47l-.5-.866a.344.344 0 00-.47-.12l-.87.546a10.74 10.74 0 00-1.05-1.05l.546-.87a.344.344 0 00-.12-.47l-.866-.5a.344.344 0 00-.47.12l-.546.87a10.74 10.74 0 00-1.44-.41l-.096-1.05A.344.344 0 0017.2 4h-1a.344.344 0 00-.344.334l-.096 1.05a10.74 10.74 0 00-1.44.41l-.546-.87a.344.344 0 00-.47-.12l-.866.5a.344.344 0 00-.12.47l.546.87a10.74 10.74 0 00-1.05 1.05l-.87-.546a.344.344 0 00-.47.12l-.5.866a.344.344 0 00.12.47l.87.546a10.74 10.74 0 00-.41 1.44l-1.05.096A.344.344 0 009 11.8v1a.344.344 0 00.334.344l1.05.096a10.74 10.74 0 00.41 1.44l-.87.546a.344.344 0 00-.12.47l.5.866a.344.344 0 00.47.12l.87-.546a10.74 10.74 0 001.05 1.05l-.546.87a.344.344 0 00.12.47l.866.5a.344.344 0 00.47-.12l.546-.87a10.74 10.74 0 001.44.41l.096 1.05a.344.344 0 00.344.334h1a.344.344 0 00.344-.334l.096-1.05a10.74 10.74 0 001.44-.41l.546.87a.344.344 0 00.47.12l.866-.5a.344.344 0 00.12-.47l-.546-.87a10.74 10.74 0 001.05-1.05l.87.546a.344.344 0 00.47-.12l.5-.866a.344.344 0 00-.12-.47l-.87-.546a10.74 10.74 0 00.41-1.44l1.05-.096A.344.344 0 0024 12.8v-1a.344.344 0 00-.166-.359zM16.7 16.2a3.5 3.5 0 110-7 3.5 3.5 0 010 7z"/>
+      </svg>
+    ),
+    C: (
+      <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M16.5 9.4c-.4-.5-1.1-.7-2.1-.7-1.3 0-2.4.7-3.1 2.1-.4.7-.6 1.5-.6 2.5s.2 1.8.6 2.5c.7 1.4 1.8 2.1 3.1 2.1 1 0 1.7-.2 2.1-.7.4-.5.6-1.2.6-2.1h2.1c0 1.4-.4 2.5-1.2 3.3-.8.8-2 1.2-3.6 1.2-1.9 0-3.4-.7-4.4-2-1-1.3-1.5-2.9-1.5-4.8s.5-3.5 1.5-4.8c1-1.3 2.5-2 4.4-2 1.6 0 2.8.4 3.6 1.2.8.8 1.2 1.9 1.2 3.3h-2.1c0-.9-.2-1.6-.6-2.1z"/>
+      </svg>
+    ),
+    "C++": (
+      <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M20.66 7a1.51 1.51 0 00-.55-.57l-7.34-4.24a1.67 1.67 0 00-1.54 0L3.89 6.43a1.68 1.68 0 00-.77 1.33v8.48a1.57 1.57 0 00.22.76 1.51 1.51 0 00.55.57l7.34 4.24a1.67 1.67 0 001.54 0l7.34-4.24a1.51 1.51 0 00.55-.57 1.57 1.57 0 00.22-.76V7.76a1.57 1.57 0 00-.22-.76zM12 17.92A5.92 5.92 0 1117.13 9L16 9.71l-.36.2-1.42.82a4 4 0 11-2.48-4.36V6a6.53 6.53 0 010 1.56v.44a4 4 0 012.48 4.36l1.42.82.36.2L17.13 15A5.92 5.92 0 0112 17.92z"/>
+      </svg>
+    ),
+    Python: (
+      <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z"/>
+      </svg>
+    ),
+  };
+  return icons[language] || (
+    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+    </svg>
+  );
+}
+
 function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
     CONFIRMED_REAL: "bg-green-500/20 text-green-400 border-green-500/30",
@@ -58,6 +88,34 @@ export default function DashboardPage() {
         />
       </div>
 
+      {/* Language Statistics */}
+      {Object.keys(stats.byLanguage).length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-white mb-4">By Language</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {Object.entries(stats.byLanguage)
+              .sort(([, a], [, b]) => b - a)
+              .map(([lang, count]) => (
+                <Link
+                  key={lang}
+                  href={`/issues?language=${encodeURIComponent(lang)}`}
+                  className="bg-[#141414] border border-[#262626] rounded-lg p-4 hover:border-blue-500/50 hover:bg-[#1a1a1a] transition-all group"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors">
+                      {lang}
+                    </span>
+                    <LanguageIcon language={lang} />
+                  </div>
+                  <div className="text-2xl font-bold text-blue-400">
+                    {count}
+                  </div>
+                </Link>
+              ))}
+          </div>
+        </div>
+      )}
+
       {/* Issues List */}
       <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden">
         <div className="px-6 py-4 border-b border-[#262626] flex items-center justify-between">
@@ -106,6 +164,12 @@ export default function DashboardPage() {
                       <span className="font-mono">{issue.id}</span>
                       <span>{issue.repo}</span>
                       <span>{issue.date}</span>
+                      {issue.language && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                          <LanguageIcon language={issue.language} />
+                          {issue.language}
+                        </span>
+                      )}
                       {issue.author && (
                         <span>by {issue.author}</span>
                       )}

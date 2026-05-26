@@ -15,6 +15,7 @@ export interface IssueMeta {
   cwe: string;
   cwe_name?: string;
   status: string;
+  language?: string;
   affected_version?: string;
   component?: string;
   issue_url?: string;
@@ -123,6 +124,7 @@ export function getStats() {
   const byCwe: Record<string, number> = {};
   const byStatus: Record<string, number> = {};
   const byRepo: Record<string, number> = {};
+  const byLanguage: Record<string, number> = {};
 
   for (const issue of issues) {
     const cweLabel = issue.cwe_name
@@ -131,6 +133,9 @@ export function getStats() {
     byCwe[cweLabel] = (byCwe[cweLabel] || 0) + 1;
     byStatus[issue.status] = (byStatus[issue.status] || 0) + 1;
     byRepo[issue.repo] = (byRepo[issue.repo] || 0) + 1;
+    if (issue.language) {
+      byLanguage[issue.language] = (byLanguage[issue.language] || 0) + 1;
+    }
   }
 
   return {
@@ -142,5 +147,6 @@ export function getStats() {
     byCwe,
     byStatus,
     byRepo,
+    byLanguage,
   };
 }
