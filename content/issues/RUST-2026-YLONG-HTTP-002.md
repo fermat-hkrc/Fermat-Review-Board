@@ -6,9 +6,10 @@ repo_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http
 title: "SSL_read FFI 调用中的不可变到可变转换导致未定义行为"
 cwe: CWE-787
 cwe_name: Out-of-bounds Write
-status: PENDING
+status: SUBMITTED
 language: Rust
 severity: HIGH
+issue_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/199
 author: Fermat
 has_poc: true
 ---

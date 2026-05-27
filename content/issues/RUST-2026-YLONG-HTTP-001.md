@@ -6,9 +6,10 @@ repo_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http
 title: "QUIC Connection 初始化缺少 NULL 指针检查"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: PENDING
+status: SUBMITTED
 language: Rust
 severity: HIGH
+issue_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/198
 author: Fermat
 ---
 
