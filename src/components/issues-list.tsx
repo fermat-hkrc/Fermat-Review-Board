@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { IssueMeta } from "@/lib/content";
 
 function StatusBadge({ status }: { status: string }) {
@@ -37,10 +38,13 @@ export default function IssuesListClient({
 }: {
   issues: IssueMeta[];
 }) {
+  const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState(searchParams.get("status") || "");
+  const [languageFilter, setLanguageFilter] = useState(searchParams.get("language") || "");
 
   const statuses = [...new Set(issues.map((i) => i.status))];
+  const languages = [...new Set(issues.map((i) => i.language).filter(Boolean))].sort();
 
   const filtered = issues.filter((issue) => {
     if (search) {
@@ -54,6 +58,7 @@ export default function IssuesListClient({
       if (!match) return false;
     }
     if (statusFilter && issue.status !== statusFilter) return false;
+    if (languageFilter && issue.language !== languageFilter) return false;
     return true;
   });
 
@@ -87,11 +92,24 @@ export default function IssuesListClient({
             </option>
           ))}
         </select>
-        {(search || statusFilter) && (
+        <select
+          value={languageFilter}
+          onChange={(e) => setLanguageFilter(e.target.value)}
+          className="bg-[#141414] border border-[#262626] rounded-md px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+        >
+          <option value="">All Languages</option>
+          {languages.map((l) => (
+            <option key={l} value={l}>
+              {l}
+            </option>
+          ))}
+        </select>
+        {(search || statusFilter || languageFilter) && (
           <button
             onClick={() => {
               setSearch("");
               setStatusFilter("");
+              setLanguageFilter("");
             }}
             className="text-sm text-[#a3a3a3] hover:text-white px-2"
           >
