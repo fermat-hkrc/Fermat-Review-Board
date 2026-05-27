@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/communication_dsoftbus
 title: "BusCenterExObjStub 和 TransSpecObjectStub 的 OnRemoteRequest 缺少调用者身份验证"
 cwe: CWE-862
 cwe_name: Missing Authorization
-status: SUBMITTED
+status: CLOSED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/communication_dsoftbus/issues/9200
 author: Zirui
@@ -134,6 +134,16 @@ int32_t BusCenterExObjStub::OnRemoteRequest(uint32_t code, MessageParcel &data, 
 ```
 
 `TransSpecObjectStub::OnRemoteRequest` 需要应用同样的修复。
+
+---
+
+## 开发者回复（已拒绝）
+
+> **LBy_qhu (lby01)** — 2026-05-27
+>
+> 关于 SERVER_SESSION_SENDMSG 条目为 nullptr 的问题，经分析，该情况对系统无实质性影响。在代理传输模式下，数据发送将经由此命令字通道完成；相关逻辑通路仅限本进程访问（通过 MANAGE_REGISTER_SERVICE、SERVER_CREATE_SESSION_SERVER、SERVER_OPEN_SESSION 创建），权限校验属重复验证环节，故评估结论为无影响。
+>
+> 服务端在 OnRemoteRequest 入口处，通过从数据包中解析接口令牌，并与服务端描述符进行比对，完成客户端身份验证流程，以确保通信安全。
 
 ## 涉及文件
 
