@@ -68,14 +68,6 @@ let serialized_data_size = unsafe {
 
 在机器层面，OpenSSL 不知道 Rust 的 const/mut 区别，它只是写入内存地址。Vec 的缓冲区是堆分配的可写内存，所以写入会成功。但这是 Rust 抽象机器中的未定义行为，未来的编译器版本或优化级别可能会破坏它。
 
-## PoC 验证
-
-**状态**: ⚠️ 无法生成可运行的 PoC
-
-**原因**: ylong_http_client 依赖 BoringSSL（通过 quiche），与系统 OpenSSL 存在链接冲突，无法在本地环境编译。
-
-**源码验证**: ✅ 已通过直接读取源代码确认漏洞存在
-
 ## 修复建议
 
 ```rust

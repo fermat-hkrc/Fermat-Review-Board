@@ -56,23 +56,8 @@ fn get_header_by_name_and_value(
   - 内存损坏
   - 数据泄露
 
-## PoC 验证
+## 触发条件
 
-**PoC 路径**: `content/pocs/RUST-2026-YLONG-HTTP-003/`
-
-**触发方式**:
-```bash
-cd content/pocs/RUST-2026-YLONG-HTTP-003
-cargo run
-```
-
-**实际结果**:
-```
-thread 'main' panicked at /home/cupcup/data/rust-repos/oh-ylong-http/ylong_http/src/h2/parts.rs:55:87:
-called `Result::unwrap()` on an `Err` value: HttpError { kind: InvalidInput }
-```
-
-**攻击向量**:
 1. 攻击者建立 HTTP/2 连接
 2. 发送 HEADERS 帧，包含 HPACK literal header
 3. Header name/value 包含无效 UTF-8 字节（如 `[0x80, 0x81, 0x82]`）

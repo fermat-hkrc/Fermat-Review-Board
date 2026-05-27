@@ -61,24 +61,8 @@ pub(crate) static HEADER_VALUE_BYTES: [bool; 256] = {
 - **需要恶意服务器**: 攻击者需要控制 HTTP 服务器
 - **实践中罕见**: 大多数服务器使用纯 ASCII
 
-## PoC 验证
+## 触发条件
 
-**PoC 路径**: `content/pocs/RUST-2026-YLONG-HTTP-004/`
-
-**触发方式**:
-```bash
-cd content/pocs/RUST-2026-YLONG-HTTP-004
-cargo run
-```
-
-**实际结果**:
-```
-[Step 3] Response decoded successfully (part + remaining bytes)
-  The vulnerability created an INVALID String inside the response.
-  UB has occurred: String invariant violated.
-```
-
-**攻击向量**:
 1. 攻击者搭建恶意 HTTP 服务器
 2. 客户端连接并发送请求
 3. 服务器返回包含扩展 ASCII 的 header value（如 `X-Custom: test\x80\x81\x82value`）
