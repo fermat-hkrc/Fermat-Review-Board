@@ -1,5 +1,7 @@
 # Contributing to Fermat Review Board
 
+> **Note for maintainers**: Internal workflow and content standards are documented in [CLAUDE.md](./CLAUDE.md). This guide is for external contributors.
+
 ## How to Report a Vulnerability
 
 1. Fork this repository
