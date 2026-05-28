@@ -7,13 +7,14 @@ title: HPACK 解码器缺少 UTF-8 验证导致 Panic
 severity: HIGH
 cwe: CWE-20
 cwe_name: Improper Input Validation
-status: PENDING
+status: SUBMITTED
 affected_version: "当前版本"
 component: ylong_http/h2/hpack
 language: Rust
 file_paths:
   - ylong_http/src/h2/hpack/decoder.rs
 author: Zirui
+issue_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/200
 has_poc: true
 ---
 

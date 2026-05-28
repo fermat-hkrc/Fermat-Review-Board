@@ -7,12 +7,13 @@ title: TcpListener bind 失败时文件描述符双重关闭
 severity: HIGH
 cwe: CWE-675
 cwe_name: Duplicate Operations on Resource
-status: PENDING
+status: SUBMITTED
 component: ylong_io
 language: Rust
 file_paths:
   - ylong_io/src/tcp/listener.rs
 author: Zirui
+issue_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_runtime/issues/170
 has_poc: true
 ---
 

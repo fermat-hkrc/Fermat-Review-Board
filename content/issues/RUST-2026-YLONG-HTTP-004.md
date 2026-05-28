@@ -7,13 +7,14 @@ title: HTTP/1.1 响应解码器接受扩展 ASCII 导致无效 String
 severity: MEDIUM
 cwe: CWE-20
 cwe_name: Improper Input Validation
-status: PENDING
+status: SUBMITTED
 affected_version: "当前版本"
 component: ylong_http/h1/response
 language: Rust
 file_paths:
   - ylong_http/src/h1/response/decoder.rs
 author: Zirui
+issue_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/200
 has_poc: true
 ---
 
