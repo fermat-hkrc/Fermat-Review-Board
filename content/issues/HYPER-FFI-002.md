@@ -1,13 +1,14 @@
 ---
 id: HYPER-FFI-002
-date: "2026-05-26"
+date: "2026-05-28"
 repo: hyper
 repo_url: https://github.com/hyperium/hyper
 title: hyper_buf_copy 缺少 NULL 指针检查
 severity: HIGH
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: PENDING
+status: SUBMITTED
+issue_url: https://github.com/hyperium/hyper/issues/4084
 component: ffi
 language: Rust
 file_paths:

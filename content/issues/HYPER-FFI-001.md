@@ -1,13 +1,14 @@
 ---
 id: HYPER-FFI-001
-date: "2026-05-26"
+date: "2026-05-28"
 repo: hyper
 repo_url: https://github.com/hyperium/hyper
 title: FFI read 回调返回值未验证导致缓冲区溢出
 severity: HIGH
 cwe: CWE-120
 cwe_name: Buffer Copy without Checking Size of Input
-status: PENDING
+status: SUBMITTED
+issue_url: https://github.com/hyperium/hyper/issues/4084
 component: ffi
 language: Rust
 file_paths:
