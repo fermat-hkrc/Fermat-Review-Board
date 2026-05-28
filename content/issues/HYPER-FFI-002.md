@@ -12,7 +12,7 @@ component: ffi
 language: Rust
 file_paths:
   - src/ffi/body.rs
-author: fermat-hkrc
+author: Zirui
 has_poc: true
 ---
 

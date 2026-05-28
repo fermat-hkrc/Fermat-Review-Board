@@ -13,7 +13,7 @@ component: ylong_http_client/quic
 language: Rust
 file_paths:
   - ylong_http_client/src/async_impl/quic/mod.rs
-author: fermat-round5
+author: Zirui
 ---
 
 ## 漏洞概述

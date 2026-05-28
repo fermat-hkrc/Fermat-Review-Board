@@ -13,7 +13,7 @@ component: ylong_http/h1/response
 language: Rust
 file_paths:
   - ylong_http/src/h1/response/decoder.rs
-author: fermat-round5
+author: Zirui
 has_poc: true
 ---
 

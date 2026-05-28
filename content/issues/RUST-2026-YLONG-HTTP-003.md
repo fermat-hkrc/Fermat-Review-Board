@@ -13,7 +13,7 @@ component: ylong_http/h2/hpack
 language: Rust
 file_paths:
   - ylong_http/src/h2/hpack/decoder.rs
-author: fermat-round5
+author: Zirui
 has_poc: true
 ---
 

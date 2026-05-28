@@ -13,7 +13,7 @@ component: ylong_http_client/ssl
 language: Rust
 file_paths:
   - ylong_http_client/src/util/c_openssl/ssl/stream.rs
-author: fermat-round5
+author: Zirui
 ---
 
 ## 漏洞概述
