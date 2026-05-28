@@ -13,7 +13,6 @@ language: Rust
 file_paths:
   - src/ffi/io.rs
 author: Zirui
-has_poc: true
 ---
 
 ## 漏洞概述
