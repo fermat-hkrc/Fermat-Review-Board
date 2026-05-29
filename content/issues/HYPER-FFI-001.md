@@ -7,7 +7,7 @@ title: FFI read 回调返回值未验证导致缓冲区溢出
 severity: HIGH
 cwe: CWE-120
 cwe_name: Buffer Copy without Checking Size of Input
-status: FALSE_POSITIVE
+status: CLOSED
 issue_url: https://github.com/hyperium/hyper/issues/4084
 component: ffi
 language: Rust

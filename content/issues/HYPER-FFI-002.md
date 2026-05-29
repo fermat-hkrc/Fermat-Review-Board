@@ -7,7 +7,7 @@ title: hyper_buf_copy 缺少 NULL 指针检查
 severity: HIGH
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: FALSE_POSITIVE
+status: CLOSED
 issue_url: https://github.com/hyperium/hyper/issues/4084
 component: ffi
 language: Rust
