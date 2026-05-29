@@ -10,7 +10,7 @@ status: SUBMITTED
 language: Rust
 severity: HIGH
 issue_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/199
-author: Fermat
+author: Zirui
 has_poc: true
 ---
 
