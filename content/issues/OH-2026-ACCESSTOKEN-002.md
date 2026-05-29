@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/security_access_token
 title: "TokenSyncManagerStub::OnRemoteRequest 缺少 VerifyAccessToken 授权检查"
 cwe: CWE-190
 cwe_name: Integer Overflow or Wraparound
-status: SUBMITTED
+status: CONFIRMED_REAL
 language: "C++"
 issue_url: https://gitcode.com/openharmony/security_access_token/issues/3173
 author: Zirui

@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/telephony_state_registry
 title: "TelephonyObserver::OnNetworkStateUpdatedInner 未检查 Unmarshalling 返回值导致空指针崩溃"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: SUBMITTED
+status: CONFIRMED_FIXED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/telephony_state_registry/issues/254
 author: Zirui

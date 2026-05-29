@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/graphic_graphic_surface
 title: "NativeWindow API va_arg 指针未校验"
 cwe: CWE-457
 cwe_name: Use of Uninitialized Variable
-status: SUBMITTED
+status: CONFIRMED_FIXED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/graphic_graphic_surface/issues/980
 author: Zirui

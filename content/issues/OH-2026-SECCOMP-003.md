@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/security_security_component_manager
 title: "WindowInfoHelper::TryGetWindowInfo 在 find_if lambda 中解引用可能为空的 sptr"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: SUBMITTED
+status: CONFIRMED_FIXED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/security_security_component_manager/issues/395
 author: Zirui

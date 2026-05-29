@@ -7,7 +7,7 @@ title: "GeneratePinCode off-by-one loop condition returns short PIN ~16% of the 
 cwe: CWE-193
 cwe_name: Off-by-One Error
 severity: HIGH
-status: SUBMITTED
+status: CONFIRMED_FIXED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/distributedhardware_device_manager/issues/2440
 affected_version: "5.0+"

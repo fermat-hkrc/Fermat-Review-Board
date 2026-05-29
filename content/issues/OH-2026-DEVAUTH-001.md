@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/security_device_auth
 title: "device_auth IPC 回调 Stub 参数提取失败时 NULL 传入回调函数"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: SUBMITTED
+status: CONFIRMED_FIXED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/security_device_auth/issues/1037
 author: Zirui

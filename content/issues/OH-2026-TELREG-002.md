@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/telephony_state_registry
 title: "EventListenerHandler 多个 Work* 函数在 napi_open_handle_scope 失败后继续执行"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: SUBMITTED
+status: CONFIRMED_FIXED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/telephony_state_registry/issues/254
 author: Zirui
