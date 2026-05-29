@@ -50,6 +50,7 @@ export function getAllIssues(): IssueMeta[] {
   return ids
     .map((id) => getIssueMeta(id))
     .filter((m): m is IssueMeta => m !== null)
+    .filter((m) => m.status !== "CLOSED")
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
