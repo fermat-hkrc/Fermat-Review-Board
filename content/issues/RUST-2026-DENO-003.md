@@ -6,7 +6,7 @@ repo_url: https://github.com/denoland/deno
 title: "Unsound Send implementation in ArenaSharedAtomic<T>"
 cwe: CWE-662
 cwe_name: Improper Synchronization
-status: ACKNOWLEDGED
+status: CONFIRMED_REAL
 language: Rust
 severity: HIGH
 issue_url: https://github.com/denoland/deno/issues/34455
@@ -129,4 +129,4 @@ unsafe impl<T: Send> Send for ArenaSharedAtomic<T> {}
    - `PhantomData<Mutex<T>>` 方案不可行，因为 `Mutex<T>: Send` 本身要求 `T: Send`
 4. **正确修复**: `unsafe impl<T: Send> Send for ArenaSharedAtomic<T>`
 
-**状态**: ACKNOWLEDGED - 开发者认可问题，欢迎 PR 修复
+**状态**: CONFIRMED_REAL - 开发者认可问题，欢迎 PR 修复

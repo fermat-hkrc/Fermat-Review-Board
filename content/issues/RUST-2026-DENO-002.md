@@ -6,7 +6,7 @@ repo_url: https://github.com/denoland/deno
 title: "Unsound Send implementation in RawArena<T>"
 cwe: CWE-662
 cwe_name: Improper Synchronization
-status: ACKNOWLEDGED
+status: CONFIRMED_REAL
 language: Rust
 severity: HIGH
 issue_url: https://github.com/denoland/deno/issues/34454
@@ -112,4 +112,4 @@ unsafe impl<T: Send> Send for RawArena<T> {}
 2. **实践中安全**: `RawArena` 是内部构建块，所有消费者（`ArenaShared`, `ArenaSharedAtomic`, `ArenaUnique`）都包装了它并提供同步，从不暴露裸的 `RawArena<T>`
 3. **应该修复**: 添加 `unsafe impl<T: Send> Send for RawArena<T>` 是正确的做法，让类型系统强制执行包装器已经假设的约束
 
-**状态**: ACKNOWLEDGED - 开发者认可问题，欢迎 PR 修复
+**状态**: CONFIRMED_REAL - 开发者认可问题，欢迎 PR 修复
