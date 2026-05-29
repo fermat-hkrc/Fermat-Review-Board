@@ -7,7 +7,7 @@ title: hyper_buf_copy 缺少 NULL 指针检查
 severity: HIGH
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: SUBMITTED
+status: FALSE_POSITIVE
 issue_url: https://github.com/hyperium/hyper/issues/4084
 component: ffi
 language: Rust
@@ -74,3 +74,11 @@ pub unsafe extern "C" fn hyper_buf_copy(buf: *const hyper_buf, dst: *mut u8, len
 ## 参考
 
 - [CWE-476: NULL Pointer Dereference](https://cwe.mitre.org/data/definitions/476.html)
+
+---
+
+## 开发者回复（已拒绝）
+
+> **seanmonstar (seanmonstar)** — 2026-05-29
+>
+> It is implied by the function that you should not pass a null pointer to `hyper_buf_copy`, since it is copying the buffer. For defensive programming, we can add a null check, the crate has a macro to make that easier. But that it doesn't check isn't a vulnerability in hyper.

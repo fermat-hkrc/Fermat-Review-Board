@@ -7,7 +7,7 @@ title: FFI read 回调返回值未验证导致缓冲区溢出
 severity: HIGH
 cwe: CWE-120
 cwe_name: Buffer Copy without Checking Size of Input
-status: SUBMITTED
+status: FALSE_POSITIVE
 issue_url: https://github.com/hyperium/hyper/issues/4084
 component: ffi
 language: Rust
@@ -78,3 +78,11 @@ match (self.read)(self.userdata, hyper_context::wrap(cx), buf_ptr, buf_len) {
 
 - [CWE-120: Buffer Copy without Checking Size of Input](https://cwe.mitre.org/data/definitions/120.html)
 - [CWE-805: Buffer Access with Incorrect Length Value](https://cwe.mitre.org/data/definitions/805.html)
+
+---
+
+## 开发者回复（已拒绝）
+
+> **seanmonstar (seanmonstar)** — 2026-05-29
+>
+> This is not a vulnerability. The documentation for `hyper_io_set_read` already makes it very clear that returning a value larger than the buf is illegal: "It is undefined behavior to try to access the bytes in the buf pointer, unless you have already written them yourself. It is also undefined behavior to return that more bytes have been written than actually set on the buf."
