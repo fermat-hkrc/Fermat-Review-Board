@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getAllIssueIds, getIssue } from "@/lib/content";
+import { getVendorLabel, getVendorColor } from "@/lib/vendors";
 import IssueContent from "@/components/issue-content";
 import PocViewer from "@/components/poc-viewer";
 import ExportButton from "@/components/export-button";
@@ -105,6 +106,11 @@ export default async function IssueDetailPage({
             </MetaRow>
             <MetaRow label="Date">
               <span className="text-[#d4d4d4]">{issue.meta.date}</span>
+            </MetaRow>
+            <MetaRow label="Vendor">
+              <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getVendorColor(issue.meta.vendor)}`}>
+                {getVendorLabel(issue.meta.vendor)}
+              </span>
             </MetaRow>
             {issue.meta.affected_version && (
               <MetaRow label="Affected Version">

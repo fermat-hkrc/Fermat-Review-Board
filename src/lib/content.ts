@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { DEFAULT_VENDOR } from "./vendors";
 
 const issuesDirectory = path.join(process.cwd(), "content/issues");
 const pocsDirectory = path.join(process.cwd(), "content/pocs");
@@ -15,6 +16,7 @@ export interface IssueMeta {
   cwe: string;
   cwe_name?: string;
   status: string;
+  vendor: string;
   language?: string;
   affected_version?: string;
   component?: string;
@@ -60,6 +62,7 @@ export function getIssueMeta(id: string): IssueMeta | null {
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data } = matter(raw);
   const meta = data as IssueMeta;
+  if (!meta.vendor) meta.vendor = DEFAULT_VENDOR;
   if (!meta.has_poc) {
     const pocDir = path.join(pocsDirectory, id);
     if (fs.existsSync(pocDir)) {
@@ -129,6 +132,7 @@ export function getStats() {
   const byStatus: Record<string, number> = {};
   const byRepo: Record<string, number> = {};
   const byLanguage: Record<string, number> = {};
+  const byVendor: Record<string, number> = {};
 
   for (const issue of issues) {
     const cweLabel = issue.cwe_name
@@ -137,6 +141,7 @@ export function getStats() {
     byCwe[cweLabel] = (byCwe[cweLabel] || 0) + 1;
     byStatus[issue.status] = (byStatus[issue.status] || 0) + 1;
     byRepo[issue.repo] = (byRepo[issue.repo] || 0) + 1;
+    byVendor[issue.vendor] = (byVendor[issue.vendor] || 0) + 1;
     if (issue.language) {
       byLanguage[issue.language] = (byLanguage[issue.language] || 0) + 1;
     }
@@ -152,5 +157,6 @@ export function getStats() {
     byStatus,
     byRepo,
     byLanguage,
+    byVendor,
   };
 }

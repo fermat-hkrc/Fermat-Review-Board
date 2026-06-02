@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllIssues, getStats } from "@/lib/content";
+import { getVendorLabel, getVendorColor } from "@/lib/vendors";
 
 function LanguageIcon({ language }: { language: string }) {
   const icons: Record<string, React.ReactElement> = {
@@ -101,6 +102,33 @@ export default function DashboardPage() {
           accent="text-purple-400"
         />
       </div>
+
+      {/* Vendor Statistics */}
+      {Object.keys(stats.byVendor).length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-white mb-4">By Vendor</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {Object.entries(stats.byVendor)
+              .sort(([, a], [, b]) => b - a)
+              .map(([vendor, count]) => (
+                <Link
+                  key={vendor}
+                  href={`/vendor/${encodeURIComponent(vendor)}`}
+                  className="bg-[#141414] border border-[#262626] rounded-lg p-4 hover:border-blue-500/50 hover:bg-[#1a1a1a] transition-all group"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium border ${getVendorColor(vendor)}`}>
+                      {getVendorLabel(vendor)}
+                    </span>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-400">
+                    {count}
+                  </div>
+                </Link>
+              ))}
+          </div>
+        </div>
+      )}
 
       {/* Language Statistics */}
       {Object.keys(stats.byLanguage).length > 0 && (

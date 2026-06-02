@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { IssueMeta } from "@/lib/content";
+import { VENDORS, getVendorLabel, getVendorColor } from "@/lib/vendors";
 
 function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
@@ -35,16 +36,20 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function IssuesListClient({
   issues,
+  defaultVendor,
 }: {
   issues: IssueMeta[];
+  defaultVendor?: string;
 }) {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState(searchParams.get("status") || "");
   const [languageFilter, setLanguageFilter] = useState(searchParams.get("language") || "");
+  const [vendorFilter, setVendorFilter] = useState(defaultVendor || searchParams.get("vendor") || "");
 
   const statuses = [...new Set(issues.map((i) => i.status))];
   const languages = [...new Set(issues.map((i) => i.language).filter(Boolean))].sort();
+  const vendors = [...new Set(issues.map((i) => i.vendor))].sort();
 
   const filtered = issues.filter((issue) => {
     if (search) {
@@ -59,6 +64,7 @@ export default function IssuesListClient({
     }
     if (statusFilter && issue.status !== statusFilter) return false;
     if (languageFilter && issue.language !== languageFilter) return false;
+    if (vendorFilter && issue.vendor !== vendorFilter) return false;
     return true;
   });
 
@@ -104,12 +110,25 @@ export default function IssuesListClient({
             </option>
           ))}
         </select>
-        {(search || statusFilter || languageFilter) && (
+        <select
+          value={vendorFilter}
+          onChange={(e) => setVendorFilter(e.target.value)}
+          className="bg-[#141414] border border-[#262626] rounded-md px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+        >
+          <option value="">All Vendors</option>
+          {vendors.map((v) => (
+            <option key={v} value={v}>
+              {getVendorLabel(v)}
+            </option>
+          ))}
+        </select>
+        {(search || statusFilter || languageFilter || vendorFilter) && (
           <button
             onClick={() => {
               setSearch("");
               setStatusFilter("");
               setLanguageFilter("");
+              setVendorFilter("");
             }}
             className="text-sm text-[#a3a3a3] hover:text-white px-2"
           >
@@ -153,6 +172,9 @@ export default function IssuesListClient({
                     <span className="font-mono">{issue.id}</span>
                     <span>{issue.repo}</span>
                     <span>{issue.date}</span>
+                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium border ${getVendorColor(issue.vendor)}`}>
+                      {getVendorLabel(issue.vendor)}
+                    </span>
                     {issue.author && (
                       <span>by {issue.author}</span>
                     )}
