@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAllIssues, getStats } from "@/lib/content";
-import { getVendorLabel, getVendorColor } from "@/lib/vendors";
+import { getVendorLabel } from "@/lib/vendors";
 
 function LanguageIcon({ language }: { language: string }) {
   const icons: Record<string, React.ReactElement> = {
@@ -28,6 +28,26 @@ function LanguageIcon({ language }: { language: string }) {
   return icons[language] || (
     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+    </svg>
+  );
+}
+
+function VendorIcon({ vendor }: { vendor: string }) {
+  const icons: Record<string, React.ReactElement> = {
+    public: (
+      <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    terminal: (
+      <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    ),
+  };
+  return icons[vendor] || (
+    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5" />
     </svg>
   );
 }
@@ -117,9 +137,10 @@ export default function DashboardPage() {
                   className="bg-[#141414] border border-[#262626] rounded-lg p-4 hover:border-blue-500/50 hover:bg-[#1a1a1a] transition-all group"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium border ${getVendorColor(vendor)}`}>
+                    <span className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors">
                       {getVendorLabel(vendor)}
                     </span>
+                    <VendorIcon vendor={vendor} />
                   </div>
                   <div className="text-2xl font-bold text-blue-400">
                     {count}
