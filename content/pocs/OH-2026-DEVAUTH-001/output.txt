@@ -1,0 +1,12 @@
+=== PoC: OH-2026-DEVAUTH-001 (CWE-476) ===
+Simulating malicious IPC message with missing PARAM_TYPE_COMM_DATA
+
+[CALLBACK] requestId=12345, data=(nil), dataLen=0
+[VULN] CONFIRMED: callback received NULL data pointer!
+[VULN] Any real callback that dereferences data will SIGSEGV here.
+
+[VULN] SIGSEGV caught! NULL pointer dereference confirmed.
+[VULN] Root cause: (void)GetIpcRequestParamByType() discards error,
+       data pointer stays NULL, passed to callback which dereferences it.
+[VULN] Affected: OnTransmitStub, OnSessKeyStub, OnDevBoundStub,
+       OnDevUnboundStub, OnDevUnTrustStub, OnDelLastGroupStub (12 instances)

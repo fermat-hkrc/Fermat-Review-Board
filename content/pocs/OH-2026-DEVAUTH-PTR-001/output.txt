@@ -1,0 +1,14 @@
+=== PoC: OH-2026-DEVAUTH-PTR-001 (CWE-822) ===
+Simulating IPC message with attacker-controlled function pointer
+
+Injected pointer value: 0xdeadbeef41414141
+Sending DEV_AUTH_CALLBACK_REQUEST...
+
+[ProcCbHook] callbackId=1, cbHook=0xdeadbeef41414141
+[VULN] CONFIRMED: About to call attacker-controlled pointer 0xdeadbeef41414141
+[VULN] In production: ((StubFunc)cbHook)(params) → arbitrary code execution
+
+[VULN] CONFIRMED: Attacker-controlled pointer 0xdeadbeef41414141 reached call site.
+[VULN] Root cause: ReadPointer(data) at ipc_callback_stub.c:70 reads raw
+       function pointer from IPC message without any validation.
+[VULN] Impact: Arbitrary code execution via crafted IPC message.

