@@ -4,6 +4,7 @@ import { getAllIssueIds, getIssue } from "@/lib/content";
 import { getVendorLabel, getVendorColor } from "@/lib/vendors";
 import IssueContent from "@/components/issue-content";
 import PocViewer from "@/components/poc-viewer";
+import AnalysisViewer from "@/components/analysis-viewer";
 import ExportButton from "@/components/export-button";
 
 export function generateStaticParams() {
@@ -164,6 +165,11 @@ export default async function IssueDetailPage({
           issueId={issue.meta.id}
         />
         </>
+      )}
+
+      {/* Analysis Trace Section */}
+      {issue.analysis && (
+        <AnalysisViewer report={issue.analysis.report} />
       )}
 
       {/* Back link */}

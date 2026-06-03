@@ -5,6 +5,7 @@ import { DEFAULT_VENDOR } from "./vendors";
 
 const issuesDirectory = path.join(process.cwd(), "content/issues");
 const pocsDirectory = path.join(process.cwd(), "content/pocs");
+const analysisDirectory = path.join(process.cwd(), "content/analysis");
 
 export interface IssueMeta {
   id: string;
@@ -31,12 +32,17 @@ export interface Issue {
   meta: IssueMeta;
   content: string;
   poc?: PocData;
+  analysis?: AnalysisData;
 }
 
 export interface PocData {
   files: { name: string; content: string; language: string }[];
   output?: string;
   report?: string;
+}
+
+export interface AnalysisData {
+  report: string;
 }
 
 export function getAllIssueIds(): string[] {
@@ -79,7 +85,8 @@ export function getIssue(id: string): Issue | null {
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
   const poc = getPocData(id);
-  return { meta: data as IssueMeta, content, poc: poc ?? undefined };
+  const analysis = getAnalysisData(id);
+  return { meta: data as IssueMeta, content, poc: poc ?? undefined, analysis: analysis ?? undefined };
 }
 
 function getPocData(issueId: string): PocData | null {
@@ -111,6 +118,16 @@ function getPocData(issueId: string): PocData | null {
     files: files.filter((f) => f.name !== "output.txt" && f.name !== "poc-report.md"),
     output: outputFile?.content,
     report: reportFile?.content,
+  };
+}
+
+function getAnalysisData(issueId: string): AnalysisData | null {
+  const analysisDir = path.join(analysisDirectory, issueId);
+  if (!fs.existsSync(analysisDir)) return null;
+  const reportPath = path.join(analysisDir, "analysis-report.md");
+  if (!fs.existsSync(reportPath)) return null;
+  return {
+    report: fs.readFileSync(reportPath, "utf-8"),
   };
 }
 
