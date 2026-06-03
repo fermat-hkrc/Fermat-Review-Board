@@ -1,0 +1,14 @@
+[package]
+name = "tauri_deadlock_poc"
+version = "0.0.0"
+edition = "2021"
+
+# Reproduced against tauri 2.11.2. Either depend on the published crate:
+#   tauri = { version = "2.11", default-features = false, features = ["test", "protocol-asset", "wry"] }
+# or path-depend on a local checkout of crates/tauri with the same features.
+[dependencies]
+tauri = { version = "2.11", default-features = false, features = ["test", "protocol-asset", "wry"] }
+
+[[bin]]
+name = "poc"
+path = "poc.rs"
