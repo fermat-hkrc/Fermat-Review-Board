@@ -12,7 +12,7 @@
 
 | 项目 | 版本/路径 |
 |------|----------|
-| 操作系统 | Ubuntu 24.04 LTS, Linux 6.17, x86_64 |
+| 操作系统 | Ubuntu 26.04 LTS, Linux 7.0, x86_64 |
 | Rust 工具链 | rustc 1.83+ |
 | 构建工具 | Cargo |
 | ylong_io 路径 | `/home/cupcup/data/rust-repos/commonlibrary_rust_ylong_runtime/ylong_io` |

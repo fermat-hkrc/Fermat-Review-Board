@@ -17,7 +17,7 @@ Target-Compile 编译的是**真正的生产代码**，测试驱动调用的是*
 
 | 项目 | 版本/路径 |
 |------|----------|
-| 操作系统 | Ubuntu 24.04 LTS, Linux 6.17, x86_64 |
+| 操作系统 | Ubuntu 26.04 LTS, Linux 7.0, x86_64 |
 | 编译器 | clang (LLVM) |
 | 构建工具 | GN (Generate Ninja) + Ninja |
 | Sanitizer | ASan + UBSan (`-fsanitize=address,undefined`) |
@@ -30,7 +30,7 @@ Target-Compile 编译的是**真正的生产代码**，测试驱动调用的是*
 ohos-build-toolkit/
 ├── custom_build/           — GN 工具链定义
 │   ├── BUILDCONFIG.gn      — 全局构建配置，声明 clang 工具链
-│   ├── toolchain/BUILD.gn  — GCC 工具定义（cc/cxx/alink/link）
+│   ├── toolchain/BUILD.gn  — Clang 工具定义（cc/cxx/alink/link）
 │   └── configs/BUILD.gn    — 编译选项：-Wall -O0 -g -fPIC
 │                             -fsanitize=address,undefined
 ├── stubs/

@@ -10,7 +10,7 @@
 
 | 项目 | 版本/路径 |
 |------|----------|
-| 操作系统 | Ubuntu 24.04 LTS, Linux 6.17, x86_64 |
+| 操作系统 | Ubuntu 26.04 LTS, Linux 7.0, x86_64 |
 | 编译器 | clang (LLVM) |
 | 构建工具 | GN + Ninja |
 | OHOS 工具链 | `~/data/ohos-build-toolkit/` |
