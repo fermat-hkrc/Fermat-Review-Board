@@ -21,7 +21,7 @@ communication_dsoftbus — 动态加载 Stub 层（bus_center_ex_obj_stub.cpp / 
 
 ### 漏洞归属版本
             
-OpenHarmony 5.0 Release
+GitCode master 分支（2026-04-29）
 
 ### CVSS V3.0分值
             
@@ -95,7 +95,7 @@ int32_t SoftBusServerStub::ActiveMetaNodeInner(MessageParcel &data, MessageParce
 
 ### 受影响版本
             
-OpenHarmony 5.0 Release
+GitCode master 分支（2026-04-29）
 
 ### 规避方案或消减措施
             

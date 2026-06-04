@@ -22,7 +22,7 @@ security_device_auth — IPC 服务分发层（ipc_dev_auth_stub.cpp）
 
 ### 漏洞归属版本
 
-OpenHarmony 5.0 Release
+GitCode master 分支（2026-04-29）
 
 ### CVSS V3.0分值
 
@@ -114,7 +114,7 @@ RESTORE_CODE 路径绕过完整权限链直接执行数据升级和账户数据�
 
 ### 受影响版本
 
-OpenHarmony 5.0 Release
+GitCode master 分支（2026-04-29）
 
 ### 规避方案或消减措施
             

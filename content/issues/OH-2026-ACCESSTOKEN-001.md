@@ -21,7 +21,7 @@ security_access_token — SoftBusChannel IPC 通信层（soft_bus_channel.cpp）
 
 ### 漏洞归属版本
             
-OpenHarmony 5.0 Release
+GitCode master 分支（2026-04-29）
 
 ### CVSS V3.0分值
             
@@ -73,7 +73,7 @@ TokenSyncManager 处理跨设备 Token 同步时，若远端设备发送超大 J
 
 ### 受影响版本
             
-OpenHarmony 5.0 Release
+GitCode master 分支（2026-04-29）
 
 ### 规避方案或消减措施
             

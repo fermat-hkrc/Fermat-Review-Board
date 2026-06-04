@@ -21,7 +21,7 @@ CWE-822 (Untrusted Pointer Dereference)
 frameworks/src/standard
 ### 漏洞归属版本
             
-2026.04.23 最新版本
+GitCode master 分支（2026-04-23）
 ### CVSS V3.0分值
             
 9.8（Critical）— AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
@@ -119,7 +119,7 @@ IPC 消息本质上是跨进程边界的不可信数据。device_auth 的回调�
 
 ### 受影响版本
             
-OpenHarmony 5.0 Release（2026.04.23 最新版本）
+GitCode master 分支（2026-04-23）
 
 ### 规避方案或消减措施
             
