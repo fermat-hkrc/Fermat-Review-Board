@@ -14,7 +14,7 @@ affected_version: "2.11.2"
 component: tauri/scope/fs
 file_paths:
   - crates/tauri/src/scope/fs.rs
-author: Toan
+author: Wensheng
 has_poc: true
 ---
 
