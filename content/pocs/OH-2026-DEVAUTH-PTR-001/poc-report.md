@@ -15,7 +15,7 @@
 | 项目 | 版本/路径 |
 |------|----------|
 | 操作系统 | Ubuntu 24.04 LTS, Linux 6.x, x86_64 |
-| 编译器 | GCC |
+| 编译器 | Clang（对齐 OpenHarmony LLVM 工具链） |
 | 编译选项 | `-g -O0` |
 | 依赖 | 无外部依赖 |
 
@@ -79,7 +79,7 @@ main()
 ### 4.1 编译
 
 ```bash
-gcc -g -O0 poc.c -o poc_devauth_ptr_001
+clang -g -O0 poc.c -o poc_devauth_ptr_001
 ```
 
 ### 4.2 输出
@@ -110,7 +110,7 @@ Sending DEV_AUTH_CALLBACK_REQUEST...
 | 维度 | 状态 |
 |------|------|
 | 源码确认 | ✅ `ipc_callback_stub.cpp:72` 中 `ReadPointer(data)` 读取不可信指针 |
-| 编译验证 | ✅ GCC 编译成功 |
+| 编译验证 | ✅ Clang 编译成功 |
 | 指针到达调用点 | ✅ `0xDEADBEEF41414141` 成功传递至 `ProcCbHook` |
 | CFI 保护 | ❌ 15 个回调桩均标注 `no_sanitize("cfi")` |
 | 影响范围 | ✅ 15 个回调桩函数（standard 文件） |

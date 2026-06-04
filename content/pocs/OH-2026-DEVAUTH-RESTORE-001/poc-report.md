@@ -15,7 +15,7 @@
 | 项目 | 版本/路径 |
 |------|----------|
 | 操作系统 | Ubuntu 24.04 LTS, Linux 6.x, x86_64 |
-| 编译器 | GCC |
+| 编译器 | Clang（对齐 OpenHarmony LLVM 工具链） |
 | 编译选项 | `-g -O0` |
 | 依赖 | 无外部依赖 |
 
@@ -72,7 +72,7 @@ main()
 ### 4.1 编译
 
 ```bash
-gcc -g -O0 poc.c -o poc_devauth_restore_001
+clang -g -O0 poc.c -o poc_devauth_restore_001
 ```
 
 ### 4.2 输出
@@ -115,7 +115,7 @@ Result: SUCCESS (permission checks: 0, privileged ops: 2)
 | 维度 | 状态 |
 |------|------|
 | 源码确认 | ✅ `ipc_dev_auth_stub.cpp:331` HandleRestoreCall 无 CheckPermission |
-| 编译验证 | ✅ GCC 编译成功 |
+| 编译验证 | ✅ Clang 编译成功 |
 | 权限绕过 | ✅ permission_check_count=0 时执行特权操作 |
 | 正常路径对比 | ✅ 同一调用者正常路径被正确拒绝 |
 | 影响范围 | ✅ ExecuteAccountAuthCmd + ReloadOsAccountDb 两个特权操作 |

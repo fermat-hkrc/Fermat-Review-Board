@@ -15,7 +15,7 @@
 | 项目 | 版本/路径 |
 |------|----------|
 | 操作系统 | Ubuntu 24.04 LTS, Linux 6.x, x86_64 |
-| 编译器 | GCC with ASan |
+| 编译器 | Clang（对齐 OpenHarmony LLVM 工具链）with ASan |
 | 编译选项 | `-fsanitize=address -fno-omit-frame-pointer -g -O0` |
 | 依赖 | 无外部依赖 |
 
@@ -76,7 +76,7 @@ main()
 ### 4.1 编译
 
 ```bash
-gcc -fsanitize=address -fno-omit-frame-pointer -g -O0 poc.c -o poc_devauth_001
+clang -fsanitize=address -fno-omit-frame-pointer -g -O0 poc.c -o poc_devauth_001
 ```
 
 ### 4.2 输出
@@ -105,7 +105,7 @@ Simulating malicious IPC message with missing PARAM_TYPE_COMM_DATA
 | 维度 | 状态 |
 |------|------|
 | 源码确认 | ✅ `ipc_adapt.c:725-728` 中 (void) 丢弃返回值 |
-| 编译验证 | ✅ GCC+ASan 编译成功 |
+| 编译验证 | ✅ Clang+ASan 编译成功 |
 | SIGSEGV 触发 | ✅ NULL 指针解引用导致段错误 |
 | 影响范围 | ✅ 12 个函数实例（lite + standard 两个文件） |
 | 真实设备可触发 | ✅ 发送缺少参数的 IPC 回调消息即可 |
