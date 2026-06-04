@@ -17,15 +17,19 @@ author: Zirui
 CWE-190 (Integer Overflow), CWE-680 (Integer Overflow to Buffer Overflow)
 ### 漏洞归属组件
             
+security_access_token — SoftBusChannel IPC 通信层（soft_bus_channel.cpp）
 
 ### 漏洞归属版本
             
+OpenHarmony 5.0 Release
 
 ### CVSS V3.0分值
             
+7.5（High）— AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H
 
 ### 漏洞简述
             
+`SoftBusChannel::ExecuteCommand` 将 `size_t` 类型的 payload 长度通过 `static_cast<int32_t>` 截断为 32 位有符号整数。当远端设备通过 SoftBus 发送超大 JSON payload 时，截断后的 `len` 变为负数，导致后续 `new[]` 分配和 `memset_s` 操作使用错误的长度值，构成堆溢出风险。
 ## 问题描述
 
 ```cpp
@@ -62,18 +66,18 @@ TokenSyncManager 处理跨设备 Token 同步时，若远端设备发送超大 J
 3. 目标设备的 `ExecuteCommand` 处理该 payload 时触发截断
 ### 影响性分析说明
             
-## 影响
-
-- **堆溢出**：截断后的 `len` 用于分配和后续内存操作，可能导致写入超出分配缓冲区
-- **影响范围**：所有参与分布式 Token 同步的 OpenHarmony 设备
+截断后的 `len` 用于内存分配和后续写入操作。在 64 位平台上，当 payload 超过 2GB 时触发整数截断，可能导致分配极小缓冲区后越界写入。攻击路径通过分布式 SoftBus 网络远程可达。
 ### 原理分析
             
+`size_t`（64位无符号）通过 `static_cast<int32_t>` 截断为 32 位有符号整数，高位数据丢失。截断后的负值在传入 `new[]` 时被隐式转换为极大的 `size_t`，或在后续 `memset_s`/`PrepareBytes` 中作为长度参数引发越界写入。根本原因是类型不匹配且缺少上限校验。
 
 ### 受影响版本
             
+OpenHarmony 5.0 Release
 
 ### 规避方案或消减措施
             
+在执行 `static_cast` 前添加长度上限检查，或直接使用 `size_t` 类型避免截断。
 ## 建议修复
 
 ```cpp

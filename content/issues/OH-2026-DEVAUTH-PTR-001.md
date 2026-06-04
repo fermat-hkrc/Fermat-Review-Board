@@ -24,10 +24,11 @@ frameworks/src/standard
 2026.04.23 最新版本
 ### CVSS V3.0分值
             
+9.8（Critical）— AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
 
 ### 漏洞简述
             
-### 完整攻击链
+device_auth IPC 回调机制通过 `WritePointer`/`ReadPointer` 在进程间传输原始函数指针。接收端 `StubDevAuthCb` 从 IPC 消息中读取该指针后仅做非零检查，随即通过 `reinterpret_cast` 转换为函数指针并直接调用。全部 15 个回调桩函数均标注 `__attribute__((no_sanitize("cfi")))` 显式禁用控制流完整性保护，攻击者可实现任意代码执行。
 
 #### Step 1 — 发送端写入原始指针到 IPC
 
@@ -111,25 +112,18 @@ __attribute__((no_sanitize("cfi"))) static void OnSessKeyStub(CallbackParams par
 3. 攻击者知道接口描述符字符串（可从公开共享库中获取）
 ### 影响性分析说明
             
-### 影响
-
-- **任意代码执行**：攻击者指定 `cbHook` 为任意地址，在 device_manager / softbus_server（`APL_SYSTEM_CORE` / `APL_SYSTEM_BASIC`）上下文中执行
-- **会话密钥窃取**：OnSessKeyStub 接收 ECDH/DH 原始会话密钥数据
-- **信任组操控**：OnGroupCreatedStub / OnDevBoundStub 控制设备信任关系
-- CFI 显式禁用，编译器控制流完整性保护不生效
+攻击者指定 `cbHook` 为任意地址，在 device_manager / softbus_server（`APL_SYSTEM_CORE` / `APL_SYSTEM_BASIC`）上下文中实现任意代码执行。OnSessKeyStub 接收 ECDH/DH 原始会话密钥数据，可窃取密钥。CFI 显式禁用使得编译器层面的控制流保护不生效。
 ### 原理分析
             
-### 触发条件
-
-1. 攻击者进程可向 device_auth 回调桩发送 IPC 消息（任何拥有 `TOKEN_NATIVE` 权限的本地进程）
-2. 回调桩已注册（任何设备认证客户端调用 `InitProxyAdapt()` 时注册）
-3. 攻击者知道接口描述符字符串（可从公开共享库中获取）
+IPC 消息本质上是跨进程边界的不可信数据。device_auth 的回调机制违反了"不信任外部输入"原则：将原始函数指针作为 IPC 载荷传输，接收端未进行地址合法性验证即直接调用。`no_sanitize("cfi")` 注解进一步移除了最后的编译器级防护。
 
 ### 受影响版本
             
+OpenHarmony 5.0 Release（2026.04.23 最新版本）
 
 ### 规避方案或消减措施
             
+用回调注册表+索引方式替代原始指针传输，移除 `no_sanitize("cfi")` 注解。
 ### 建议修复（伪代码）
 
 用回调索引替代原始指针传输：

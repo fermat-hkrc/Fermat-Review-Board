@@ -106,10 +106,7 @@ int32_t ServiceDevAuth::HandleRestoreCall(MessageParcel &data, MessageParcel &re
 
 ### 影响性分析说明
             
-### 影响
-
-- 绕过完整权限链触发数据升级和账户数据库重载
-- 唯一保护是接口令牌字符串 `"OHOS.Updater.RestoreData"`（静态常量，可从公开共享库获取）
+RESTORE_CODE 路径绕过完整权限链直接执行数据升级和账户数据库重载操作。唯一保护是静态接口令牌字符串（可从公开共享库逆向获取），不构成有效安全屏障。
 
 ### 原理分析
 
@@ -121,6 +118,7 @@ OpenHarmony 5.0 Release
 
 ### 规避方案或消减措施
             
+为 RESTORE_CODE 路径添加调用者 UID 验证，限制仅系统级进程（UID < FIRST_APPLICATION_UID）可调用。
 ### 建议修复（伪代码）
 
 ```cpp

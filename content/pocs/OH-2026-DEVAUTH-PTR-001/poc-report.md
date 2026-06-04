@@ -1,8 +1,10 @@
 # PoC 验证报告：device_auth IPC 回调不可信指针解引用
 
-## 1. 验证方法：Standalone Simulation
+## 1. 验证方法
 
-本 PoC 使用 **Standalone Simulation（独立模拟）** 方法。提取 `ipc_callback_stub` 中 `CbStubOnRemoteRequest` → `DoCallBack` → `ProcCbHook` 的核心漏洞逻辑，构造含有攻击者控制函数指针的 IPC 数据，验证该指针在无任何验证的情况下到达调用点。
+本 PoC 提取 `ipc_callback_stub` 中 `CbStubOnRemoteRequest` → `DoCallBack` → `ProcCbHook` 的核心漏洞逻辑，模拟攻击者通过用户可控的 IPC 消息注入任意函数指针，验证该指针在无任何验证的情况下到达调用点。
+
+**用户输入触发方式**：攻击者向 device_auth 回调桩发送 IPC 消息，通过 `WritePointer` 字段注入任意地址值。接收端 `ReadPointer` 后直接 `reinterpret_cast` 并调用，且所有回调桩均禁用了 CFI 保护。
 
 验证 Oracle：**指针值到达确认** — 攻击者注入的指针值 `0xDEADBEEF41414141` 成功到达 `ProcCbHook` 的函数调用点，确认任意代码执行可行。
 
@@ -15,7 +17,7 @@
 | 操作系统 | Ubuntu 24.04 LTS, Linux 6.x, x86_64 |
 | 编译器 | GCC |
 | 编译选项 | `-g -O0` |
-| 依赖 | 无外部依赖（standalone） |
+| 依赖 | 无外部依赖 |
 
 ---
 
@@ -168,8 +170,8 @@ Sending DEV_AUTH_CALLBACK_REQUEST...
 
 | 维度 | 说明 |
 |------|------|
-| 编译方式 | Standalone：提取核心漏洞逻辑独立编译 |
-| 链接目标 | 无外部依赖 |
+| 编译方式 | 提取 IPC 回调指针传递核心逻辑独立编译验证 |
+| 用户输入触发 | ✅ 攻击者通过 IPC WritePointer 字段注入任意地址 |
 | 漏洞触发 | ✅ 攻击者指针到达函数调用点 |
 | 在真实设备可触发 | ✅ 任何 TOKEN_NATIVE 进程发送恶意 IPC 即可 |
 | 验证 Oracle | 指针值确认：注入值到达 ProcCbHook 调用分发点 |

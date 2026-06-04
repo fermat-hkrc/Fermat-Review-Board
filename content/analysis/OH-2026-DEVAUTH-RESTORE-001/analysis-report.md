@@ -1,6 +1,6 @@
 # 分析溯源：CWE-862 — RESTORE_CODE 路径跳过权限检查
 
-## 1. 检测引擎
+## 1. 分析方法
 
 | 项目 | 值 |
 |------|---|
@@ -89,7 +89,7 @@ analysis_approaches:
 
 ## 4. 候选匹配过程
 
-`spec_candidate_generator.py` 扫描 `security_device_auth` 程序模型：
+`spec_candidate_generator.py` 对 `security_device_auth` 程序模型执行路径分析：
 
 | 步骤 | 匹配内容 | 匹配方式 |
 |------|---------|---------|

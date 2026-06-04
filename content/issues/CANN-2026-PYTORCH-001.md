@@ -22,9 +22,11 @@ GitCode 安全漏洞报告功能允许用户能够快速、安全地报告代码
 
 ### CVE 编号
             
+暂无（已提交待分配）
 
 ### 影响程度
             
+中等（Moderate）— 长时间运行的分布式训练场景下，内存泄漏累积导致服务不可用；fd 复用时可能造成数据损坏
 ### 漏洞代码
 
 ```cpp
@@ -86,9 +88,11 @@ void ParallelTcpServer::LoopProcessClients(int epollFd) noexcept {
 - **信息泄漏**：残留缓冲区中可能包含前一次连接的训练数据
 ### 补丁
             
+修复已提交，待上游确认合并。
 
 ### 解决方法
             
+在 `close(fd)` 前先执行 `ctx.erase(fd)`，或保存原始 fd 值后再执行 erase。
 ### 建议修复（伪代码）
 
 ```cpp
@@ -118,6 +122,8 @@ void ParallelTcpServer::ProcessClientEvent(int epFd, int fd, uint32_t event,
 ```
 ### 参考资料
             
+- CWE-775: Missing Release of File Descriptor after Effective Lifetime
+- CWE-403: Exposure of File Descriptor to Unintended Control Sphere
 
 ### 常见弱点枚举（CWE）
             
@@ -125,6 +131,3 @@ CWE-775 (Unreleased Resource) / CWE-403
 ### 严重程度
             
 中等（Moderate）
-### 报告人信息
-            
-邮件：songzr3@gmail.com

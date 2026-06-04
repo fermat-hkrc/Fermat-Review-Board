@@ -1,8 +1,10 @@
 # PoC 验证报告：device_auth IPC 回调 NULL 指针解引用
 
-## 1. 验证方法：Standalone Simulation
+## 1. 验证方法
 
-本 PoC 使用 **Standalone Simulation（独立模拟）** 方法。提取 `device_auth` 中 `OnTransmitStub` 的核心漏洞逻辑，构造缺少关键参数的 IPC 数据，验证 NULL 指针传入回调并触发 SIGSEGV。
+本 PoC 提取 `device_auth` 中 `OnTransmitStub` 的核心漏洞逻辑，模拟攻击者通过用户可控的 IPC 消息构造缺少关键参数的回调数据，验证 NULL 指针传入回调并触发 SIGSEGV。
+
+**用户输入触发方式**：攻击者向 device_auth 回调桩发送 IPC 消息，消息体中省略数据长度/数据指针字段，即可触发回调函数对 NULL 指针的解引用。
 
 验证 Oracle：**ASan SIGSEGV 检测** — 回调函数接收到 NULL 数据指针，解引用时触发段错误。
 
@@ -15,7 +17,7 @@
 | 操作系统 | Ubuntu 24.04 LTS, Linux 6.x, x86_64 |
 | 编译器 | GCC with ASan |
 | 编译选项 | `-fsanitize=address -fno-omit-frame-pointer -g -O0` |
-| 依赖 | 无外部依赖（standalone） |
+| 依赖 | 无外部依赖 |
 
 ---
 
@@ -148,8 +150,8 @@ Simulating malicious IPC message with missing PARAM_TYPE_COMM_DATA
 
 | 维度 | 说明 |
 |------|------|
-| 编译方式 | Standalone：提取核心漏洞逻辑独立编译 |
-| 链接目标 | 无外部依赖 |
+| 编译方式 | 提取 IPC 回调核心逻辑独立编译验证 |
+| 用户输入触发 | ✅ 攻击者通过构造缺少参数的 IPC 回调消息触发 |
 | 漏洞触发 | ✅ SIGSEGV 确认（ASan 捕获） |
 | 在真实设备可触发 | ✅ 发送缺少参数的 IPC 回调即可 |
 | 验证 Oracle | 进程崩溃检测：SIGSEGV on NULL dereference |

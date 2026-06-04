@@ -136,7 +136,7 @@ its id outside the locked region).
 [-] Packages
     - tauri [RUST]: 2.11.2  (path dep on crates/tauri @ dev, commit 25a6835)
 
-Note: reproduced as a standalone Rust binary path-depending on crates/tauri
+Note: reproduced as an independent Rust binary path-depending on crates/tauri
 with features ["test", "protocol-asset", "wry"]; no JS/CLI project involved.
 ```
 
