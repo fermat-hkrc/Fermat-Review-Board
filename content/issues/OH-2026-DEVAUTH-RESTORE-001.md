@@ -17,16 +17,21 @@ has_poc: true
             
 CWE-862 (Missing Authorization)
 ### 漏洞归属组件
-            
+
+security_device_auth — IPC 服务分发层（ipc_dev_auth_stub.cpp）
 
 ### 漏洞归属版本
-            
+
+OpenHarmony 5.0 Release
 
 ### CVSS V3.0分值
-            
+
+8.4（High）— AV:L/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
 
 ### 漏洞简述
-            
+
+`ServiceDevAuth::OnRemoteRequest` 中 RESTORE_CODE（14701）分发路径直接调用 `HandleRestoreCall`，完全跳过 `CheckPermission` 权限验证链。任何能够向 device_auth SA 发送 IPC 消息的进程，只需设置 code=14701 和已知的静态接口令牌字符串 `"OHOS.Updater.RestoreData"`，即可在零权限检查下执行 `ExecuteAccountAuthCmd`（覆写认证数据库）和 `ReloadOsAccountDb`（重载认证状态）两个特权操作。
+
 ### 正常路径：所有方法经 CheckPermission
 
 ```cpp
@@ -107,10 +112,12 @@ int32_t ServiceDevAuth::HandleRestoreCall(MessageParcel &data, MessageParcel &re
 - 唯一保护是接口令牌字符串 `"OHOS.Updater.RestoreData"`（静态常量，可从公开共享库获取）
 
 ### 原理分析
-            
+
+`OnRemoteRequest` 作为 IPC 入口函数，在处理 `RESTORE_CODE`（14701）请求时，仅验证接口令牌字符串匹配即直接分发到 `HandleRestoreCall`，而该函数内部未调用任何权限验证接口。相比之下，正常的 `HandleDeviceAuthCall` 路径必须通过完整的 `CheckPermission` 权限链（令牌类型→APL等级→进程白名单→ACL权限）。这是一个典型的权限检查遗漏：开发者在添加恢复路径时未将其纳入统一的权限管控框架。
 
 ### 受影响版本
-            
+
+OpenHarmony 5.0 Release
 
 ### 规避方案或消减措施
             

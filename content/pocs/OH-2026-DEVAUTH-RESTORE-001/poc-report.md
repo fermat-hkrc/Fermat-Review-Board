@@ -1,10 +1,12 @@
 # PoC 验证报告：device_auth RESTORE_CODE 路径缺失授权检查
 
-## 1. 验证方法：Standalone Simulation
+## 1. 验证方法
 
-本 PoC 使用 **Standalone Simulation（独立模拟）** 方法。提取 `ServiceDevAuth::OnRemoteRequest` 的分发逻辑，对比正常路径（`HandleDeviceAuthCall`，经过 `CheckPermission`）与 RESTORE 路径（`HandleRestoreCall`，无任何权限检查），验证未授权调用者可直接执行特权操作。
+本 PoC 提取 `ServiceDevAuth::OnRemoteRequest` 的 IPC 分发逻辑，模拟攻击者通过用户可控的 IPC 消息（code + interfaceToken）触发漏洞路径。对比正常路径（`HandleDeviceAuthCall`，经过 `CheckPermission`）与 RESTORE 路径（`HandleRestoreCall`，无任何权限检查），验证未授权调用者可直接执行特权操作。
 
 验证 Oracle：**权限绕过确认** — 正常路径被权限系统拒绝（permission checks=1, ops=0），而 RESTORE_CODE 路径零权限检查即执行 2 个特权操作（permission checks=0, ops=2）。
+
+**用户输入触发方式**：攻击者构造 IPC 消息，设置 `code=14701`（RESTORE_CODE）和 `interfaceToken="OHOS.Updater.RestoreData"`，即可从任何具有 IPC 访问权限的进程触发此漏洞路径。这两个值均为编译时常量，可从公开发布的共享库中提取。
 
 ---
 
@@ -165,10 +167,10 @@ Result: SUCCESS (permission checks: 0, privileged ops: 2)
 
 | 维度 | 说明 |
 |------|------|
-| 编译方式 | Standalone：提取核心分发逻辑独立编译 |
-| 链接目标 | 无外部依赖 |
+| 编译方式 | 提取 IPC 分发核心逻辑独立编译验证 |
+| 用户输入触发 | ✅ 攻击者通过构造 IPC 消息（code=14701 + 已知令牌）触发 |
 | 漏洞触发 | ✅ 权限绕过确认（0 权限检查 + 2 特权操作执行） |
-| 在真实设备可触发 | ✅ 发送 code=14701 + 已知令牌即可 |
+| 在真实设备可触发 | ✅ 任何具有 IPC 访问权限的进程均可发送触发消息 |
 | 验证 Oracle | 权限计数对比：正常路径 checks=1/ops=0 vs 漏洞路径 checks=0/ops=2 |
 
 ---

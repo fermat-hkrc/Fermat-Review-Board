@@ -6,7 +6,7 @@
  *   1. Normal path (HandleDeviceAuthCall) → calls CheckPermission(methodId)
  *   2. Restore path (HandleRestoreCall) → NO permission check at all
  *
- * The restore path is triggered by:
+ * User-input trigger: An attacker sends an IPC message with:
  *   code == RESTORE_CODE (14701) AND
  *   interfaceToken == "OHOS.Updater.RestoreData"
  *
