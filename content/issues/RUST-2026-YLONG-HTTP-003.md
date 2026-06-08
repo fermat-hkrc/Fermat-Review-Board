@@ -7,7 +7,7 @@ title: HPACK 解码器缺少 UTF-8 验证导致 Panic
 severity: HIGH
 cwe: CWE-20
 cwe_name: Improper Input Validation
-status: SUBMITTED
+status: CLOSED
 affected_version: "当前版本"
 component: ylong_http/h2/hpack
 language: Rust
@@ -86,6 +86,19 @@ fn get_header_by_name_and_value(
     Ok((h, v))
 }
 ```
+
+## 上游处理记录
+
+- **提单**: [commonlibrary_rust_ylong_http#200](https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/200)
+- **上游状态**: 已关闭（已拒绝）
+
+---
+
+## 开发者回复（已拒绝）
+
+> **huaxin05** — 2026-05
+>
+> 未找到对应源码
 
 ## 参考
 

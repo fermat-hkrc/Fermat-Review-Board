@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http
 title: "QUIC Connection 初始化缺少 NULL 指针检查"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: SUBMITTED
+status: CONFIRMED_FIXED
 language: Rust
 severity: HIGH
 issue_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/198
@@ -192,6 +192,12 @@ pub(crate) struct QuicConn {
 类似的 FFI NULL 指针问题在 Rust 生态中很常见：
 - [RUSTSEC-2021-0XXX] 多个 crate 的 FFI 绑定缺少 NULL 检查
 - [CVE-2021-XXXXX] 类似的 `Box::from_raw` 误用
+
+## 上游处理记录
+
+- **提单**: [commonlibrary_rust_ylong_http#198](https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/198)
+- **修复 PR**: [#227 ylong_http ffi安全问题修复](https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/pull/227)（已 merged，huaxin05，2026-05）
+- **上游状态**: issue 关闭（已拒绝标签），但对应修复已通过 PR#227 合并
 
 ## 参考资料
 

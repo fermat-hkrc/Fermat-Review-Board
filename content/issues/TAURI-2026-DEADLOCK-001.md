@@ -7,7 +7,7 @@ title: "[bug] Re-entrant deadlock in fs::Scope: once() always deadlocks (emit() 
 cwe: CWE-667
 cwe_name: Improper Locking
 severity: MEDIUM
-status: SUBMITTED
+status: CONFIRMED_REAL
 language: Rust
 issue_url: https://github.com/tauri-apps/tauri/issues/15468
 affected_version: "2.11.2"
@@ -101,6 +101,12 @@ fn emit(&self, event: Event) {
 ```
 
 并让 `once` 在锁外移除自身 id。
+
+## 上游处理记录
+
+- **提单**: [tauri#15468](https://github.com/tauri-apps/tauri/issues/15468)（GitHub，优先级 priority:1 high）
+- **社区确认**: AliMahmoudDev（社区贡献者）— "Great catch. The fix is straightforward - collect handlers before invoking them to avoid holding the lock during callbacks. I'll put together a PR for this."（2026-06）
+- **上游状态**: open，已被社区贡献者确认为 bug 并承诺提 PR
 
 ## Notes
 

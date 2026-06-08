@@ -6,7 +6,7 @@ repo_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http
 title: "SSL_read FFI 调用中的不可变到可变转换导致未定义行为"
 cwe: CWE-787
 cwe_name: Out-of-bounds Write
-status: SUBMITTED
+status: CONFIRMED_FIXED
 language: Rust
 severity: HIGH
 issue_url: https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/199
@@ -237,6 +237,12 @@ pub(crate) fn write(&mut self, buf: &[u8]) -> c_int {
 - 直接翻译 C 函数签名而不考虑 Rust 语义
 - 使用 `as` 转换绕过类型检查
 - 假设"能编译就是对的"
+
+## 上游处理记录
+
+- **提单**: [commonlibrary_rust_ylong_http#199](https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/199)
+- **修复 PR**: [#227 ylong_http ffi安全问题修复](https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/pull/227)（已 merged，huaxin05，2026-05）
+- **上游状态**: issue 关闭（已拒绝标签），但对应修复已通过 PR#227 合并
 
 ## 参考资料
 

@@ -7,7 +7,7 @@ title: HTTP/1.1 响应解码器接受扩展 ASCII 导致无效 String
 severity: MEDIUM
 cwe: CWE-20
 cwe_name: Improper Input Validation
-status: SUBMITTED
+status: CLOSED
 affected_version: "当前版本"
 component: ylong_http/h1/response
 language: Rust
@@ -112,6 +112,19 @@ fn header_insert(
 ```rust
 // 不转换为 String，保持为 HeaderValue (内部是 bytes)
 ```
+
+## 上游处理记录
+
+- **提单**: [commonlibrary_rust_ylong_http#200](https://gitcode.com/openharmony/commonlibrary_rust_ylong_http/issues/200)
+- **上游状态**: 已关闭（已拒绝）
+
+---
+
+## 开发者回复（已拒绝）
+
+> **huaxin05** — 2026-05
+>
+> 未找到对应源码
 
 ## 参考
 

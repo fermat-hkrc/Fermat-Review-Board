@@ -7,7 +7,7 @@ title: TcpListener bind 失败时文件描述符双重关闭
 severity: HIGH
 cwe: CWE-675
 cwe_name: Duplicate Operations on Resource
-status: SUBMITTED
+status: CLOSED
 component: ylong_io
 language: Rust
 file_paths:
@@ -78,6 +78,19 @@ pub fn bind(addr: SocketAddr) -> io::Result<Self> {
     Ok(Self::from_std_listener(ManuallyDrop::into_inner(socket).into())?)
 }
 ```
+
+## 上游处理记录
+
+- **提单**: [commonlibrary_rust_ylong_runtime#170](https://gitcode.com/openharmony/commonlibrary_rust_ylong_runtime/issues/170)
+- **上游状态**: 已关闭（已拒绝）
+
+---
+
+## 开发者回复（已拒绝）
+
+> **huaxin05** — 2026-05
+>
+> 未找到对应源码
 
 ## 参考
 
