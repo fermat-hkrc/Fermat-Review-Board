@@ -10,7 +10,7 @@ status: CONFIRMED_REAL
 language: Rust
 severity: HIGH
 issue_url: https://github.com/denoland/deno/issues/34455
-author: Fermat
+author: Wensheng
 ---
 
 ## 漏洞概述
