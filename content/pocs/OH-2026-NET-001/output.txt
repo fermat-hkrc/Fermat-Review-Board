@@ -1,0 +1,19 @@
+[*] Compiling PoC (reproduces env.rs:843 vulnerable code path)...
+[*] Running PoC (expect SIGSEGV)...
+
+[POC] netmanager_base env.rs:843 — array_buffer() null pointer dereference
+[POC] Simulating: detached ArrayBuffer passed to native method
+[POC] ArrayBuffer_GetInfo returns success (0) but ptr = NULL, size = 16
+
+[POC] Calling array_buffer() with mocked detached ArrayBuffer...
+
+thread 'main' (3453885) panicked at poc.rs:83:12:
+unsafe precondition(s) violated: slice::from_raw_parts requires the pointer to be aligned and non-null, and the total size of the slice not to exceed `isize::MAX`
+
+This indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.
+thread caused non-unwinding panic. aborting.
+Aborted (core dumped)
+
+[+] Process crashed with signal (exit=134) — NULL pointer dereference CONFIRMED.
+[+] Root cause: env.rs:843 std::slice::from_raw_parts(NULL, 16) → UB → SIGSEGV
+[+] Fix: Add 'if ptr.is_null() { return Err(...); }' before from_raw_parts

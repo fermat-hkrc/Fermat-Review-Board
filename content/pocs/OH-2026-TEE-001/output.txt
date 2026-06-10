@@ -1,0 +1,20 @@
+[*] Creating stubs for tee_client dependencies...
+[*] Locating tarzip.c in /home/cupcup/data/terminal/oh-vuln-analysis/tee_client ...
+[*] Compiling real tarzip.c from /home/cupcup/data/terminal/oh-vuln-analysis/tee_client/tarzip.c ...
+[*] Compiling PoC driver ...
+[*] Linking ...
+[*] Running PoC ...
+[POC] Test dir: /tmp/tarzip_poc_rKvnpA
+[POC] Bait:     /tmp/tarzip_poc_rKvnpA/teeOS_log-0
+[POC] Target:   /tmp/tarzip_poc_rKvnpA/secret.dat
+[POC] Output:   /tmp/tarzip_poc_rKvnpA/output.tar.gz
+
+[+] tee_open FOLLOWED SYMLINK to target!
+[+] RACE WON on attempt 3!
+[+] Secret content found in output archive.
+[+] tee_open() followed symlink → arbitrary file read confirmed.
+
+[RESULT] TOCTOU race condition CONFIRMED.
+  Root cause: JudgeFileValidite uses lstat (CHECK)
+              WriteZipContent uses tee_open without O_NOFOLLOW (USE)
+[*] Exit code: 0

