@@ -14,6 +14,7 @@ file_paths:
   - services/storage_manager/src/volume/volume_external.cpp:139
 author: Zirui
 has_poc: true
+vendor: terminal
 ---
 
 ## 漏洞概述
