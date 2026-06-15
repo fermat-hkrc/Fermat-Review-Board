@@ -1,0 +1,15 @@
+=== PoC: Use-After-Free in get_proc_node (proc_node.c:246) ===
+OpenHarmony tee_os_kernel
+
+Race: get_proc_node returns pointer after releasing lock.
+       Another thread frees node -> caller has dangling pointer.
+
+
+=== Results ===
+UAF accesses detected (freed marker seen): 0
+Corrupted canary detections:               10
+
+[VULNERABLE] Use-After-Free confirmed!
+  Dangling pointer was dereferenced 10 times after free.
+  In real TEE: attacker controls freed memory via heap spray,
+  hijacks proc_node to escalate privileges or leak secrets.

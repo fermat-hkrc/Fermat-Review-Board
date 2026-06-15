@@ -1,0 +1,13 @@
+=== appspawn ReadFile() TOCTOU PoC ===
+Target: OpenHarmony appspawn util/src/appspawn_utils.c:ReadFile()
+Bug: stat() then fopen() without holding fd - content can change
+Impact: Malicious sandbox config injection via content swap
+
+[!] RACE WON at attempt 15!
+[!] Expected: {"sandbox":"safe"}
+[!] Got:      {"sandbox":"evil",
+[!] appspawn would parse malicious JSON config!
+
+[+] PoC SUCCESS: Demonstrated TOCTOU in ReadFile()
+[+] In real scenario: attacker injects malicious sandbox config
+[+] Effect: sandbox escape or mount manipulation during app spawn

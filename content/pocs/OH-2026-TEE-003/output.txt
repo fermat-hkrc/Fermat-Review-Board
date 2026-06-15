@@ -1,0 +1,16 @@
+=== PoC: DCLP Race in __self_init (drv_io_share.c:33) ===
+OpenHarmony tee_os_kernel - Broken Double-Checked Locking
+
+Threads: 8, Iterations: 100000
+Testing for: double-init race, use of partially-initialized data
+
+
+=== Results ===
+Total init_htable calls: 1 (expected: 1)
+Double-init detections:  0
+Use-before-init events:  0
+
+[NOTE] Race not triggered in this run.
+  On ARM (OpenHarmony target), weak memory ordering makes
+  this race much more likely to manifest.
+  Run under ThreadSanitizer: gcc -fsanitize=thread -o poc poc.c -lpthread

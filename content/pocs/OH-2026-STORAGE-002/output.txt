@@ -1,0 +1,22 @@
+=== fscrypt ReadKeyFile() TOCTOU PoC ===
+Target: OpenHarmony storage_service libfscrypt/src/fscrypt_control.c
+Bug: stat() validates size, then open()+read() — content can change
+Impact: Encryption key substitution → data encrypted with attacker key
+
+[*] Key file: /tmp/poc_fscrypt_keys/key_desc (8 bytes)
+[*] Legitimate key: AABBCCDDEEFF1122
+[*] Evil key:       DEADBEEFCAFEBABE
+
+[!] RACE WON at iteration 2811!
+[!] Expected key: AABBCCDDEEFF1122
+[!] Got key:      DEADBEEFCAFEBABE
+
+[+] PoC SUCCESS: Key substitution via TOCTOU
+[+] Real-world impact:
+[+]   1. Compromised service races storage daemon's key loading
+[+]   2. fscrypt policy is set with attacker's key descriptor
+[+]   3. User data encrypted with attacker-controlled key
+[+]   4. Attacker can later decrypt the data
+
+[+] Fix: Open file first (O_NOFOLLOW), fstat() the fd, then read.
+[+]       Never stat() a path and then open() it separately.
