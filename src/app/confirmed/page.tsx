@@ -27,10 +27,10 @@ export default function ConfirmedPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white mb-2">
+        <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
           Confirmed Vulnerabilities
         </h1>
-        <p className="text-sm text-[#a3a3a3]">
+        <p className="text-sm text-[var(--text-muted)]">
           {issues.length} issues confirmed by upstream maintainers
           ({confirmed.length} confirmed, {fixed.length} fixed)
         </p>
@@ -43,7 +43,7 @@ export default function ConfirmedPage() {
         <Section title="Confirmed" issues={confirmed} />
       )}
       {issues.length === 0 && (
-        <div className="bg-[#141414] border border-[#262626] rounded-lg px-6 py-12 text-center text-[#737373]">
+        <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg px-6 py-12 text-center text-[var(--text-faint)]">
           No confirmed or fixed issues yet.
         </div>
       )}
@@ -54,12 +54,12 @@ export default function ConfirmedPage() {
 function Section({ title, issues }: { title: string; issues: ReturnType<typeof getConfirmedIssues> }) {
   return (
     <div className="mb-8">
-      <h2 className="text-lg font-semibold text-white mb-3">{title}</h2>
-      <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden divide-y divide-[#262626]">
+      <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">{title}</h2>
+      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg overflow-hidden divide-y divide-[var(--divider)]">
         {issues.map((issue) => (
           <div
             key={issue.id}
-            className="px-6 py-5 hover:bg-[#1a1a1a] transition-colors"
+            className="px-6 py-5 hover:bg-[var(--card-hover)] transition-colors"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 flex-1">
@@ -67,20 +67,20 @@ function Section({ title, issues }: { title: string; issues: ReturnType<typeof g
                   <StatusBadge status={issue.status} />
                   <Link
                     href={`/issues/${issue.id}`}
-                    className="text-[15px] font-medium text-white hover:text-blue-300 transition-colors"
+                    className="text-[15px] font-medium text-[var(--text-primary)] hover:text-blue-300 transition-colors"
                   >
                     {issue.title}
                   </Link>
                 </div>
                 {issue.cwe && (
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[#1a1a2e] text-blue-400 border border-blue-500/20">
+                  <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[var(--pre-bg)] text-blue-400 border border-blue-500/20">
                     {issue.cwe}
                     {issue.cwe_name && ` — ${issue.cwe_name}`}
                   </span>
                 </div>
                 )}
-                <div className="flex items-center gap-4 text-xs text-[#737373]">
+                <div className="flex items-center gap-4 text-xs text-[var(--text-faint)]">
                   <span className="font-mono">{issue.id}</span>
                   <span>{issue.repo}</span>
                   <span>{issue.date}</span>

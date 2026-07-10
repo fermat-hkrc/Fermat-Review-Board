@@ -1,16 +1,49 @@
 @import "tailwindcss";
 
+/* Light theme (default) */
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --card-bg: #141414;
-  --card-border: #262626;
+  --background: #ffffff;
+  --foreground: #171717;
+  --card-bg: #f9fafb;
+  --card-border: #e5e7eb;
+  --card-hover: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --text-faint: #9ca3af;
+  --code-bg: #f3f4f6;
+  --code-text: #b45309;
+  --pre-bg: #f8fafc;
+  --pre-border: #e5e7eb;
   --accent: #3b82f6;
   --accent-hover: #2563eb;
+  --nav-bg: rgba(255, 255, 255, 0.8);
+  --divider: #e5e7eb;
   --status-confirmed: #22c55e;
   --status-fixed: #3b82f6;
   --status-review: #eab308;
   --status-fp: #6b7280;
+}
+
+/* Dark theme */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card-bg: #141414;
+  --card-border: #262626;
+  --card-hover: #1a1a1a;
+  --text-primary: #f5f5f5;
+  --text-secondary: #d4d4d4;
+  --text-muted: #a3a3a3;
+  --text-faint: #737373;
+  --code-bg: #1e1e1e;
+  --code-text: #e5a853;
+  --pre-bg: #1a1a2e;
+  --pre-border: #262626;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --nav-bg: rgba(10, 10, 10, 0.8);
+  --divider: #262626;
 }
 
 @theme inline {
@@ -24,6 +57,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 /* Markdown prose styling */
@@ -35,8 +69,8 @@ body {
   font-weight: 700;
   margin-top: 2rem;
   margin-bottom: 0.75rem;
-  color: #f5f5f5;
-  border-bottom: 1px solid #262626;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--card-border);
   padding-bottom: 0.5rem;
 }
 .prose h3 {
@@ -44,11 +78,11 @@ body {
   font-weight: 600;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  color: #e5e5e5;
+  color: var(--text-secondary);
 }
 .prose p {
   margin-bottom: 1rem;
-  color: #d4d4d4;
+  color: var(--text-secondary);
 }
 .prose ul, .prose ol {
   margin-bottom: 1rem;
@@ -56,23 +90,23 @@ body {
 }
 .prose li {
   margin-bottom: 0.25rem;
-  color: #d4d4d4;
+  color: var(--text-secondary);
 }
 .prose strong {
-  color: #f5f5f5;
+  color: var(--text-primary);
   font-weight: 600;
 }
 .prose code {
-  background: #1e1e1e;
+  background: var(--code-bg);
   padding: 0.15rem 0.35rem;
   border-radius: 0.25rem;
   font-size: 0.875em;
-  color: #e5a853;
+  color: var(--code-text);
   font-family: var(--font-mono), monospace;
 }
 .prose pre {
-  background: #1a1a2e !important;
-  border: 1px solid #262626;
+  background: var(--pre-bg) !important;
+  border: 1px solid var(--pre-border);
   border-radius: 0.5rem;
   padding: 1rem;
   overflow-x: auto;
@@ -83,7 +117,7 @@ body {
 .prose pre code {
   background: transparent;
   padding: 0;
-  color: #d4d4d4;
+  color: var(--text-secondary);
 }
 .prose table {
   width: 100%;
@@ -91,17 +125,17 @@ body {
   margin-bottom: 1rem;
 }
 .prose th, .prose td {
-  border: 1px solid #262626;
+  border: 1px solid var(--card-border);
   padding: 0.5rem 0.75rem;
   text-align: left;
 }
 .prose th {
-  background: #1a1a1a;
+  background: var(--card-bg);
   font-weight: 600;
-  color: #e5e5e5;
+  color: var(--text-secondary);
 }
 .prose td {
-  color: #d4d4d4;
+  color: var(--text-secondary);
 }
 .prose a {
   color: #60a5fa;
@@ -111,22 +145,42 @@ body {
   color: #93bbfd;
 }
 
-/* highlight.js dark theme overrides */
-.hljs {
+/* highlight.js — dark only overrides */
+.dark .hljs {
   background: #1a1a2e !important;
   color: #d4d4d4 !important;
 }
-.hljs-keyword { color: #c586c0 !important; }
-.hljs-string { color: #ce9178 !important; }
-.hljs-comment { color: #6a9955 !important; }
-.hljs-function { color: #dcdcaa !important; }
-.hljs-number { color: #b5cea8 !important; }
-.hljs-type { color: #4ec9b0 !important; }
-.hljs-built_in { color: #4ec9b0 !important; }
-.hljs-params { color: #9cdcfe !important; }
-.hljs-title { color: #dcdcaa !important; }
-.hljs-attr { color: #9cdcfe !important; }
-.hljs-literal { color: #569cd6 !important; }
-.hljs-meta { color: #569cd6 !important; }
-.hljs-addition { color: #22c55e !important; background: rgba(34, 197, 94, 0.1) !important; }
-.hljs-deletion { color: #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
+.dark .hljs-keyword { color: #c586c0 !important; }
+.dark .hljs-string { color: #ce9178 !important; }
+.dark .hljs-comment { color: #6a9955 !important; }
+.dark .hljs-function { color: #dcdcaa !important; }
+.dark .hljs-number { color: #b5cea8 !important; }
+.dark .hljs-type { color: #4ec9b0 !important; }
+.dark .hljs-built_in { color: #4ec9b0 !important; }
+.dark .hljs-params { color: #9cdcfe !important; }
+.dark .hljs-title { color: #dcdcaa !important; }
+.dark .hljs-attr { color: #9cdcfe !important; }
+.dark .hljs-literal { color: #569cd6 !important; }
+.dark .hljs-meta { color: #569cd6 !important; }
+.dark .hljs-addition { color: #22c55e !important; background: rgba(34, 197, 94, 0.1) !important; }
+.dark .hljs-deletion { color: #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
+
+/* highlight.js — light overrides */
+:root:not(.dark) .hljs {
+  background: #f8fafc !important;
+  color: #1f2937 !important;
+}
+:root:not(.dark) .hljs-keyword { color: #7c3aed !important; }
+:root:not(.dark) .hljs-string { color: #059669 !important; }
+:root:not(.dark) .hljs-comment { color: #6b7280 !important; }
+:root:not(.dark) .hljs-function { color: #b45309 !important; }
+:root:not(.dark) .hljs-number { color: #0284c7 !important; }
+:root:not(.dark) .hljs-type { color: #0d9488 !important; }
+:root:not(.dark) .hljs-built_in { color: #0d9488 !important; }
+:root:not(.dark) .hljs-params { color: #1d4ed8 !important; }
+:root:not(.dark) .hljs-title { color: #b45309 !important; }
+:root:not(.dark) .hljs-attr { color: #1d4ed8 !important; }
+:root:not(.dark) .hljs-literal { color: #7c3aed !important; }
+:root:not(.dark) .hljs-meta { color: #7c3aed !important; }
+:root:not(.dark) .hljs-addition { color: #16a34a !important; background: rgba(22, 163, 74, 0.1) !important; }
+:root:not(.dark) .hljs-deletion { color: #dc2626 !important; background: rgba(220, 38, 38, 0.1) !important; }

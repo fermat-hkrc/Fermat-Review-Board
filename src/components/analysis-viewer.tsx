@@ -14,7 +14,7 @@ export default function AnalysisViewer({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mt-6 border-2 border-purple-500/30 rounded-xl overflow-hidden bg-[#0d1117]">
+    <div className="mt-6 border-2 border-purple-500/30 rounded-xl overflow-hidden bg-[var(--card-bg)]">
       {/* Collapsible Header */}
       <button
         onClick={() => setOpen(!open)}

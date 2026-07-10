@@ -44,7 +44,7 @@ export default function ExportButton({ meta, content }: ExportButtonProps) {
   return (
     <button
       onClick={handleExport}
-      className="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-[#a3a3a3] hover:text-white border border-[#262626] hover:border-[#404040] rounded-lg transition-colors"
+      className="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--card-border)] hover:border-[var(--text-faint)] rounded-lg transition-colors"
     >
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

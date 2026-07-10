@@ -25,16 +25,16 @@ export default async function IssueDetailPage({
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-[#737373] mb-6">
-        <Link href="/" className="hover:text-white">
+      <div className="flex items-center gap-2 text-sm text-[var(--text-faint)] mb-6">
+        <Link href="/" className="hover:text-[var(--text-primary)]">
           Dashboard
         </Link>
         <span>/</span>
-        <Link href="/issues" className="hover:text-white">
+        <Link href="/issues" className="hover:text-[var(--text-primary)]">
           Issues
         </Link>
         <span>/</span>
-        <span className="text-[#a3a3a3]">{issue.meta.id}</span>
+        <span className="text-[var(--text-muted)]">{issue.meta.id}</span>
       </div>
 
       {/* Header */}
@@ -42,13 +42,13 @@ export default async function IssueDetailPage({
         <div className="flex flex-wrap items-center gap-2 mb-3">
           <StatusBadge status={issue.meta.status} />
           {issue.meta.cwe && (
-          <span className="text-xs font-mono text-blue-400 bg-[#1a1a2e] px-2 py-0.5 rounded border border-blue-500/20">
+          <span className="text-xs font-mono text-blue-400 bg-[var(--pre-bg)] px-2 py-0.5 rounded border border-blue-500/20">
             {issue.meta.cwe}
             {issue.meta.cwe_name && ` — ${issue.meta.cwe_name}`}
           </span>
           )}
         </div>
-        <h1 className="text-xl font-bold text-white mb-4">
+        <h1 className="text-xl font-bold text-[var(--text-primary)] mb-4">
           {issue.meta.title}
         </h1>
 
@@ -81,11 +81,11 @@ export default async function IssueDetailPage({
         </div>
 
         {/* Meta info */}
-        <div className="bg-[#141414] border border-[#262626] rounded-lg p-4">
+        <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             {issue.meta.cwe && (
             <MetaRow label="CWE">
-              <span className="text-[#d4d4d4] font-mono">
+              <span className="text-[var(--text-secondary)] font-mono">
                 {issue.meta.cwe}
                 {issue.meta.cwe_name && ` — ${issue.meta.cwe_name}`}
               </span>
@@ -102,11 +102,11 @@ export default async function IssueDetailPage({
                   {issue.meta.repo}
                 </a>
               ) : (
-                <span className="text-[#d4d4d4]">{issue.meta.repo}</span>
+                <span className="text-[var(--text-secondary)]">{issue.meta.repo}</span>
               )}
             </MetaRow>
             <MetaRow label="Date">
-              <span className="text-[#d4d4d4]">{issue.meta.date}</span>
+              <span className="text-[var(--text-secondary)]">{issue.meta.date}</span>
             </MetaRow>
             <MetaRow label="Vendor">
               <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getVendorColor(issue.meta.vendor)}`}>
@@ -115,32 +115,32 @@ export default async function IssueDetailPage({
             </MetaRow>
             {issue.meta.affected_version && (
               <MetaRow label="Affected Version">
-                <span className="text-[#d4d4d4]">
+                <span className="text-[var(--text-secondary)]">
                   {issue.meta.affected_version}
                 </span>
               </MetaRow>
             )}
             {issue.meta.component && (
               <MetaRow label="Component">
-                <span className="text-[#d4d4d4]">{issue.meta.component}</span>
+                <span className="text-[var(--text-secondary)]">{issue.meta.component}</span>
               </MetaRow>
             )}
             {issue.meta.author && (
               <MetaRow label="Reporter">
-                <span className="text-[#d4d4d4]">{issue.meta.author}</span>
+                <span className="text-[var(--text-secondary)]">{issue.meta.author}</span>
               </MetaRow>
             )}
           </div>
           {issue.meta.file_paths && issue.meta.file_paths.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-[#262626]">
-              <span className="text-xs text-[#737373] uppercase tracking-wider">
+            <div className="mt-3 pt-3 border-t border-[var(--card-border)]">
+              <span className="text-xs text-[var(--text-faint)] uppercase tracking-wider">
                 Affected Files
               </span>
               <div className="mt-1 flex flex-wrap gap-2">
                 {issue.meta.file_paths.map((fp) => (
                   <code
                     key={fp}
-                    className="text-xs bg-[#1a1a1a] border border-[#262626] rounded px-2 py-0.5 text-[#a3a3a3]"
+                    className="text-xs bg-[var(--card-hover)] border border-[var(--card-border)] rounded px-2 py-0.5 text-[var(--text-muted)]"
                   >
                     {fp}
                   </code>
@@ -173,7 +173,7 @@ export default async function IssueDetailPage({
       )}
 
       {/* Back link */}
-      <div className="mt-8 pt-6 border-t border-[#262626]">
+      <div className="mt-8 pt-6 border-t border-[var(--card-border)]">
         <Link
           href="/issues"
           className="text-sm text-blue-400 hover:text-blue-300"
@@ -222,7 +222,7 @@ function MetaRow({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[#737373] shrink-0">{label}:</span>
+      <span className="text-[var(--text-faint)] shrink-0">{label}:</span>
       {children}
     </div>
   );

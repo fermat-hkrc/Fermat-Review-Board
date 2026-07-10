@@ -71,8 +71,8 @@ export default function IssuesListClient({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white mb-2">All Issues</h1>
-        <p className="text-sm text-[#a3a3a3]">
+        <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">All Issues</h1>
+        <p className="text-sm text-[var(--text-muted)]">
           {issues.length} total issues across all scanned repositories
         </p>
       </div>
@@ -84,12 +84,12 @@ export default function IssuesListClient({
           placeholder="Search issues..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="bg-[#141414] border border-[#262626] rounded-md px-3 py-1.5 text-sm text-white placeholder-[#737373] focus:outline-none focus:border-blue-500 w-64"
+          className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-md px-3 py-1.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-faint)] focus:outline-none focus:border-blue-500 w-64"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-[#141414] border border-[#262626] rounded-md px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+          className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-md px-3 py-1.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-blue-500"
         >
           <option value="">All Statuses</option>
           {statuses.map((s) => (
@@ -101,7 +101,7 @@ export default function IssuesListClient({
         <select
           value={languageFilter}
           onChange={(e) => setLanguageFilter(e.target.value)}
-          className="bg-[#141414] border border-[#262626] rounded-md px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+          className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-md px-3 py-1.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-blue-500"
         >
           <option value="">All Languages</option>
           {languages.map((l) => (
@@ -113,7 +113,7 @@ export default function IssuesListClient({
         <select
           value={vendorFilter}
           onChange={(e) => setVendorFilter(e.target.value)}
-          className="bg-[#141414] border border-[#262626] rounded-md px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+          className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-md px-3 py-1.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-blue-500"
         >
           <option value="">All Vendors</option>
           {vendors.map((v) => (
@@ -130,7 +130,7 @@ export default function IssuesListClient({
               setLanguageFilter("");
               setVendorFilter("");
             }}
-            className="text-sm text-[#a3a3a3] hover:text-white px-2"
+            className="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] px-2"
           >
             Clear filters
           </button>
@@ -138,16 +138,16 @@ export default function IssuesListClient({
       </div>
 
       {/* Issues List */}
-      <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden divide-y divide-[#1e1e1e]">
+      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg overflow-hidden divide-y divide-[var(--divider)]">
         {filtered.length === 0 ? (
-          <div className="px-6 py-12 text-center text-[#737373]">
+          <div className="px-6 py-12 text-center text-[var(--text-faint)]">
             No issues match your filters.
           </div>
         ) : (
           filtered.map((issue) => (
             <div
               key={issue.id}
-              className="px-6 py-5 hover:bg-[#1a1a1a] transition-colors"
+              className="px-6 py-5 hover:bg-[var(--card-hover)] transition-colors"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
@@ -155,20 +155,20 @@ export default function IssuesListClient({
                     <StatusBadge status={issue.status} />
                     <Link
                       href={`/issues/${issue.id}`}
-                      className="text-[15px] font-medium text-white hover:text-blue-300 transition-colors"
+                      className="text-[15px] font-medium text-[var(--text-primary)] hover:text-blue-300 transition-colors"
                     >
                       {issue.title}
                     </Link>
                   </div>
                   {issue.cwe && (
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[#1a1a2e] text-blue-400 border border-blue-500/20">
+                    <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[var(--pre-bg)] text-blue-400 border border-blue-500/20">
                       {issue.cwe}
                       {issue.cwe_name && ` — ${issue.cwe_name}`}
                     </span>
                   </div>
                   )}
-                  <div className="flex items-center gap-4 text-xs text-[#737373]">
+                  <div className="flex items-center gap-4 text-xs text-[var(--text-faint)]">
                     <span className="font-mono">{issue.id}</span>
                     <span>{issue.repo}</span>
                     <span>{issue.date}</span>

@@ -26,7 +26,7 @@ function LanguageIcon({ language }: { language: string }) {
     ),
   };
   return icons[language] || (
-    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-4 h-4 text-[var(--text-faint)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
     </svg>
   );
@@ -46,7 +46,7 @@ function VendorIcon({ vendor }: { vendor: string }) {
     ),
   };
   return icons[vendor] || (
-    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-4 h-4 text-[var(--text-faint)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5" />
     </svg>
   );
@@ -87,10 +87,10 @@ export default function DashboardPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white mb-2">
+        <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
           Security Dashboard
         </h1>
-        <p className="text-[#a3a3a3]">
+        <p className="text-[var(--text-muted)]">
           Fermat Security Scanner vulnerability findings across OpenHarmony,
           CANN, and AI project repositories.
         </p>
@@ -126,7 +126,7 @@ export default function DashboardPage() {
       {/* Vendor Statistics */}
       {Object.keys(stats.byVendor).length > 0 && (
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-white mb-4">By Vendor</h2>
+          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">By Vendor</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {Object.entries(stats.byVendor)
               .sort(([, a], [, b]) => b - a)
@@ -134,10 +134,10 @@ export default function DashboardPage() {
                 <Link
                   key={vendor}
                   href={`/vendor/${encodeURIComponent(vendor)}`}
-                  className="bg-[#141414] border border-[#262626] rounded-lg p-4 hover:border-blue-500/50 hover:bg-[#1a1a1a] transition-all group"
+                  className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg p-4 hover:border-blue-500/50 hover:bg-[var(--card-hover)] transition-all group"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors">
+                    <span className="text-sm font-medium text-[var(--text-primary)] group-hover:text-blue-400 transition-colors">
                       {getVendorLabel(vendor)}
                     </span>
                     <VendorIcon vendor={vendor} />
@@ -154,7 +154,7 @@ export default function DashboardPage() {
       {/* Language Statistics */}
       {Object.keys(stats.byLanguage).length > 0 && (
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-white mb-4">By Language</h2>
+          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">By Language</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {Object.entries(stats.byLanguage)
               .sort(([, a], [, b]) => b - a)
@@ -162,10 +162,10 @@ export default function DashboardPage() {
                 <Link
                   key={lang}
                   href={`/issues?language=${encodeURIComponent(lang)}`}
-                  className="bg-[#141414] border border-[#262626] rounded-lg p-4 hover:border-blue-500/50 hover:bg-[#1a1a1a] transition-all group"
+                  className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg p-4 hover:border-blue-500/50 hover:bg-[var(--card-hover)] transition-all group"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors">
+                    <span className="text-sm font-medium text-[var(--text-primary)] group-hover:text-blue-400 transition-colors">
                       {lang}
                     </span>
                     <LanguageIcon language={lang} />
@@ -180,9 +180,9 @@ export default function DashboardPage() {
       )}
 
       {/* Issues List */}
-      <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#262626] flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Issues</h2>
+      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg overflow-hidden">
+        <div className="px-6 py-4 border-b border-[var(--card-border)] flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)]">Issues</h2>
           <Link
             href="/issues"
             className="text-sm text-blue-400 hover:text-blue-300"
@@ -190,16 +190,16 @@ export default function DashboardPage() {
             View all &rarr;
           </Link>
         </div>
-        <div className="divide-y divide-[#1e1e1e]">
+        <div className="divide-y divide-[var(--divider)]">
           {issues.length === 0 ? (
-            <div className="px-6 py-12 text-center text-[#737373]">
+            <div className="px-6 py-12 text-center text-[var(--text-faint)]">
               No issues found.
             </div>
           ) : (
             issues.map((issue) => (
               <div
                 key={issue.id}
-                className="px-6 py-5 hover:bg-[#1a1a1a] transition-colors"
+                className="px-6 py-5 hover:bg-[var(--card-hover)] transition-colors"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
@@ -208,7 +208,7 @@ export default function DashboardPage() {
                       <StatusBadge status={issue.status} />
                       <Link
                         href={`/issues/${issue.id}`}
-                        className="text-[15px] font-medium text-white hover:text-blue-300 transition-colors"
+                        className="text-[15px] font-medium text-[var(--text-primary)] hover:text-blue-300 transition-colors"
                       >
                         {issue.title}
                       </Link>
@@ -216,14 +216,14 @@ export default function DashboardPage() {
                     {/* CWE */}
                     {issue.cwe && (
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[#1a1a2e] text-blue-400 border border-blue-500/20">
+                      <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-[var(--pre-bg)] text-blue-400 border border-blue-500/20">
                         {issue.cwe}
                         {issue.cwe_name && ` — ${issue.cwe_name}`}
                       </span>
                     </div>
                     )}
                     {/* Meta row */}
-                    <div className="flex items-center gap-4 text-xs text-[#737373]">
+                    <div className="flex items-center gap-4 text-xs text-[var(--text-faint)]">
                       <span className="font-mono">{issue.id}</span>
                       <span>{issue.repo}</span>
                       <span>{issue.date}</span>
@@ -295,9 +295,9 @@ function StatCard({
   href?: string;
 }) {
   const content = (
-    <div className={`bg-[#141414] border border-[#262626] rounded-lg p-5 ${href ? "hover:border-[#404040] transition-colors cursor-pointer" : ""}`}>
-      <span className="text-sm text-[#a3a3a3]">{label}</span>
-      <div className={`text-3xl font-bold mt-1 ${accent || "text-white"}`}>
+    <div className={`bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg p-5 ${href ? "hover:border-[var(--text-faint)] transition-colors cursor-pointer" : ""}`}>
+      <span className="text-sm text-[var(--text-muted)]">{label}</span>
+      <div className={`text-3xl font-bold mt-1 ${accent || "text-[var(--text-primary)]"}`}>
         {value}
       </div>
     </div>

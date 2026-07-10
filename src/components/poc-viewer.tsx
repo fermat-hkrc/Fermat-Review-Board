@@ -27,7 +27,7 @@ export default function PocViewer({
   const totalFiles = files.length + (output ? 1 : 0);
 
   return (
-    <div className="mt-10 border-2 border-emerald-500/30 rounded-xl overflow-hidden bg-[#0d1117]">
+    <div className="mt-10 border-2 border-emerald-500/30 rounded-xl overflow-hidden bg-[var(--card-bg)]">
       {/* Collapsible Header */}
       <button
         onClick={() => setOpen(!open)}
@@ -110,11 +110,11 @@ function PocFileCard({ file, issueId }: { file: PocFile; issueId: string }) {
   const downloadHref = `https://github.com/fermat-hkrc/Fermat-Review-Board/raw/main/content/pocs/${issueId}/${file.name}`;
 
   return (
-    <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden mb-4">
-      <div className="px-4 py-3 border-b border-[#262626] flex items-center justify-between bg-[#1a1a1a]">
+    <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg overflow-hidden mb-4">
+      <div className="px-4 py-3 border-b border-[var(--card-border)] flex items-center justify-between bg-[var(--card-hover)]">
         <div className="flex items-center gap-3">
-          <span className="text-sm font-mono text-[#e5e5e5]">{file.name}</span>
-          <span className="text-xs text-[#525252]">
+          <span className="text-sm font-mono text-[var(--text-secondary)]">{file.name}</span>
+          <span className="text-xs text-[var(--text-faint)]">
             {lines} lines &middot; {sizeLabel}
           </span>
         </div>
@@ -122,7 +122,7 @@ function PocFileCard({ file, issueId }: { file: PocFile; issueId: string }) {
           href={downloadHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-xs text-[#737373] hover:text-blue-400 transition-colors px-2 py-1 rounded border border-[#262626] hover:border-blue-500/30"
+          className="inline-flex items-center gap-1 text-xs text-[var(--text-faint)] hover:text-blue-400 transition-colors px-2 py-1 rounded border border-[var(--card-border)] hover:border-blue-500/30"
         >
           <svg
             className="w-3 h-3"
@@ -146,7 +146,7 @@ function PocFileCard({ file, issueId }: { file: PocFile; issueId: string }) {
         collapsedLabel={`Click to expand (${lines} lines)`}
       >
         <pre className="p-4 overflow-x-auto text-[13px] leading-relaxed">
-          <code className="text-[#d4d4d4] font-mono">{file.content}</code>
+          <code className="text-[var(--text-secondary)] font-mono">{file.content}</code>
         </pre>
       </CollapsibleBlock>
     </div>
@@ -168,13 +168,13 @@ function CollapsibleBlock({
 
   if (title) {
     return (
-      <div className="bg-[#141414] border border-[#262626] rounded-lg overflow-hidden mb-4">
+      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg overflow-hidden mb-4">
         <button
           onClick={() => setOpen(!open)}
-          className="w-full px-4 py-2 border-b border-[#262626] flex items-center justify-between bg-[#1a1a1a] hover:bg-[#222] transition-colors text-left"
+          className="w-full px-4 py-2 border-b border-[var(--card-border)] flex items-center justify-between bg-[var(--card-hover)] hover:opacity-80 transition-colors text-left"
         >
-          <span className="text-sm font-mono text-[#a3a3a3]">{title}</span>
-          <span className="text-xs text-[#525252]">{open ? "▼" : "▶"}</span>
+          <span className="text-sm font-mono text-[var(--text-muted)]">{title}</span>
+          <span className="text-xs text-[var(--text-faint)]">{open ? "▼" : "▶"}</span>
         </button>
         {open && children}
       </div>
@@ -185,7 +185,7 @@ function CollapsibleBlock({
     return (
       <button
         onClick={() => setOpen(true)}
-        className="w-full px-4 py-3 text-center text-xs text-[#525252] hover:text-[#a3a3a3] hover:bg-[#1a1a1a] transition-colors"
+        className="w-full px-4 py-3 text-center text-xs text-[var(--text-faint)] hover:text-[var(--text-muted)] hover:bg-[var(--card-hover)] transition-colors"
       >
         {collapsedLabel || "Click to expand"}
       </button>
