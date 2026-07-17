@@ -1,0 +1,1 @@
+success_callback=1 ifname='' station_count=6 expected_ifname='wlan0' expected_count=1 leases_delivered=0 exit_delivered=0 expected_each=1

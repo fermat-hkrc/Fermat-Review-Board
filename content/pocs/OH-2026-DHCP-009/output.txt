@@ -1,0 +1,1 @@
+hostname_after_short_update='xong-name' expected='x'

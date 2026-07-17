@@ -1,0 +1,1 @@
+sendto_return=-1 handler_result=0 expected_failure

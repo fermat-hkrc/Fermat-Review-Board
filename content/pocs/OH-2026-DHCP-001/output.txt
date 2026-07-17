@@ -1,0 +1,1 @@
+callback status=0 ifname=wlan0 dnsCount=2863311531

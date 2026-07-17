@@ -1,0 +1,8 @@
+dhcp_server_impl: rejected by compiler
+dhcp_server_callback_stub_lite: rejected by compiler
+dhcp_server_proxy_lite: rejected by compiler
+dhcp_server_impl.cpp:60:9: error: use of undeclared identifier 'clientProxy'
+dhcp_server_callback_stub_lite.cpp:135:92: error: no member named 'GetRawDataSize' in 'IpcIo'
+dhcp_server_callback_stub_lite.cpp:138:27: error: use of undeclared identifier 'state'
+dhcp_server_proxy_lite.cpp:153:6: error: use of undeclared identifier 'WifiScanProxy'
+dhcp_server_proxy_lite.cpp:207:79: error: use of undeclared identifier 'mRemoteDied'

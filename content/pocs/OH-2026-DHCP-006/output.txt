@@ -1,0 +1,4 @@
+dhcp_result_event.h:61:5: error: unknown type name 'bool'
+dhcp_c_api.h:48:54: error: expected ')'
+dhcp_c_api.h:56:68: error: expected ')'
+dhcp_c_api.h:65:54: error: unknown type name 'bool'
