@@ -1,85 +1,46 @@
-# 验证报告：DHCP Server callback IPC 错位与未交付事件
+# 验证报告：DHCP Server 成功回调字段顺序不一致
 
-## 1. 验证目标与判定标准
+## 1. 目标与版本
 
 | 项目 | 内容 |
 | --- | --- |
-| 目标仓库版本 | `communication_dhcp` `f705027a799e8fe915417026b5c9d90628c40793` |
-| 发送端 | `DhcpServerCallbackProxy` |
-| 接收端 | `DhcpServreCallBackStub` |
-| 输入 | 接口 `wlan0`、一个站点、一个 lease 字符串 |
-| 判定标准 | 上线回调应保留接口名和 1 个站点；lease 与退出回调应各到达一次 |
+| 目标仓库 | communication_dhcp |
+| 目标版本 | GitCode master，f52429ee1873c13c8ed55bde0cb9914b2dfedc43 |
+| 发送端 | DhcpServerCallbackProxy |
+| 接收端 | DhcpServreCallBackStub |
+| 输入 | 接口 wlan0、一个站点 |
+| 判定 | 回调必须收到 wlan0 和恰好一个相同站点 |
 
-## 2. 使用的生产代码与边界替身
+## 2. 使用的生产代码
 
-构建链接以下两个真实翻译单元：
+构建链接真实的：
 
-- `services/dhcp_server/src/dhcp_server_callback_proxy.cpp`
-- `frameworks/native/src/dhcp_server_callback_stub.cpp`
+- services/dhcp_server/src/dhcp_server_callback_proxy.cpp
+- frameworks/native/src/dhcp_server_callback_stub.cpp
 
-driver 只提供注册 callback、一个站点对象和 in-process IPC 端点。平台替身负责编解码 parcel 并把 production proxy 的 `SendRequest` 交给 production stub；字段写入、字段读取和 callback 分发均来自上述生产文件。
+driver 只提供 callback 注册、一个站点对象和 in-process IPC 端点。字段写入、字段读取和生产 stub 的分发逻辑均来自目标仓库。
 
-## 3. 输入构造
+## 3. 触发过程
 
-```cpp
-proxy.OnServerSuccess("wlan0", stations);  // stations.size() == 1
-proxy.OnServerLeasesChanged("wlan0", leases);
-proxy.OnServerSerExitChanged("wlan0");
-```
+    proxy.OnServerSuccess("wlan0", oneStation)
+      -> proxy 写入 string ifname
+      -> proxy 写入 int station count
+      -> production stub 先 ReadInt32 作为 count
+      -> production stub 再 ReadString 作为 ifname
+      -> RecordingCallback 记录收到的值
 
-站点包含合法的设备名、MAC 和 IPv4 字符串。`RecordingCallback` 记录实际收到的接口名、站点数和三个回调次数。
+## 4. 实际结果
 
-## 4. 完整触发链
-
-```text
-OnServerSuccess("wlan0", oneStation)
-  → production proxy 写入：exception=0, string "wlan0", int 1, station fields
-  → SendRequest
-  → production stub 的 RemoteOnServerSuccess
-    → 先 ReadInt32() 作为 size                 // 读取了字符串 framing
-    → 再 ReadString() 作为 ifName               // 已经偏移
-    → 以错误 size 读取站点
-  → RecordingCallback::OnServerSuccess
-
-OnServerLeasesChanged / OnServerSerExitChanged
-  → production proxy 记录日志后直接 return
-  → 没有 SendRequest
-  → RecordingCallback 不会被调用
-```
-
-## 5. 实际结果
-
-```text
-success_callback=1 ifname='' station_count=6 expected_ifname='wlan0' expected_count=1 leases_delivered=0 exit_delivered=0 expected_each=1
-```
+    success_callback=1 ifname='' station_count=6 expected_ifname='wlan0' expected_count=1
 
 | 观察项 | 期望 | 实际 |
 | --- | --- | --- |
-| 成功回调是否到达 | 1 | 1 |
-| 成功回调接口名 | `wlan0` | 空字符串 |
-| 成功回调站点数 | 1 | 6 |
-| lease 回调次数 | 1 | 0 |
-| exit 回调次数 | 1 | 0 |
+| 回调是否到达 | 1 | 1 |
+| 接口名 | wlan0 | 空字符串 |
+| 站点数量 | 1 | 6 |
 
-数值 6 来自字符串在 parcel 中的编码数据被误读为整数；测试不依赖该具体值，判定是“不是原始 1”。
+数值 6 来自字符串 framing 被当作整数读取。本验证的判定是接收结果不等于发送结果，而不依赖该具体数值。
 
-## 6. 结论与边界
+## 5. 结论
 
-该验证覆盖 production proxy 到 production stub 的完整 callback 路径，确认一个字段顺序不一致和两个完全未发送的事件。它不检查 DHCP 地址池分配，也不要求伪造外部 IPC 消息；三种事件均由正常服务端通知 API 触发。
-
-## 7. 修复后的回归判定
-
-修复后保持相同输入：
-
-- `OnServerSuccess` 必须回调 `ifname="wlan0"` 和恰好 1 个内容一致的站点；
-- `OnServerLeasesChanged` 必须回调 1 次并保留 lease 数据；
-- `OnServerSerExitChanged` 必须回调 1 次并保留接口名；
-- 分别测试 0、1 和多个站点，验证字段顺序不会再次漂移。
-
-## 8. 文件说明
-
-| 文件 | 用途 |
-| --- | --- |
-| `driver.cpp` | 真实回调端点的注册、三种正常事件输入与结果记录 |
-| `build.sh` | 编译生产 proxy、生产 stub 与 IPC 边界 driver |
-| `output.txt` | 本次端到端观察结果 |
+同一条生产 callback 消息的写入与读取顺序不一致。保持相同输入时，修复后应收到 wlan0 和恰好一个站点。

@@ -1,1 +1,0 @@
-decline_result=0 requested_ip_options=2 server_id_options=2 expected_each=1

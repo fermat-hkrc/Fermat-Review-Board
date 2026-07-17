@@ -1,1 +1,0 @@
-save_result=0 cache_entries_after_write_failure=0 expected_nonzero_and_preserved
