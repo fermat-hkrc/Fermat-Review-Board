@@ -7,7 +7,7 @@ title: "[bug] Re-entrant deadlock in fs::Scope: once() always deadlocks (emit() 
 cwe: CWE-667
 cwe_name: Improper Locking
 severity: MEDIUM
-status: CONFIRMED_REAL
+status: CONFIRMED_FIXED
 language: Rust
 issue_url: https://github.com/tauri-apps/tauri/issues/15468
 affected_version: "2.11.2"

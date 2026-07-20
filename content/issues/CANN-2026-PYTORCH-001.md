@@ -6,7 +6,8 @@ repo_url: https://gitcode.com/Ascend/pytorch
 title: "ParallelTcpServer ctx.erase(fd) 值传递导致客户端上下文泄漏"
 cwe: CWE-775
 cwe_name: Missing Release of File Descriptor after Effective Lifetime
-status: SUBMITTED
+severity: MEDIUM
+status: CONFIRMED_FIXED
 language: "C++"
 issue_url: https://gitcode.com/Ascend/pytorch/issues/1731
 author: Zirui

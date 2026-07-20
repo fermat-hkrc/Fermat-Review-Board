@@ -7,7 +7,7 @@ title: "ReplyRevokeRuntimePermission 全局缓冲区越界写入"
 severity: HIGH
 cwe: CWE-129
 cwe_name: Improper Validation of Array Index
-status: SUBMITTED
+status: CONFIRMED_REAL
 language: C
 issue_url: https://gitcode.com/openharmony/security_permission_lite/issues/96
 has_poc: true
@@ -87,4 +87,3 @@ static void ReplyRevokeRuntimePermission(const void *origin, IpcIo *req, IpcIo *
 ```
 
 ---
-

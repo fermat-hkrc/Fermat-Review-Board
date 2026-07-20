@@ -6,7 +6,8 @@ repo_url: https://gitcode.com/openharmony/drivers_interface
 title: "Camera HAL ReadMetadata 系列函数空指针解引用"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
-status: SUBMITTED
+severity: MEDIUM
+status: CONFIRMED_REAL
 language: "C++"
 issue_url: https://gitcode.com/openharmony/drivers_interface/issues/1235
 author: Zirui
@@ -179,4 +180,3 @@ static void ReadMetadataUInt8(camera_metadata_item_t &entry, MessageParcel &data
 
 - `camera/metadata/src/metadata_utils.cpp` (lines 591, 601, 611, 621, 631, 641)
 - `camera/metadata/include/metadata_utils.h`
-

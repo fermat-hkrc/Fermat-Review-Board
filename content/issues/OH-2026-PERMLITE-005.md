@@ -7,7 +7,7 @@ title: "ParsePermissions 服务端整数溢出导致堆破坏"
 severity: HIGH
 cwe: CWE-190
 cwe_name: Integer Overflow or Wraparound
-status: SUBMITTED
+status: CONFIRMED_REAL
 language: C
 issue_url: https://gitcode.com/openharmony/security_permission_lite/issues/97
 component: pms_impl
@@ -91,4 +91,3 @@ if (pSize > PERMISSION_NUM_MAX) {  // PERMISSION_NUM_MAX = 1000
 ```
 
 添加与客户端相同的 `PERMISSION_NUM_MAX=1000` 上限检查，防止整数溢出和过度分配。
-
