@@ -7,7 +7,7 @@ title: "Camera HAL ReadMetadata 系列函数空指针解引用"
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 severity: MEDIUM
-status: CONFIRMED_REAL
+status: CONFIRMED_FIXED
 language: "C++"
 issue_url: https://gitcode.com/openharmony/drivers_interface/issues/1235
 author: Zirui
@@ -180,3 +180,20 @@ static void ReadMetadataUInt8(camera_metadata_item_t &entry, MessageParcel &data
 
 - `camera/metadata/src/metadata_utils.cpp` (lines 591, 601, 611, 621, 631, 641)
 - `camera/metadata/include/metadata_utils.h`
+
+## 上游处理记录
+
+- **提单**: [drivers_interface#1235](https://gitcode.com/openharmony/drivers_interface/issues/1235)
+- **修复提交**: [`43bde11213d04773b06b90a251bf3145a8e820e2`](https://gitcode.com/openharmony/drivers_interface/commit/43bde11213d04773b06b90a251bf3145a8e820e2)，提交说明为 `fix:null pointer safety check and validation`
+- **修复内容**: master 中的 `ReadMetadata*` 系列函数已在 `ReadUnpadBuffer` 后检查 `ptr == nullptr`，避免将空指针传入 `memcpy_s`
+- **上游状态说明**: Issue 工作流仍显示“待办的”，但开发者已经明确确认修复合入 master
+
+## 开发者回复（已修复）
+
+> **liuchunyu20** — 2026-06-30
+>
+> 感谢您的建议，这个问题我们核对一下，计划7月份处理掉
+
+> **liuchunyu20** — 2026-07-30
+>
+> 已解决并合入master
