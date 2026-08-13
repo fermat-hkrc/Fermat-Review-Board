@@ -125,6 +125,20 @@ export default async function IssueDetailPage({
                 <span className="text-[var(--text-secondary)]">{issue.meta.component}</span>
               </MetaRow>
             )}
+            {issue.meta.gitcode_issue_type && (
+              <MetaRow label="Issue Type">
+                <span className="text-[var(--text-secondary)]">
+                  {issue.meta.gitcode_issue_type}
+                </span>
+              </MetaRow>
+            )}
+            {issue.meta.report_count !== undefined && (
+              <MetaRow label="Problem Points">
+                <span className="text-[var(--text-secondary)]">
+                  {issue.meta.report_count}
+                </span>
+              </MetaRow>
+            )}
             {issue.meta.author && (
               <MetaRow label="Reporter">
                 <span className="text-[var(--text-secondary)]">{issue.meta.author}</span>

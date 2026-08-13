@@ -26,6 +26,12 @@ export default function ExportButton({ meta, content }: ExportButtonProps) {
     if (meta.repo) {
       rows.push(`| 仓库 | ${meta.repo} |`);
     }
+    if (meta.gitcode_issue_type) {
+      rows.push(`| GitCode Issue 类型 | ${meta.gitcode_issue_type} |`);
+    }
+    if (meta.report_count !== undefined) {
+      rows.push(`| 问题点数量 | ${meta.report_count} |`);
+    }
     if (meta.file_paths && meta.file_paths.length > 0) {
       rows.push(`| 影响文件 | ${meta.file_paths.map(f => `\`${f}\``).join(", ")} |`);
     }

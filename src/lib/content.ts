@@ -23,6 +23,8 @@ export interface IssueMeta {
   component?: string;
   issue_url?: string;
   internal_issue_id?: string;
+  gitcode_issue_type?: string;
+  report_count?: number;
   file_paths?: string[];
   author?: string;
   has_poc?: boolean;
