@@ -114,8 +114,8 @@ export default async function IssueDetailPage({
               </span>
             </MetaRow>
             {issue.meta.affected_version && (
-              <MetaRow label="Affected Version">
-                <span className="text-[var(--text-secondary)]">
+              <MetaRow label="Affected Version" className="sm:col-span-2">
+                <span className="font-mono text-[var(--text-secondary)] break-all">
                   {issue.meta.affected_version}
                 </span>
               </MetaRow>
@@ -154,7 +154,7 @@ export default async function IssueDetailPage({
                 {issue.meta.file_paths.map((fp) => (
                   <code
                     key={fp}
-                    className="text-xs bg-[var(--card-hover)] border border-[var(--card-border)] rounded px-2 py-0.5 text-[var(--text-muted)]"
+                    className="max-w-full break-all whitespace-normal text-xs bg-[var(--card-hover)] border border-[var(--card-border)] rounded px-2 py-0.5 text-[var(--text-muted)]"
                   >
                     {fp}
                   </code>
@@ -230,14 +230,16 @@ function StatusBadge({ status }: { status: string }) {
 function MetaRow({
   label,
   children,
+  className = "",
 }: {
   label: string;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className={`grid min-w-0 grid-cols-[max-content_minmax(0,1fr)] items-start gap-x-2 ${className}`}>
       <span className="text-[var(--text-faint)] shrink-0">{label}:</span>
-      {children}
+      <div className="min-w-0 break-words">{children}</div>
     </div>
   );
 }
