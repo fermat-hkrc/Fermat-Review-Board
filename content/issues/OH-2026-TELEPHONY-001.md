@@ -18,7 +18,7 @@ file_paths:
   - services/sim/src/esim_manager.cpp
   - frameworks/native/src/core_manager_inner.cpp
 author: Zirui
-vendor: terminal
+vendor: public
 ---
 
 ## 漏洞概述

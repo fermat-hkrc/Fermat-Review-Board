@@ -21,7 +21,7 @@ file_paths:
   - services/core/src/core_service_stub.cpp
   - frameworks/native/src/core_service_proxy.cpp
 author: Zirui
-vendor: terminal
+vendor: public
 ---
 
 ## 漏洞概述

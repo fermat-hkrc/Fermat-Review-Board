@@ -17,7 +17,7 @@ file_paths:
   - frameworks/js/sim/src/napi_sim.cpp
   - frameworks/js/sim/BUILD.gn
 author: Zirui
-vendor: terminal
+vendor: public
 ---
 
 ## 漏洞概述

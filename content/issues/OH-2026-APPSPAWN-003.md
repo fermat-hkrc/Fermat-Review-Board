@@ -17,7 +17,7 @@ file_paths:
   - service/hnp/src/hnp_installer.c:474
 author: Zirui
 has_poc: true
-vendor: terminal
+vendor: public
 ---
 
 ## 漏洞概述

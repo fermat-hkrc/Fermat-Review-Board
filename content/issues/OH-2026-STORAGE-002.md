@@ -14,7 +14,7 @@ file_paths:
   - services/storage_daemon/libfscrypt/src/fscrypt_control.c:277
 author: Zirui
 has_poc: true
-vendor: terminal
+vendor: public
 ---
 
 ## 漏洞概述

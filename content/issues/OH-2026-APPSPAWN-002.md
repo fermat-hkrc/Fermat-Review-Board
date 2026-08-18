@@ -15,7 +15,7 @@ file_paths:
   - modules/sandbox/modern/appspawn_sandbox.c:358
 author: Zirui
 has_poc: true
-vendor: terminal
+vendor: public
 ---
 
 ## 漏洞概述

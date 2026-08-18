@@ -1,6 +1,6 @@
 export const VENDORS: Record<string, { label: string; color: string }> = {
   public: { label: "Open Source", color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
-  terminal: { label: "Terminal In-house", color: "bg-violet-500/20 text-violet-400 border-violet-500/30" },
+  cbg: { label: "Consumer Business Group", color: "bg-violet-500/20 text-violet-400 border-violet-500/30" },
 };
 
 export const DEFAULT_VENDOR = "public";

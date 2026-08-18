@@ -17,7 +17,7 @@ file_paths:
   - frameworks/extension/src/ani/ani_common_event_utils.cpp
   - interfaces/kits/ani/common_event/src/ani_common_event_utils.cpp
 author: Zirui
-vendor: terminal
+vendor: public
 ---
 
 ## 漏洞概述

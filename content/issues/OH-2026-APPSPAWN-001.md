@@ -14,7 +14,7 @@ file_paths:
   - util/src/appspawn_utils.c:238
 author: Zirui
 has_poc: true
-vendor: terminal
+vendor: public
 ---
 
 ## 漏洞概述

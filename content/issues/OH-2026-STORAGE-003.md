@@ -17,7 +17,7 @@ file_paths:
   - services/storage_manager/storage/src/storage_total_status_service.cpp
   - services/storage_manager/storage/src/storage_monitor_service.cpp
 author: Zirui
-vendor: terminal
+vendor: public
 ---
 
 ## 漏洞概述
