@@ -8,6 +8,8 @@ severity: LOW
 cwe: CWE-401
 cwe_name: Missing Release of Memory after Effective Lifetime
 status: PENDING
+hidden_from_dashboard: true
+hidden_date: "2026-09-01"
 gitcode_issue_type: "缺陷"
 report_count: 24
 affected_version: "e313c25c811710e5425c3c51338521719b086c2b"

@@ -8,6 +8,8 @@ severity: MEDIUM
 cwe: CWE-362
 cwe_name: Concurrent Execution using Shared Resource with Improper Synchronization
 status: PENDING
+hidden_from_dashboard: true
+hidden_date: "2026-09-01"
 gitcode_issue_type: "缺陷"
 report_count: 1
 affected_version: "670d98dfcc1bdb77a984d948bd10d21a3cc06aae"

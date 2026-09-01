@@ -8,6 +8,8 @@ severity: HIGH
 cwe: CWE-367
 cwe_name: Time-of-check Time-of-use (TOCTOU) Race Condition
 status: PENDING
+hidden_from_dashboard: true
+hidden_date: "2026-09-01"
 language: C
 component: hnp
 file_paths:

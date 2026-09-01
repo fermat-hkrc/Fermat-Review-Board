@@ -8,6 +8,8 @@ severity: MEDIUM
 cwe: CWE-476
 cwe_name: NULL Pointer Dereference
 status: PENDING
+hidden_from_dashboard: true
+hidden_date: "2026-09-01"
 language: "C++"
 component: storage_manager
 file_paths:
