@@ -7,8 +7,9 @@ title: "MultiSimController 本地 SIM 缓存使用不一致的锁"
 severity: MEDIUM
 cwe: CWE-362
 cwe_name: Concurrent Execution using Shared Resource with Improper Synchronization
-status: PENDING
+status: SUBMITTED
 gitcode_issue_type: "缺陷"
+issue_url: https://gitcode.com/openharmony/telephony_core_service/issues/2766
 report_count: 2
 affected_version: "670d98dfcc1bdb77a984d948bd10d21a3cc06aae"
 component: Multi-SIM Cache

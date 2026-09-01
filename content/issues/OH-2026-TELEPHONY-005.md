@@ -7,8 +7,9 @@ title: "SimStateHandle 的 SIM 对外状态读写缺少统一同步"
 severity: MEDIUM
 cwe: CWE-362
 cwe_name: Concurrent Execution using Shared Resource with Improper Synchronization
-status: PENDING
+status: SUBMITTED
 gitcode_issue_type: "缺陷"
+issue_url: https://gitcode.com/openharmony/telephony_core_service/issues/2765
 report_count: 7
 affected_version: "670d98dfcc1bdb77a984d948bd10d21a3cc06aae"
 component: SIM State Handle

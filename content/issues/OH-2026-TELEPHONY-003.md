@@ -7,8 +7,9 @@ title: "SIM I/O 等待超时后仍返回缓存响应且状态码不反映超时"
 severity: LOW
 cwe: CWE-754
 cwe_name: Improper Check for Unusual or Exceptional Conditions
-status: PENDING
+status: SUBMITTED
 gitcode_issue_type: "缺陷"
+issue_url: https://gitcode.com/openharmony/telephony_core_service/issues/2763
 report_count: 1
 affected_version: "e313c25c811710e5425c3c51338521719b086c2b"
 component: SIM I/O synchronous request handling

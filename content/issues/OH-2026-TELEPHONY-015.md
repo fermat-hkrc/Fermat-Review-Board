@@ -7,8 +7,9 @@ title: "StkController 响应完成标志未按条件变量规则同步"
 severity: LOW
 cwe: CWE-362
 cwe_name: Concurrent Execution using Shared Resource with Improper Synchronization
-status: PENDING
+status: SUBMITTED
 gitcode_issue_type: "缺陷"
+issue_url: https://gitcode.com/openharmony/telephony_core_service/issues/2767
 report_count: 1
 affected_version: "670d98dfcc1bdb77a984d948bd10d21a3cc06aae"
 component: SIM Toolkit Controller

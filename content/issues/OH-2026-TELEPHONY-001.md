@@ -7,8 +7,9 @@ title: "eSIM CarrierIdentifiers 使用空 MCC/MNC 固定下标读取导致越界
 severity: MEDIUM
 cwe: CWE-125
 cwe_name: Out-of-bounds Read
-status: PENDING
+status: SUBMITTED
 gitcode_issue_type: "缺陷"
+issue_url: https://gitcode.com/openharmony/telephony_core_service/issues/2762
 report_count: 1
 affected_version: "e313c25c811710e5425c3c51338521719b086c2b"
 component: eSIM rules authorization table parser

@@ -7,8 +7,9 @@ title: "SchedulePostTaskBlocked 超时返回后任务继续引用调用方栈地
 severity: MEDIUM
 cwe: CWE-562
 cwe_name: Return of Stack Variable Address
-status: PENDING
+status: SUBMITTED
 gitcode_issue_type: "缺陷"
+issue_url: https://gitcode.com/openharmony/communication_nearlink_service/issues/190
 report_count: 17
 affected_version: "211765308f9b2e67fd288dcb0d0a1f8ddda9f2fa"
 component: NearLink Stack Scheduler

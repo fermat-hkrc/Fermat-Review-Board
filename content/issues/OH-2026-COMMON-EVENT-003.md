@@ -7,8 +7,9 @@ title: "StaticSubscriberConnection 无锁读取 action_ 导致断连决策竞态
 severity: MEDIUM
 cwe: CWE-362
 cwe_name: Concurrent Execution using Shared Resource with Improper Synchronization
-status: PENDING
+status: SUBMITTED
 gitcode_issue_type: "缺陷"
+issue_url: https://gitcode.com/openharmony/notification_common_event_service/issues/1266
 report_count: 1
 affected_version: "6f5e69cb84cf9e779810a17694779dc62b02850d"
 component: Static Subscriber Connection

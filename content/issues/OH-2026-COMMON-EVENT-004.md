@@ -7,8 +7,9 @@ title: "两套 NAPI SubscriberInstance 生命周期字段未统一同步"
 severity: MEDIUM
 cwe: CWE-362
 cwe_name: Concurrent Execution using Shared Resource with Improper Synchronization
-status: PENDING
+status: SUBMITTED
 gitcode_issue_type: "缺陷"
+issue_url: https://gitcode.com/openharmony/notification_common_event_service/issues/1266
 report_count: 4
 affected_version: "6f5e69cb84cf9e779810a17694779dc62b02850d"
 component: Common Event NAPI Subscriber

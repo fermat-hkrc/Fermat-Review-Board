@@ -7,8 +7,9 @@ title: "OperatorNameUtils 在 fclose 失败路径遗失已分配内容"
 severity: LOW
 cwe: CWE-401
 cwe_name: Missing Release of Memory after Effective Lifetime
-status: PENDING
+status: SUBMITTED
 gitcode_issue_type: "缺陷"
+issue_url: https://gitcode.com/openharmony/telephony_core_service/issues/2764
 report_count: 2
 affected_version: "670d98dfcc1bdb77a984d948bd10d21a3cc06aae"
 component: Operator Name Configuration

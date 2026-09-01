@@ -7,8 +7,9 @@ title: "静态订阅扩展重复加载后未保存或释放 dlopen 引用"
 severity: LOW
 cwe: CWE-775
 cwe_name: Missing Release of File Descriptor or Handle after Effective Lifetime
-status: PENDING
+status: SUBMITTED
 gitcode_issue_type: "缺陷"
+issue_url: https://gitcode.com/openharmony/notification_common_event_service/issues/1265
 report_count: 1
 affected_version: "6f5e69cb84cf9e779810a17694779dc62b02850d"
 component: Static Subscriber Extension Loader
