@@ -7,7 +7,7 @@ title: "存储空闲空间查询失败后记录未初始化输出值"
 severity: LOW
 cwe: CWE-457
 cwe_name: Use of Uninitialized Variable
-status: PENDING
+status: CONFIRMED_FIXED
 gitcode_issue_type: "缺陷"
 report_count: 1
 affected_version: "38f4e18628953fedc48e2664b38c57009bf4446f"
@@ -20,13 +20,17 @@ author: Zirui
 vendor: public
 ---
 
+## 当前状态
+
+历史版本中的未初始化值读取真实。当前复核提交 `ed50e0173ce700c1d613efb5f3ad63a7c63e1e25` 已在 `GetRawFreeSize` 失败后立即返回，不再记录或使用未赋值的 `freeSize`。该控制流修复由提交 `c4884ee1` 引入，因此本项标记为已修复，不提交新的上游 Issue。
+
 ## 漏洞概述
 
 `StorageTotalStatusService::GetFreeSize` 通过 `statvfs("/data")` 查询空闲空间。当 `statvfs` 失败时，底层 `GetSizeOfPath` 直接返回错误，不写入输出引用 `freeSize`。上层虽然记录了查询失败，却没有立即返回，随后仍把 `freeSize` 作为公开整数写入一条内容标记为“success”的日志。
 
 产品内的周期存储监控路径以未初始化的局部变量调用该函数。`StorageManagerProvider::OnStart` 启动 `StorageMonitorService`，其 `MonitorAndManageStorage` 声明 `int64_t freeSize;` 后直接传入 `GetFreeSize`。因此在 `/data` 查询失败时，当前源码存在一条明确的“未初始化调用方变量—失败不写输出—继续记录输出值”路径。
 
-相关源文件在启用 `storage_service_storage_statistics_manager` 特性时进入 `storage_manager` 共享库，该目标由组件 `service_group` 纳入产品。当前 `master` 提交 `38f4e18628953fedc48e2664b38c57009bf4446f` 仍存在问题。逐文件检查确认 `OpenHarmony-v6.0-Beta1` 和 `OpenHarmony-v6.0-Release` 都包含同一失败路径；未对其他发行分支作推断。
+相关源文件在启用 `storage_service_storage_statistics_manager` 特性时进入 `storage_manager` 共享库，该目标由组件 `service_group` 纳入产品。受影响提交 `38f4e18628953fedc48e2664b38c57009bf4446f` 以及已核对的 `OpenHarmony-v6.0-Beta1`、`OpenHarmony-v6.0-Release` 包含同一失败路径；当前复核提交已经修复。
 
 本次没有对 `/data` 执行卸载、权限故障或 I/O 故障注入。普通应用能否稳定使系统服务的 `statvfs("/data")` 失败尚未确认。
 
